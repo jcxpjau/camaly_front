@@ -1,7 +1,4 @@
-import { useEffect } from "react";
 import type { Route } from "../+types/root";
-import { useAuth } from '../context/auth/auth.hooks';
-import { useDispatch } from 'react-redux'
 import { login } from '../context/auth/authSlice'
 import Test from "~/pages/Test";
 
