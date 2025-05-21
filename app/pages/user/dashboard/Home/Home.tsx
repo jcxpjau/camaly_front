@@ -1,4 +1,4 @@
-import ProductCard from "../../../../components/product-card/ProductCard";
+import ProductCard from "../../../../components/productCard/ProductCard";
 import { motion } from 'framer-motion';
 import './Home.css'
 import chatbotImg from '../../../../assets/dashboard/chatbot.png';

@@ -1,5 +1,5 @@
 import type { Route } from "../+types/root";
-import Home from "~/pages/user/dashboard/Home/Home";
+import Marketplace from "~/pages/user/dashboard/Marketplace/Marketplace";
 
 export function meta({ }: Route.MetaArgs) {
     return [
@@ -10,6 +10,6 @@ export function meta({ }: Route.MetaArgs) {
 
   export default function DashboardHome() {
     return (
-        <Home/>
+        <Marketplace/>
     );
 }
