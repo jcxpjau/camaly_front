@@ -3,7 +3,7 @@ import type { Route } from "../+types/root";
 import { useAuth } from '../context/auth/auth.hooks';
 import { useDispatch } from 'react-redux'
 import { login } from '../context/auth/authSlice'
-import Home from "~/pages/user/dashboard/Home/Home";
+import Concierge from "~/pages/user/dashboard/Concierge/Concierge";
 
 export function meta({ }: Route.MetaArgs) {
     return [
@@ -12,8 +12,8 @@ export function meta({ }: Route.MetaArgs) {
     ];
 }
 
-  export default function DashboardHome() {
+  export default function DashboardStats() {
     return (
-        <Home/>
+        <Concierge/>
     );
 }
