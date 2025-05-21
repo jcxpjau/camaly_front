@@ -6,12 +6,13 @@ import {
     Scripts,
     ScrollRestoration,
 } from "react-router";
-import { Provider } from 'react-redux'
-import { store } from "./store";
+import { Provider, useSelector } from "react-redux";
+import { store, type RootState } from "./store";
 
 import type { Route } from "./+types/root";
 import "./app.css";
 import LayoutComponent from "./components/layout";
+import { useEffect } from "react";
 
 export const links: Route.LinksFunction = () => [
     { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -26,6 +27,21 @@ export const links: Route.LinksFunction = () => [
     },
 ];
 
+// Componente que conecta o tema global e aplica classe dark/light no html
+function ThemeWrapper({ children }: { children: React.ReactNode }) {
+    const mode = useSelector((state: RootState) => state.theme.mode);
+
+    useEffect(() => {
+        if (mode === "dark") {
+            document.documentElement.classList.add("dark");
+        } else {
+            document.documentElement.classList.remove("dark");
+        }
+    }, [mode]);
+
+    return <>{children}</>;
+}
+
 export function Layout({ children }: { children: React.ReactNode }) {
     return (
         <html lang="en">
@@ -36,9 +52,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 <Links />
             </head>
             <body>
-                <LayoutComponent>
-                    {children}
-                </LayoutComponent>
+                {children}
                 <ScrollRestoration />
                 <Scripts />
             </body>
@@ -47,10 +61,13 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-
     return (
         <Provider store={store}>
-            <Outlet />
+            <ThemeWrapper>
+                <LayoutComponent>
+                    <Outlet />
+                </LayoutComponent>
+            </ThemeWrapper>
         </Provider>
     );
 }
