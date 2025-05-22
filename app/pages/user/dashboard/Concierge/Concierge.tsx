@@ -39,45 +39,49 @@ const stats = [
 
 export default function ConciergeDashboard() {
   return (
-    <div className="p-6 space-y-6 min-h-screen text-[var(--color-text)] bg-[var(--color-bg)]">
-      <motion.div
-        className="mx-1"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1, ease: 'easeOut' }}
-      >
-        <h3 className="font-extralight tracking-wide text-3xl">
-          Concierge
-        </h3>
-      </motion.div>
+    <div className="min-h-screen bg-[var(--color-bg)] text-[var(--color-text)] px-6 py-10">
+      <div className="max-w-7xl mx-auto">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, ease: 'easeOut' }}
+        >
+          <h1 className="text-3xl font-bold text-[var(--color-text)] mb-2">
+            Concierge
+          </h1>
+          <p className="text-[var(--color-muted)] mb-12">
+            Insights and metrics from support sessions and usage data.
+          </p>
+        </motion.div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {stats.map(product => (
-          <div key={product.id} className="relative">
-            <MetricsCard
-              title={product.title}
-              description={product.description}
-            />
-          </div>
-        ))}
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="rounded-xl p-6 bg-[var(--color-bg-alt)]">
-          <h3 className="text-lg font-semibold mb-2">
-            Usage by Day of the Week
-          </h3>
-          <StatsLineChart lineData={lineData} />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+          {stats.map(product => (
+            <div key={product.id} className="relative">
+              <MetricsCard
+                title={product.title}
+                description={product.description}
+              />
+            </div>
+          ))}
         </div>
 
-        <div className="rounded-xl p-6 bg-[var(--color-bg-alt)]">
-          <h3 className="text-lg font-semibold mb-2">
-            Support Channels
-          </h3>
-          <p className="text-sm mb-4 text-[var(--color-muted)]">
-            Most Used
-          </p>
-          <StatsPieChart pieData={pieData} />
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="rounded-xl p-6 bg-[var(--color-bg-alt)]">
+            <h3 className="text-lg font-semibold mb-2">
+              Usage by Day of the Week
+            </h3>
+            <StatsLineChart lineData={lineData} />
+          </div>
+
+          <div className="rounded-xl p-6 bg-[var(--color-bg-alt)]">
+            <h3 className="text-lg font-semibold mb-2">
+              Support Channels
+            </h3>
+            <p className="text-sm mb-4 text-[var(--color-muted)]">
+              Most Used
+            </p>
+            <StatsPieChart pieData={pieData} />
+          </div>
         </div>
       </div>
     </div>

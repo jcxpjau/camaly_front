@@ -1,4 +1,3 @@
-//import libraries
 import { motion } from "framer-motion";
 //import styles
 import "./Home.css";
@@ -36,32 +35,35 @@ const userName = "Nanni";
 
 export default function Home() {
   return (
-    <div className="p-6 space-y-6 min-h-screen bg-[var(--color-bg)] text-[var(--color-text)]">
-      <motion.div
-        className="mb-16 mx-1"
-        initial={{ opacity: 0, y: 40 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-      >
-        <h1 className="accent text-3xl lg:text-4xl md:text-3xl font-bold bg-gradient-to-r text-transparent bg-clip-text mb-4 drop-shadow-lg">
-          Welcome back, {userName}
-        </h1>
-        <p className="text-lg md:text-xl text-[var(--color-muted)] font-light max-w-2xl leading-relaxed animate-fade-in">
-          Explore what’s new!
-        </p>
-      </motion.div>
+    <div className="min-h-screen bg-[var(--color-bg)] text-[var(--color-text)] px-6 py-10">
+      <div className="max-w-7xl mx-auto space-y-6">
+        <motion.div
+          className="mb-16"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, ease: "easeOut" }}
+        >
+          <h1 className="accent text-3xl font-bold bg-gradient-to-r text-transparent bg-clip-text mb-2 drop-shadow-lg">
+            Welcome back, {userName}
+          </h1>
+          <p className="text-lg md:text-xl text-[var(--color-muted)] font-light max-w-2xl leading-relaxed">
+            Explore what’s new!
+          </p>
+        </motion.div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-        {products.map((product) => (
-          <div key={product.id} className="relative">
-            <NewsCard
-              title={product.title}
-              description={product.description}
-              image={product.image}
-            />
-          </div>
-        ))}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+          {products.map((product) => (
+            <div key={product.id} className="relative">
+              <NewsCard
+                title={product.title}
+                description={product.description}
+                image={product.image}
+              />
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
 }
+

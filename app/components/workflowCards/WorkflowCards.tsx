@@ -26,7 +26,7 @@ export default function WorkflowCard({
     >
       <div>
         <div className="flex items-center justify-between mb-4">
-          <div className="text-2xl text-[color:var(--color-accent)]">{icon}</div>
+          <div className="text-base text-[color:var(--color-accent)]">{icon}</div>
           <div
             className="text-sm px-2 py-1 rounded-full"
             style={{
@@ -37,8 +37,10 @@ export default function WorkflowCard({
             {price}
           </div>
         </div>
-        <h3 className="text-xl font-semibold mb-2">{title}</h3>
-        <p className="text-sm text-[color:var(--color-text)]">{description}</p>
+       <h3 className="text-xl font-semibold mb-2 break-words">
+          {title}
+        </h3>
+        <p className="text-xs text-[color:var(--color-text)]">{description}</p>
       </div>
       <div className="flex justify-between items-center mt-6">
         <button

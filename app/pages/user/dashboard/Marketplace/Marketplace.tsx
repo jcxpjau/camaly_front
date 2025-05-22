@@ -1,5 +1,9 @@
-import { Zap, Bot, CalendarCheck, Mail, Settings2, Search } from 'lucide-react';
+// import libraries
 import { useState } from 'react';
+import { motion } from 'framer-motion';
+// import icons
+import { Zap, Bot, CalendarCheck, Mail, Settings2, Search } from 'lucide-react';
+// import components
 import WorkflowPanel from '~/components/workflowPanel/WorkflowPanel';
 import FilterDropdown from '~/components/filterDropdown/FilterDropdown';
 
@@ -23,7 +27,7 @@ const workflows = [
     price: '$25',
   },
   {
-    title: 'Customer Feedback Collector',
+    title: 'Feedback Collector',
     description: 'Automate follow-up messages asking for reviews after a service.',
     icon: <Mail className="w-5 h-5 text-[color:var(--color-accent)]" />,
     price: '$15',
@@ -60,10 +64,17 @@ export default function Marketplace() {
   return (
     <div className="min-h-screen bg-[var(--color-bg)] text-[var(--color-text)] px-6 py-10">
       <div className="max-w-7xl mx-auto">
-        <h1 className="text-3xl font-bold text-[var(--color-text)] mb-2">
-          Workflow Marketplace
-        </h1>
-        <p className="text-[var(--color-muted)] mb-6">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, ease: 'easeOut' }}
+        >
+          <h1 className="text-3xl font-bold text-[var(--color-text)] mb-2">
+            Workflow Marketplace
+          </h1>
+        </motion.div>
+
+        <p className="text-[var(--color-muted)] mb-16">
           Boost your productivity by adding automations to your business.
         </p>
 

@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import WorkflowCard from '../workflowCards/WorkflowCards';
 
 interface Workflow {
@@ -13,9 +14,26 @@ interface Props {
   searchTerm: string;
 }
 
+// Define variants for the horizontal fade animation
+const slideVariants = {
+  initial: (direction: number) => ({ // Add 'direction' to control slide direction
+    opacity: 0,
+    x: direction > 0 ? 50 : -50, // Slide in from right (50) or left (-50)
+  }),
+  animate: {
+    opacity: 1,
+    x: 0, // End at original position
+  },
+  exit: (direction: number) => ({ // Add 'direction' to control slide direction
+    opacity: 0,
+    x: direction > 0 ? -50 : 50, // Slide out to left (-50) or right (50)
+  }),
+};
+
 export default function WorkflowPanel({ workflows, searchTerm }: Props) {
   const itemsPerPage = 4;
   const [currentPage, setCurrentPage] = useState(1);
+  const [direction, setDirection] = useState(1); // 1 for next, -1 for previous
 
   const filteredWorkflows = useMemo(() => {
     return workflows.filter(wf =>
@@ -33,23 +51,37 @@ export default function WorkflowPanel({ workflows, searchTerm }: Props) {
 
   const handlePageChange = (page: number) => {
     if (page >= 1 && page <= pageCount) {
+      // Determine direction for animation
+      setDirection(page > currentPage ? 1 : -1);
       setCurrentPage(page);
     }
   };
 
   return (
-    <div>
-      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-5 min-h-1">
-        {currentWorkflows.map((workflow, idx) => (
-          <WorkflowCard
-            key={idx}
-            title={workflow.title}
-            description={workflow.description}
-            icon={workflow.icon}
-            price={workflow.price}
-          />
-        ))}
-      </div>
+    // Adicione overflow-x-hidden no contêiner pai
+    <div className="overflow-x-hidden">
+      <AnimatePresence mode="wait" custom={direction}>
+        <motion.div
+          key={currentPage}
+          variants={slideVariants}
+          initial="initial"
+          animate="animate"
+          exit="exit"
+          custom={direction}
+          transition={{ duration: 0.3 }}
+          className="grid grid-cols-1 md:grid-cols- lg:grid-cols-4 gap-5 min-h-1"
+        >
+          {currentWorkflows.map((workflow, idx) => (
+            <WorkflowCard
+              key={idx}
+              title={workflow.title}
+              description={workflow.description}
+              icon={workflow.icon}
+              price={workflow.price}
+            />
+          ))}
+        </motion.div>
+      </AnimatePresence>
 
       <div className="flex justify-center mt-5">
         <div className="flex gap-2">
@@ -61,6 +93,7 @@ export default function WorkflowPanel({ workflows, searchTerm }: Props) {
             }}
             className="text-sm px-3 py-1.5 rounded-lg hover:brightness-110 transition"
             onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
           >
             Previous
           </button>
@@ -89,6 +122,7 @@ export default function WorkflowPanel({ workflows, searchTerm }: Props) {
             }}
             className="text-sm px-3 py-1.5 rounded-lg hover:brightness-110 transition"
             onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === pageCount}
           >
             Next
           </button>
