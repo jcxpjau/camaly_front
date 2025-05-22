@@ -64,7 +64,7 @@ export default function App() {
                 <Header toggleSidebar={() => { }} sidebarVisible={true} />
                 <div className="flex flex-1 overflow-hidden">
                     <Sidebar />
-                    <main className="flex-1 overflow-auto bg-[#2A2A2A]">
+                    <main className="flex-1 overflow-auto bg-[var(--color-bg)]">
                         <Outlet />
                     </main>
                 </div>

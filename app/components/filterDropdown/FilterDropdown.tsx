@@ -12,13 +12,19 @@ export default function FilterDropdown() {
     <div className="relative">
       <button
         onClick={() => setOpen(!open)}
-        className="flex items-center gap-2 bg-purple-600 px-3 py-2 rounded-xl text-sm hover:bg-purple-700"
+        className="flex items-center gap-2 bg-[var(--color-accent)] text-white px-3 py-2 rounded-xl text-sm hover:brightness-110 transition"
       >
         <Filter className="w-4 h-4" /> Filter
       </button>
 
       {open && (
-        <div className="absolute z-10 mt-2 w-48 bg-white rounded-lg shadow-lg text-sm text-gray-800">
+        <div className="absolute z-10 mt-2 w-48 rounded-lg shadow-lg text-sm"
+             style={{
+               backgroundColor: 'var(--color-bg)',
+               color: 'var(--color-text)',
+               border: '1px solid var(--color-border)',
+             }}
+        >
           {options.map((option) => (
             <div
               key={option}
@@ -26,9 +32,11 @@ export default function FilterDropdown() {
                 setSelected(option);
                 setOpen(false);
               }}
-              className={`cursor-pointer px-4 py-2 hover:bg-gray-100 ${
-                selected === option ? 'bg-gray-200 font-semibold' : ''
-              }`}
+              style={{
+                backgroundColor: selected === option ? 'var(--color-bg-alt)' : 'transparent',
+                fontWeight: selected === option ? 600 : 400,
+              }}
+              className="cursor-pointer px-4 py-2 hover:bg-[var(--color-bg-alt)] transition"
             >
               {option}
             </div>

@@ -54,24 +54,40 @@ export default function WorkflowPanel({ workflows, searchTerm }: Props) {
       <div className="flex justify-center mt-5">
         <div className="flex gap-2">
           <button
-            className="bg-zinc-800 text-white text-sm px-3 py-1.5 rounded-lg hover:bg-zinc-700"
+            style={{
+              backgroundColor: 'var(--color-bg-alt)',
+              color: 'var(--color-text)',
+              border: '1px solid var(--color-border)',
+            }}
+            className="text-sm px-3 py-1.5 rounded-lg hover:brightness-110 transition"
             onClick={() => handlePageChange(currentPage - 1)}
           >
             Previous
           </button>
+
           {Array.from({ length: pageCount }, (_, i) => (
             <button
               key={i}
-              className={`${
-        currentPage === i + 1 ? 'bg-purple-600' : 'bg-zinc-800'
-      } text-white text-sm px-3 py-1.5 rounded-lg hover:bg-zinc-700`}
+              style={{
+                backgroundColor:
+                  currentPage === i + 1 ? 'var(--color-accent)' : 'var(--color-bg-alt)',
+                color: 'var(--color-text)',
+                border: '1px solid var(--color-border)',
+              }}
+              className="text-sm px-3 py-1.5 rounded-lg hover:brightness-110 transition"
               onClick={() => handlePageChange(i + 1)}
             >
               {i + 1}
             </button>
           ))}
+
           <button
-            className="bg-zinc-800 text-white text-sm px-3 py-1.5 rounded-lg hover:bg-zinc-700"
+            style={{
+              backgroundColor: 'var(--color-bg-alt)',
+              color: 'var(--color-text)',
+              border: '1px solid var(--color-border)',
+            }}
+            className="text-sm px-3 py-1.5 rounded-lg hover:brightness-110 transition"
             onClick={() => handlePageChange(currentPage + 1)}
           >
             Next
