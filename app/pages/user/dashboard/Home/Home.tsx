@@ -1,6 +1,10 @@
-import ProductCard from "../../../../components/productCard/ProductCard";
+//import libraries
 import { motion } from 'framer-motion';
+//import styles
 import './Home.css'
+// import components
+import NewsCard from "../../../../components/newsCard/NewsCard";
+// import assets
 import chatbotImg from '../../../../assets/dashboard/chatbot.png';
 import postsImg from '../../../../assets/dashboard/posts.png';
 import emailImg from '../../../../assets/dashboard/email.png'
@@ -38,7 +42,7 @@ export default function Home() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, ease: 'easeOut' }}
             >
-                <h1 className="accent text-4xl md:text-3xl font-bold bg-gradient-to-r text-transparent bg-clip-text mb-4 drop-shadow-lg">
+                <h1 className="accent text-3xl lg:text-4xl md:text-3xl font-bold bg-gradient-to-r text-transparent bg-clip-text mb-4 drop-shadow-lg">
                     Welcome back, {userName}
                 </h1>
                 <p className="text-lg md:text-xl text-gray-300 font-light max-w-2xl leading-relaxed animate-fade-in">
@@ -47,10 +51,10 @@ export default function Home() {
             </motion.div>
 
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
                 {products.map(product => (
                     <div key={product.id} className="relative">
-                        <ProductCard
+                        <NewsCard
                             title={product.title}
                             description={product.description}
                             image={product.image}

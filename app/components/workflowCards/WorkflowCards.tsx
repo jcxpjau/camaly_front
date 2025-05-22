@@ -16,7 +16,8 @@ export default function WorkflowCard({
     price,
     }: WorkflowCardProps) {
     return (
-        <div className="rounded-2xl fluxCard p-6 shadow-xl flex flex-col justify-between text-white transition hover:scale-[1.02] duration-300">
+        <div className="rounded-2xl fluxCard p-6 shadow-xl flex flex-col justify-between text-white transition hover:scale-[1.02] duration-300 h-[300px]">
+
             <div>
                 <div className="flex items-center justify-between mb-4">
                 <div className="text-2xl">{icon}</div>

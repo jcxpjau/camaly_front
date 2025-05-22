@@ -1,5 +1,4 @@
-import React from 'react';
-import './ProductCard.css';
+import './NewsCard.css';
 import { CircleArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 
@@ -9,7 +8,7 @@ interface ProductCardProps {
   image: string;
 }
 
-const ProductCard = ({ title, description, image }: ProductCardProps) => {
+const NewsCard = ({ title, description, image }: ProductCardProps) => {
   return (
     <motion.div
       whileHover={{ scale: 1.05 }}
@@ -18,7 +17,7 @@ const ProductCard = ({ title, description, image }: ProductCardProps) => {
     >
       <div className="p-6 opacity-75">
         <h3 className="text-white text-2xl font-normal text-center mb-2">{title}</h3>
-        <p className="text-white font-light text-xs text-left">{description}</p>
+        <p className="text-white font-light text-xs text-center lg:text-left">{description}</p>
       </div>
       <div className="flex justify-center p-4">
         <img src={image} alt={title} className="w-full max-w-[200px]" />
@@ -36,4 +35,4 @@ const ProductCard = ({ title, description, image }: ProductCardProps) => {
   );
 };
 
-export default ProductCard;
+export default NewsCard;
