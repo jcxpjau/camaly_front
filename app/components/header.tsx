@@ -11,11 +11,13 @@ import { useState, useRef, useEffect } from "react";
 import Logo from "../assets/imgs/Logo_Camaly.png";
 import LogoAlt from "../assets/imgs/Logo_Camaly(1).png";
 import { useSideBar } from "~/context/theme/sidebar.hooks";
+import { useNavigate } from "react-router";
 
 export default function Header() {
     const {isOpen, toggleSidebar } = useSideBar();
     const [showSearchMobile, setShowSearchMobile] = useState(false);
     const searchRef = useRef<HTMLDivElement>(null);
+    const navigate = useNavigate();
 
     // Fecha a busca da lupinha no mobile ao clicar fora
     useEffect(() => {
@@ -38,6 +40,8 @@ export default function Header() {
                     src={isOpen ? Logo : LogoAlt}
                     alt="Camaly"
                     className="hidden sm:block h-6 w-auto sm:h-7 md:h-8 max-w-[120px]"
+                    style={{ cursor: "pointer" }}
+                    onClick={() => navigate( "/user/home" )}
                 />
                 {/* Menu Hamburguer para mobile */}
                 <button

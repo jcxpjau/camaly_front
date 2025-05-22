@@ -1,6 +1,13 @@
 {
   "greeting": "Welcome back, {{name}}!",
   "description": "Explore what’s new!",
+  "creator": "Ads Creator",
+  "your-stats": "Your Stats",
+  "agent": "New Agents",
+  "stats": "stats",
+  "concierge": "Creator",
+  "credits": "credits",
+  "your-agents": "Your Agents",
   "language": {
     "en": "English",
     "pt": "Portuguese"

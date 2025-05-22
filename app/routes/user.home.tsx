@@ -3,13 +3,13 @@ import Home from "~/pages/user/dashboard/Home/Home";
 
 export function meta({ }: Route.MetaArgs) {
     return [
-        { title: "New React Router App" },
-        { name: "description", content: "Welcome to React Router!" },
+        { title: "Camaly | Home" },
+        { name: "description", content: "Welcome to Camaly!" },
     ];
 }
 
-  export default function DashboardHome() {
+export default function DashboardHome() {
     return (
-        <Home/>
+        <Home />
     );
 }

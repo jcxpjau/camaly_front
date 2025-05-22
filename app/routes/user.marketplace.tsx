@@ -3,8 +3,8 @@ import Marketplace from "~/pages/user/dashboard/Marketplace/Marketplace";
 
 export function meta({ }: Route.MetaArgs) {
     return [
-        { title: "New React Router App" },
-        { name: "description", content: "Welcome to React Router!" },
+        { title: "Camaly | Marketplace" },
+        { name: "description", content: "Marketplace Camaly!" },
     ];
 }
 

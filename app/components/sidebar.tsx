@@ -13,6 +13,8 @@ import { useTheme } from "../context/theme/theme.hooks";
 import { useLanguage } from "~/context/language/language.hooks";
 import { useSideBar } from "~/context/theme/sidebar.hooks";
 import useIsMobile from "~/hooks/useIsMobile";
+import { useTranslation } from "react-i18next";
+import { useCustomNavigate } from "~/hooks/useCustomNavigate";
 
 
 
@@ -21,7 +23,8 @@ export default function Sidebar() {
     const { language, changeLanguage } = useLanguage();
     const isMobile = useIsMobile();
     const { isOpen, toggleSidebar } = useSideBar();
-
+    const { t } = useTranslation();
+    const navigate = useCustomNavigate();
 
     const isCollapsed = !isMobile && !isOpen;
 
@@ -67,8 +70,9 @@ export default function Sidebar() {
                                 style={{
                                     background: "linear-gradient(90deg, rgb(164,183,244), rgb(188,172,252))",
                                 }}
+                                onClick={(e) => navigate(e, '/user/marketplace')}
                             >
-                                <span>New Agents</span>
+                                <span>{t('agent')}</span>
                                 <CirclePlus className="w-5 h-5" />
                             </button>
                         </>
@@ -77,30 +81,42 @@ export default function Sidebar() {
                 <section className="mb-8">
                     {!isCollapsed && (
                         <h2 className="text-xs font-semibold mb-3 text-[var(--color-muted)] tracking-wide">
-                            YOUR AGENTS
+                            {t('your-agents')}
                         </h2>
                     )}
                     {isCollapsed ? (
                         <nav className="flex flex-col gap-5">
-                            {[MessageCircleMore, Bot, ChartPie].map((Icon, idx) => (
-                                <a
-                                    key={idx}
-                                    href="#"
-                                    className="flex items-center justify-center hover:text-[var(--color-accent)] hover:scale-110 transition-transform rounded-lg"
-                                >
-                                    <Icon className="w-10 h-10" />
-                                </a>
-                            ))}
+                            <a
+                                href="#"
+                                onClick={(e) => navigate(e, "/user/marketplace")}
+                                className="flex items-center justify-center hover:text-[var(--color-accent)] hover:scale-110 transition-transform rounded-lg"
+                            >
+                                <MessageCircleMore className="w-10 h-10" />
+                            </a>
+                            <a
+                                href="#"
+                                onClick={(e) => navigate(e, "/user/home")}
+                                className="flex items-center justify-center hover:text-[var(--color-accent)] hover:scale-110 transition-transform rounded-lg"
+                            >
+                                <Bot className="w-10 h-10" />
+                            </a>
+                            <a
+                                href="#"
+                                onClick={(e) => navigate(e, "/user/concierge")}
+                                className="flex items-center justify-center hover:text-[var(--color-accent)] hover:scale-110 transition-transform rounded-lg"
+                            >
+                                <ChartPie className="w-10 h-10" />
+                            </a>
                         </nav>
                     ) : (
                         <nav className="flex flex-col gap-3 font-normal text-sm">
-                            <a href="#" className="flex items-center gap-2 hover:text-[var(--color-accent)] transition">
+                            <a href="#" onClick={(e) => navigate(e, "/user/marketplace")} className="flex items-center gap-2 hover:text-[var(--color-accent)] transition">
                                 <MessageCircleMore className="w-6 h-6" />
-                                <span>Ads Creator</span>
+                                <span>{t("creator")}</span>
                             </a>
-                            <a href="#" className="flex items-center gap-2 hover:text-[var(--color-accent)] transition">
+                            <a href="#" onClick={(e) => navigate(e, "/user/home")} className="flex items-center gap-2 hover:text-[var(--color-accent)] transition">
                                 <Bot className="w-6 h-6" />
-                                <span>Concierge</span>
+                                <span>{t('concierge')}</span>
                             </a>
                         </nav>
                     )}
@@ -108,12 +124,12 @@ export default function Sidebar() {
                 {!isCollapsed && (
                     <section>
                         <h2 className="text-xs font-semibold mb-3 text-[var(--color-muted)] tracking-wide">
-                            YOUR STATS
+                            {t('your-stats')}
                         </h2>
                         <nav className="flex flex-col gap-3 font-normal text-sm">
-                            <a href="#" className="flex items-center gap-2 hover:text-[var(--color-accent)] transition">
+                            <a href="#" onClick={(e) => navigate(e, "/user/concierge")} className="flex items-center gap-2 hover:text-[var(--color-accent)] transition">
                                 <ChartPie className="w-6 h-6" />
-                                <span>Stats</span>
+                                <span>{t('stats')}</span>
                             </a>
                         </nav>
                     </section>
@@ -160,7 +176,7 @@ export default function Sidebar() {
                         </button>
                     </div>
                     <div className="p-3 rounded-lg border border-[var(--color-border)] text-xs text-[var(--color-text)]">
-                        <p className="mb-2">100 de 2K de créditos</p>
+                        <p className="mb-2">100 / 2K {t('credits')}</p>
                         <div className="w-full h-2 bg-[var(--color-progress-bg)] rounded-full overflow-hidden">
                             <div className="h-full bg-[var(--color-progress)] w-[5%]" />
                         </div>

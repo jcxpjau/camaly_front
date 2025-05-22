@@ -1,6 +1,13 @@
 {
   "greeting": "Bem vindo de volta, {{name}}!",
   "description": "Explore o que há de novo!",
+  "creator": "Criador de Ads",
+  "your-stats": "Suas Estatisticas",
+  "agent": "Novo Agente",
+  "stats": "Estatisticas",
+  "concierge": "Atendente",
+  "credits": "de créditos",
+  "your-agents": "Seus Agentes",
   "language": {
     "en": "Inglês",
     "pt": "Português"
