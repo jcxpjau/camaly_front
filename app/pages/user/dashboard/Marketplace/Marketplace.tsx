@@ -3,7 +3,7 @@ import { Zap, Bot, CalendarCheck, Mail, Settings2, Search } from 'lucide-react';
 import { useState } from 'react';
 // import components
 import WorkflowPanel from '~/components/workflowPanel/WorkflowPanel';
-import FilterDropdown from '~/components/filterDropdown/filterDropdown';
+import FilterDropdown from '~/components/filterDropdown/FilterDropdown';
 
 const workflows = [
   {
