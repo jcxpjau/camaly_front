@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 
 import { useTheme } from "../context/theme/theme.hooks"; // ajuste o caminho conforme seu projeto
+import { useLanguage } from "~/context/language/language.hooks";
 
 type SidebarProps = {
   isMobile?: boolean;
@@ -23,6 +24,7 @@ export default function Sidebar({
   isOpen = true,
 }: SidebarProps) {
   const { mode, toggleTheme } = useTheme();
+  const { language, changeLanguage } = useLanguage();
 
   useEffect(() => {
     const html = document.documentElement;
@@ -35,11 +37,6 @@ export default function Sidebar({
     }
   }, [mode]);
 
-  // Linguagem pode continuar local (ou você pode migrar para Redux depois)
-  const [language, setLanguage] = useState<"BR" | "EN">("BR");
-  const toggleLanguage = () => {
-    setLanguage((prev) => (prev === "BR" ? "EN" : "BR"));
-  };
 
   const isCollapsed = !isMobile && !isOpen;
 
@@ -196,18 +193,18 @@ export default function Sidebar({
               </div>
 
               <button
-                onClick={toggleLanguage}
+                onClick={changeLanguage( (language == 'pt' ) ? 'en' : 'pt' )}
                 className="relative w-16 h-8 rounded-full bg-[var(--color-bg-alt)] flex items-center cursor-pointer select-none"
                 aria-label="Toggle language"
               >
                 <div
                   className={`absolute top-0.5 left-0.5 w-7 h-7 rounded-full bg-white shadow-md transition-transform duration-300 transform ${
-                    language === "EN" ? "translate-x-8" : ""
+                    language === "en" ? "translate-x-8" : ""
                   }`}
                 />
                 <span
                   className={`absolute left-2 top-1.5 text-xs font-semibold ${
-                    language === "BR"
+                    language === "pt"
                       ? "text-[var(--color-accent)]"
                       : "text-[var(--color-muted)]"
                   }`}
@@ -216,7 +213,7 @@ export default function Sidebar({
                 </span>
                 <span
                   className={`absolute right-2 top-1.5 text-xs font-semibold ${
-                    language === "EN"
+                    language === "en"
                       ? "text-[var(--color-accent)]"
                       : "text-[var(--color-muted)]"
                   }`}

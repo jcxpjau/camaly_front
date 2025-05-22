@@ -1,0 +1,8 @@
+{
+  "greeting": "Olá, {{name}}!",
+  "description": "Este é seu painel.",
+  "language": {
+    "en": "Inglês",
+    "pt": "Português"
+  }
+}
