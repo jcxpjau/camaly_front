@@ -7,6 +7,7 @@ import {
     Sun,
     Moon,
     X,
+    CircleUserRound,
 } from "lucide-react";
 import type { RootState } from "../store";
 import { useTheme } from "../context/theme/theme.hooks";
@@ -22,9 +23,7 @@ export default function Sidebar() {
     const isMobile = useIsMobile();
     const { isOpen, toggleSidebar } = useSideBar();
 
-
     const isCollapsed = !isMobile && !isOpen;
-
 
     return (
         <aside
@@ -48,7 +47,6 @@ export default function Sidebar() {
       border-r border-[var(--color-border)]
       flex flex-col justify-between
     `}
-            style={{ pointerEvents: isMobile && !isOpen ? "none" : "auto" }}
         >
             <div>
                 {isMobile && (
@@ -116,6 +114,17 @@ export default function Sidebar() {
                                 <span>Stats</span>
                             </a>
                         </nav>
+                        <section className="mt-8">
+                          <h2 className="text-xs font-semibold mb-3 text-[var(--color-muted)] tracking-wide">
+                              YOUR ACCOUNT
+                          </h2>
+                          <nav className="flex flex-col gap-3 font-normal text-sm">
+                              <a href="#" className="flex items-center gap-2 hover:text-[var(--color-accent)] transition">
+                                  <CircleUserRound className="w-6 h-6" />
+                                  <span>Account</span>
+                              </a>
+                          </nav>
+                      </section>
                     </section>
                 )}
             </div>
