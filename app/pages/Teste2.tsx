@@ -5,8 +5,6 @@ import { Link } from "react-router";
 export default function Test2() {
 
     const { mode, toggleTheme } = useTheme();
-
-    console.log( mode );
     
 
     return (
