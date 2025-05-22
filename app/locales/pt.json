@@ -1,6 +1,6 @@
 {
-  "greeting": "Olá, {{name}}!",
-  "description": "Este é seu painel.",
+  "greeting": "Bem vindo de volta, {{name}}!",
+  "description": "Explore o que há de novo!",
   "language": {
     "en": "Inglês",
     "pt": "Português"

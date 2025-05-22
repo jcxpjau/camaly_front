@@ -8,6 +8,7 @@ import NewsCard from "../../../../components/newsCard/NewsCard";
 import chatbotImg from '../../../../assets/dashboard/chatbot.png';
 import postsImg from '../../../../assets/dashboard/posts.png';
 import emailImg from '../../../../assets/dashboard/email.png'
+import { useTranslation } from 'react-i18next';
 
 const products = [
   {
@@ -34,6 +35,8 @@ const userName = 'Nanni';
 
 export default function Home() {
 
+    const { t } = useTranslation();
+
     return (
         <div className="p-6 space-y-6 text-white min-h-screen">
             <motion.div
@@ -43,14 +46,12 @@ export default function Home() {
                 transition={{ duration: 0.8, ease: 'easeOut' }}
             >
                 <h1 className="accent text-3xl lg:text-4xl md:text-3xl font-bold bg-gradient-to-r text-transparent bg-clip-text mb-4 drop-shadow-lg">
-                    Welcome back, {userName}
+                    { t('greeting', { name: 'Nanni' })}
                 </h1>
                 <p className="text-lg md:text-xl text-gray-300 font-light max-w-2xl leading-relaxed animate-fade-in">
-                    Explore what’s new!
+                    { t('description' )}
                 </p>
             </motion.div>
-
-
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
                 {products.map(product => (
                     <div key={product.id} className="relative">

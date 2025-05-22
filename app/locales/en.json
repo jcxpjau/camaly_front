@@ -1,6 +1,6 @@
 {
-  "greeting": "Hello, {{name}}!",
-  "description": "This is your dashboard.",
+  "greeting": "Welcome back, {{name}}!",
+  "description": "Explore what’s new!",
   "language": {
     "en": "English",
     "pt": "Portuguese"
