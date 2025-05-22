@@ -1,7 +1,6 @@
-//import libraries
-import { motion } from 'framer-motion';
+import { motion } from "framer-motion";
 //import styles
-import './Home.css'
+import "./Home.css";
 // import components
 import NewsCard from "../../../../components/newsCard/NewsCard";
 // import assets
@@ -11,27 +10,29 @@ import emailImg from '../../../../assets/dashboard/email.png'
 import { useTranslation } from 'react-i18next';
 
 const products = [
-  {
-    id: 1,
-    title: "Customer Support",
-    description: "Customize the agent to meet all your customers' needs.",
-    image: chatbotImg
-  },
-  {
-    id: 2,
-    title: "Automated Posts",
-    description: "Schedule posts and generate captions using our specialized agent.",
-    image: postsImg
-  },
-  {
-    id: 3,
-    title: "Reminders",
-    description: "Avoid no-shows with this reminder and confirmation email automator.",
-    image: emailImg
-  }
+    {
+        id: 1,
+        title: "Customer Support",
+        description: "Customize the agent to meet all your customers' needs.",
+        image: chatbotImg,
+    },
+    {
+        id: 2,
+        title: "Automated Posts",
+        description:
+            "Schedule posts and generate captions using our specialized agent.",
+        image: postsImg,
+    },
+    {
+        id: 3,
+        title: "Reminders",
+        description:
+            "Avoid no-shows with this reminder and confirmation email automator.",
+        image: emailImg,
+    },
 ];
 
-const userName = 'Nanni';
+const userName = "Nanni";
 
 export default function Home() {
 
@@ -46,10 +47,10 @@ export default function Home() {
                 transition={{ duration: 0.8, ease: 'easeOut' }}
             >
                 <h1 className="accent text-3xl lg:text-4xl md:text-3xl font-bold bg-gradient-to-r text-transparent bg-clip-text mb-4 drop-shadow-lg">
-                    { t('greeting', { name: 'Nanni' })}
+                    {t('greeting', { name: 'Nanni' })}
                 </h1>
                 <p className="text-lg md:text-xl text-gray-300 font-light max-w-2xl leading-relaxed animate-fade-in">
-                    { t('description' )}
+                    {t('description')}
                 </p>
             </motion.div>
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
@@ -66,3 +67,4 @@ export default function Home() {
         </div>
     );
 }
+

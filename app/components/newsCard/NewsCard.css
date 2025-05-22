@@ -1,9 +1,24 @@
-.card{
-    font-family: 'Gantari', sans-serif;
-    background-image: linear-gradient(
-        to top,
-        rgba(91, 87, 115, 0.47),
-        rgba(147, 51, 234, 0.47),
-        rgba(43, 43, 43, 0.47)
-    );
+.card {
+  font-family: 'Gantari', sans-serif;
+  background-image: linear-gradient(
+    to top,
+    var(--card-bg-from),
+    var(--card-bg-mid),
+    var(--card-bg-to)
+  );
+ /*  box-shadow: 0 2px 0px var(--color-text); */
+}
+
+/* Light Mode */
+:root {
+  --card-bg-from: #a4b7f4;
+  --card-bg-mid: #bcacfc;
+  --card-bg-to: #f9fafb; 
+}
+
+/* Dark Mode */
+.dark {
+  --card-bg-from: #5b577378;
+  --card-bg-mid:#977efc;
+  --card-bg-to: #2b2b2b78;
 }

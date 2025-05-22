@@ -1,13 +1,22 @@
 .accent {
-  background-image: linear-gradient(to right,
-    rgba(180, 120, 250, 1),
-    rgba(200, 160, 252, 1),
-    rgba(220, 200, 253, 1),
-    rgba(235, 225, 254, 1),
-    rgba(245, 240, 254, 1),
-    rgba(250, 245, 255, 1),
-    rgba(255, 250, 255, 1),
-    rgba(255, 253, 255, 1),
-    rgba(255, 255, 255, 1)
+  background-image: linear-gradient(
+    to right,
+    var(--accent-from),
+    var(--accent-mid),
+    var(--accent-to)
   );
+}
+
+/* Light Mode */
+:root {
+  --accent-from: #977efc;       
+  --accent-mid:  #a4b7f4;        
+  --accent-to:  #a4b7f4;
+}
+
+/* Dark Mode */
+.dark {
+  --accent-from:#977efc;          
+  --accent-mid:#bcacfc;       
+  --accent-to: #f9fafb;
 }
