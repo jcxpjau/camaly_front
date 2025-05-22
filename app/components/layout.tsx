@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Header from "./header";
 import Sidebar from "./sidebar";
-import useIsMobile from "./hooks/useIsMobile"; // ajuste o path se necessário
+import useIsMobile from "../hooks/useIsMobile"; // ajuste o path se necessário
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const [sidebarVisible, setSidebarVisible] = useState(true);

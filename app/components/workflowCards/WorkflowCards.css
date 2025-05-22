@@ -1,0 +1,9 @@
+.fluxCard{
+    font-family: 'Gantari', sans-serif;
+    background-image: linear-gradient(
+        to top,
+        rgba(91, 87, 115, 0.47),
+        rgba(146, 91, 197, 0.47),
+        rgba(43, 43, 43, 0.47)
+    );
+}

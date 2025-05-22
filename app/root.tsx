@@ -13,17 +13,15 @@ import type { Route } from "./+types/root";
 import "./app.css";
 import LayoutComponent from "./components/layout";
 import { useEffect } from "react";
+import Header from "./components/header";
+import Sidebar from "./components/sidebar";
 
 export const links: Route.LinksFunction = () => [
     { rel: "preconnect", href: "https://fonts.googleapis.com" },
-    {
-        rel: "preconnect",
-        href: "https://fonts.gstatic.com",
-        crossOrigin: "anonymous",
-    },
+    { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
     {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Gantari:wght@400;500;700&display=swap",
     },
 ];
 
@@ -50,7 +48,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 <Meta />
                 <Links />
             </head>
-            <body>
+            <body className="flex flex-col h-screen relative">
                 {children}
                 <ScrollRestoration />
                 <Scripts />
@@ -63,9 +61,13 @@ export default function App() {
     return (
         <Provider store={store}>
             <ThemeWrapper>
-                <LayoutComponent>
-                    <Outlet />
-                </LayoutComponent>
+                <Header toggleSidebar={() => { }} sidebarVisible={true} />
+                <div className="flex flex-1 overflow-hidden">
+                    <Sidebar />
+                    <main className="flex-1 overflow-auto bg-[#2A2A2A]">
+                        <Outlet />
+                    </main>
+                </div>
             </ThemeWrapper>
         </Provider>
     );

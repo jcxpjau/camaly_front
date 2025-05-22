@@ -1,11 +1,11 @@
+
 @import "tailwindcss";
 
-<<<<<<< HEAD
-=======
 /* Aplica à página inteira */
 html, body {
   scrollbar-width: thin; /* Para Firefox */
   scrollbar-color: #888 #2A2A2A; /* thumb e track (Firefox) */
+  font-family: 'Gantari', sans-serif;
 }
 
 /* Para Chrome, Edge, Safari */
@@ -48,4 +48,3 @@ html, body {
   --color-progress-bg: #3f3f46;
   --color-progress: #e4e4e7;
 }
->>>>>>> valmir-branch
