@@ -6,14 +6,15 @@ import {
     Scripts,
     ScrollRestoration,
 } from "react-router";
-import { Provider, useSelector } from "react-redux";
+import { Provider } from "react-redux";
 import { store, type RootState } from "./store";
 
 import type { Route } from "./+types/root";
 import "./app.css";
-import { useEffect } from "react";
+import { useEffect, useLayoutEffect } from "react";
 import Header from "./components/header";
 import Sidebar from "./components/sidebar";
+import { useTheme } from "./context/theme/theme.hooks";
 
 export const links: Route.LinksFunction = () => [
     { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -25,9 +26,9 @@ export const links: Route.LinksFunction = () => [
 ];
 
 function ThemeWrapper({ children }: { children: React.ReactNode }) {
-    const mode = useSelector((state: RootState) => state.theme.mode);
+    const {mode} = useTheme();
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         if (mode === "dark") {
             document.documentElement.classList.add("dark");
         } else {
