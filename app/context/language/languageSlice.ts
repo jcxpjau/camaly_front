@@ -10,7 +10,7 @@ type LanguageState = {
 const getInitialLanguage = (): LanguageState => {
   if (typeof window !== 'undefined') {
     const storedMode = localStorage.getItem('camaly.language') || localStorage.getItem( 'i18nextLng' );
-    if (storedMode === 'pt' || storedMode === 'en' || storedMode == 'pt-br' ) {
+    if (storedMode === 'pt' || storedMode === 'en' || storedMode == 'pt-BR' ) {
       i18n.changeLanguage(storedMode);
       return { language: storedMode }
     }
