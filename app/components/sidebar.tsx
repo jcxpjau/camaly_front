@@ -22,20 +22,17 @@ export default function Sidebar() {
     const { mode, toggleTheme } = useTheme();
     const { language, changeLanguage } = useLanguage();
     const isMobile = useIsMobile();
-    const { isOpen, toggleSidebar } = useSideBar();
+    const { isOpen, toggleSidebar, changeSidebar } = useSideBar();
     const { t } = useTranslation();
     const navigate = useCustomNavigate();
 
     const isCollapsed = !isMobile && !isOpen;
 
-    const hasRun = useRef(false);
-
     useEffect(() => {
-        if (hasRun.current) return;
-        hasRun.current = true;
-
-        if (isMobile && isOpen) {
-            toggleSidebar();
+        if( isMobile && isOpen ) {
+            changeSidebar( false );
+        } else {
+            changeSidebar( true );
         }
     }, [isMobile]);
 

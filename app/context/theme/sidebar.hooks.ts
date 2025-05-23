@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux'
 import type { RootState, AppDispatch } from '../../store'
-import { toggleSidebar } from './sidebarSlice'
+import { toggleSidebar, changeSidebar } from './sidebarSlice'
 
 export const useSideBar = () => {
   const dispatch = useDispatch<AppDispatch>()
@@ -8,6 +8,7 @@ export const useSideBar = () => {
 
   return {
     ...sidebar,
-    toggleSidebar: () => dispatch(toggleSidebar())
+    toggleSidebar: () => dispatch(toggleSidebar()),
+    changeSidebar: ( value : boolean ) => dispatch( changeSidebar( value ) )
   }
 }
