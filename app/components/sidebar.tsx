@@ -27,26 +27,26 @@ export default function Sidebar() {
 
     return (
         <aside
-            className={`
-      /* Mobile (<=768px) */
-      ${isMobile ? `
-        fixed z-50 top-0 left-0 h-full w-64
-        transition-transform duration-300 ease-in-out
-        ${isOpen ? "translate-x-0 opacity-100" : "-translate-x-full opacity-0"}
-        p-4
-      ` : `
-      
-      /* Desktop (>768px) */
-        relative
-        transition-all duration-300 ease-in-out
-        ${isCollapsed ? "w-10 p-1.5" : "w-64 p-4"}
-      `}
-
-      /* Estilos comuns */
-      bg-[var(--color-bg)] text-[var(--color-text)]
-      border-r border-[var(--color-border)]
-      flex flex-col justify-between
-    `}
+        className={`
+            /* Mobile (<=768px) */
+            ${isMobile ? `
+            fixed z-50 top-0 left-0 h-full w-64
+            transition-transform duration-500 ease-out
+            ${isOpen ? "translate-x-0" : "-translate-x-full"}
+            opacity-100
+            p-4
+            ` : `
+            /* Desktop (>768px) */
+            relative
+            transition-all duration-500 ease-in-out
+            ${isCollapsed ? "w-10 p-1.5" : "w-64 p-4"}
+            `}
+            /* Estilos comuns */
+            bg-[var(--color-bg)] text-[var(--color-text)]
+            border-r border-[var(--color-border)]
+            flex flex-col justify-between
+        `}
+        style={{ willChange: "transform" }}//Adicionado para resolver bug
         >
             <div>
                 {isMobile && (
