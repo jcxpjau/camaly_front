@@ -9,6 +9,7 @@ import {
     X,
     ShoppingBag,
     CircleUserRound,
+    Settings
 } from "lucide-react";
 import type { RootState } from "../store";
 import { useTheme } from "../context/theme/theme.hooks";
@@ -93,53 +94,61 @@ export default function Sidebar() {
                         </>
                     )}
                 </section>
-                <section className="mb-8">
+                <section className="mb-8 h-100">
                     {showContent && (
                         <h2 className="text-xs font-semibold mb-3 text-[var(--color-muted)] tracking-wide">
                             {t('your-agents')}
                         </h2>
                     )}
                     {isCollapsed ? (
-                        <nav className="flex flex-col gap-5">
-                            <button
-                                className="flex items-center justify-between w-full px-1 py-1 rounded-lg font-semibold shadow hover:brightness-110 transition text-white"
-                                style={{
-                                    background: "linear-gradient(90deg, rgb(164,183,244), rgb(188,172,252))",
-                                }}
-                                onClick={(e) => navigate(e, '/user/marketplace')}
-                            >
-                                <CirclePlus className="w-6 h-6" />
-                            </button>
+                            <nav className="flex flex-col gap-5 h-100">
+                                <button
+                                    className="flex items-center justify-between w-full px-1 py-1 rounded-lg font-semibold shadow hover:brightness-110 transition text-white"
+                                    style={{
+                                        background: "linear-gradient(90deg, rgb(164,183,244), rgb(188,172,252))",
+                                    }}
+                                    onClick={(e) => navigate(e, '/user/marketplace')}
+                                >
+                                    <CirclePlus className="w-6 h-6" />
+                                </button>
 
-                            <a
-                                href="#"
-                                onClick={(e) => navigate(e, "/user/marketplace")}
-                                className="flex items-center justify-center hover:text-[var(--color-accent)] hover:scale-110 transition-transform rounded-lg"
-                            >
-                                <MessageCircleMore className="w-6 h-6" />
-                            </a>
-                            <a
-                                href="#"
-                                onClick={(e) => navigate(e, "/user/home")}
-                                className="flex items-center justify-center hover:text-[var(--color-accent)] hover:scale-110 transition-transform rounded-lg"
-                            >
-                                <Bot className="w-6 h-6" />
-                            </a>
-                            <a
-                                href="#"
-                                onClick={(e) => navigate(e, "/user/concierge")}
-                                className="flex items-center justify-center hover:text-[var(--color-accent)] hover:scale-110 transition-transform rounded-lg"
-                            >
-                                <ChartPie className="w-6 h-6" />
-                            </a>
-                            <a
-                                href="#"
-                                onClick={(e) => navigate(e, "/user/marketplace")}
-                                className="flex items-center justify-center hover:text-[var(--color-accent)] hover:scale-110 transition-transform rounded-lg"
-                            >
-                                <ShoppingBag className="w-6 h-6" />
-                            </a>
-                        </nav>
+                                <a
+                                    href="#"
+                                    onClick={(e) => navigate(e, "/user/marketplace")}
+                                    className="flex items-center justify-center hover:text-[var(--color-accent)] hover:scale-110 transition-transform rounded-lg"
+                                >
+                                    <MessageCircleMore className="w-6 h-6" />
+                                </a>
+                                <a
+                                    href="#"
+                                    onClick={(e) => navigate(e, "/user/home")}
+                                    className="flex items-center justify-center hover:text-[var(--color-accent)] hover:scale-110 transition-transform rounded-lg"
+                                >
+                                    <Bot className="w-6 h-6" />
+                                </a>
+                                <div className="flex-grow"></div>
+                                <a
+                                    href="#"
+                                    onClick={(e) => navigate(e, "/user/marketplace")}
+                                    className="flex items-center justify-center hover:text-[var(--color-accent)] hover:scale-110 transition-transform rounded-lg"
+                                >
+                                    <ShoppingBag className="w-6 h-6" />
+                                </a>
+                                <a
+                                    href="#"
+                                    onClick={(e) => navigate(e, "/user/concierge")}
+                                    className="flex items-center justify-center hover:text-[var(--color-accent)] hover:scale-110 transition-transform rounded-lg"
+                                >
+                                    <ChartPie className="w-6 h-6" />
+                                </a>
+                                <a
+                                    href="#"
+                                    onClick={(e) => navigate(e, "/user/concierge")}
+                                    className="flex items-center justify-center hover:text-[var(--color-accent)] hover:scale-110 transition-transform rounded-lg"
+                                >
+                                    <Settings className="w-6 h-6" />
+                                </a>
+                            </nav>
                     ) : (
                         <nav className="flex flex-col gap-3 font-normal text-sm">
                             {showContent && (
