@@ -9,11 +9,13 @@ type LanguageState = {
 
 const getInitialLanguage = (): LanguageState => {
   if (typeof window !== 'undefined') {
-    const storedMode = localStorage.getItem('camaly.language')
-    if (storedMode === 'pt' || storedMode === 'en') {
+    const storedMode = localStorage.getItem('camaly.language') || localStorage.getItem( 'i18nextLng' );
+    if (storedMode === 'pt' || storedMode === 'en' || storedMode == 'pt-br' ) {
+      i18n.changeLanguage(storedMode);
       return { language: storedMode }
     }
   }
+  i18n.changeLanguage('en');
   return { language: 'en' }
 }
 
