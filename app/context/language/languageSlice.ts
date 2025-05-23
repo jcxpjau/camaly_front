@@ -6,18 +6,27 @@ type LanguageState = {
   language: string | null
 }
 
+const SUPPORTED_LANGUAGES = ['en', 'pt', 'pt-BR'] as const;
+
+type SupportedLanguage = typeof SUPPORTED_LANGUAGES[number];
+
+const normalizeLanguage = (lang: string | null): SupportedLanguage => {
+  if (!lang) return 'en';
+  if (lang === 'pt-BR') return 'pt';
+  return SUPPORTED_LANGUAGES.includes(lang as SupportedLanguage) ? lang as SupportedLanguage : 'en';
+};
+
 
 const getInitialLanguage = (): LanguageState => {
   if (typeof window !== 'undefined') {
-    const storedMode = localStorage.getItem('camaly.language') || localStorage.getItem( 'i18nextLng' );
-    if (storedMode === 'pt' || storedMode === 'en' || storedMode == 'pt-BR' ) {
-      i18n.changeLanguage(storedMode);
-      return { language: storedMode }
-    }
+    const storedLang = localStorage.getItem('camaly.language') || localStorage.getItem('i18nextLng');
+    const language = normalizeLanguage(storedLang);
+    i18n.changeLanguage(language);
+    return { language: language };
   }
   i18n.changeLanguage('en');
-  return { language: 'en' }
-}
+  return { language: 'en' };
+};
 
 const languageSlice = createSlice({
   name: 'language',
