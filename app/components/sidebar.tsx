@@ -15,8 +15,6 @@ import { useLanguage } from "~/context/language/language.hooks";
 import { useSideBar } from "~/context/theme/sidebar.hooks";
 import useIsMobile from "~/hooks/useIsMobile";
 
-
-
 export default function Sidebar() {
     const { mode, toggleTheme } = useTheme();
     const { language, changeLanguage } = useLanguage();
@@ -25,28 +23,37 @@ export default function Sidebar() {
 
     const isCollapsed = !isMobile && !isOpen;
 
+    // Estado para mostrar o conteúdo textual com delay (para resolver bug)
+    const [showContent, setShowContent] = useState(!isCollapsed);
+
+    useEffect(() => {
+        if (!isCollapsed) {
+            const timer = setTimeout(() => setShowContent(true), 200); // tempo igual à duração da transição
+            return () => clearTimeout(timer);
+        } else {
+            setShowContent(false);
+        }
+    }, [isCollapsed]);
+
     return (
         <aside
-        className={`
-            /* Mobile (<=768px) */
-            ${isMobile ? `
-            fixed z-50 top-0 left-0 h-full w-64
-            transition-transform duration-500 ease-out
-            ${isOpen ? "translate-x-0" : "-translate-x-full"}
-            opacity-100
-            p-4
-            ` : `
-            /* Desktop (>768px) */
-            relative
-            transition-all duration-500 ease-in-out
-            ${isCollapsed ? "w-10 p-1.5" : "w-64 p-4"}
+            className={`
+                ${isMobile ? `
+                    fixed z-50 top-0 left-0 h-full w-64
+                    transition-transform duration-500 ease-out
+                    ${isOpen ? "translate-x-0" : "-translate-x-full"}
+                    opacity-100
+                    p-4
+                ` : `
+                    relative
+                    transition-all duration-500 ease-in-out
+                    ${isCollapsed ? "w-16 p-4" : "w-64 p-4"}
+                `}
+                bg-[var(--color-bg)] text-[var(--color-text)]
+                border-r border-[var(--color-border)]
+                flex flex-col justify-between
             `}
-            /* Estilos comuns */
-            bg-[var(--color-bg)] text-[var(--color-text)]
-            border-r border-[var(--color-border)]
-            flex flex-col justify-between
-        `}
-        style={{ willChange: "transform" }}//Adicionado para resolver bug
+            style={{ willChange: "transform" }}
         >
             <div>
                 {isMobile && (
@@ -55,7 +62,7 @@ export default function Sidebar() {
                     </button>
                 )}
                 <section className="mb-8">
-                    {!isCollapsed && (
+                    {showContent && (
                         <>
                             <h2 className="text-xs font-semibold mb-3 text-[var(--color-muted)] tracking-wide">
                                 NEWS!
@@ -73,37 +80,42 @@ export default function Sidebar() {
                     )}
                 </section>
                 <section className="mb-8">
-                    {!isCollapsed && (
+                    {showContent && (
                         <h2 className="text-xs font-semibold mb-3 text-[var(--color-muted)] tracking-wide">
                             YOUR AGENTS
                         </h2>
                     )}
                     {isCollapsed ? (
-                        <nav className="flex flex-col gap-5">
+                        <nav className="flex flex-col gap-10 items-center">
                             {[MessageCircleMore, Bot, ChartPie].map((Icon, idx) => (
                                 <a
                                     key={idx}
                                     href="#"
-                                    className="flex items-center justify-center hover:text-[var(--color-accent)] hover:scale-110 transition-transform rounded-lg"
+                                    className="flex items-center justify-center hover:text-[var(--color-accent)] hover:scale-105 transition-transform rounded-lg"
+                                    style={{ opacity: 0.7 }}
                                 >
-                                    <Icon className="w-10 h-10" />
+                                    <Icon className="w-6 h-6" />
                                 </a>
                             ))}
                         </nav>
                     ) : (
                         <nav className="flex flex-col gap-3 font-normal text-sm">
-                            <a href="#" className="flex items-center gap-2 hover:text-[var(--color-accent)] transition">
-                                <MessageCircleMore className="w-6 h-6" />
-                                <span>Ads Creator</span>
-                            </a>
-                            <a href="#" className="flex items-center gap-2 hover:text-[var(--color-accent)] transition">
-                                <Bot className="w-6 h-6" />
-                                <span>Concierge</span>
-                            </a>
+                            {showContent && (
+                                <>
+                                    <a href="#" className="flex items-center gap-2 hover:text-[var(--color-accent)] transition">
+                                        <MessageCircleMore className="w-6 h-6" />
+                                        <span>Ads Creator</span>
+                                    </a>
+                                    <a href="#" className="flex items-center gap-2 hover:text-[var(--color-accent)] transition">
+                                        <Bot className="w-6 h-6" />
+                                        <span>Concierge</span>
+                                    </a>
+                                </>
+                            )}
                         </nav>
                     )}
                 </section>
-                {!isCollapsed && (
+                {showContent && (
                     <section>
                         <h2 className="text-xs font-semibold mb-3 text-[var(--color-muted)] tracking-wide">
                             YOUR STATS
@@ -115,20 +127,20 @@ export default function Sidebar() {
                             </a>
                         </nav>
                         <section className="mt-8">
-                          <h2 className="text-xs font-semibold mb-3 text-[var(--color-muted)] tracking-wide">
-                              YOUR ACCOUNT
-                          </h2>
-                          <nav className="flex flex-col gap-3 font-normal text-sm">
-                              <a href="#" className="flex items-center gap-2 hover:text-[var(--color-accent)] transition">
-                                  <CircleUserRound className="w-6 h-6" />
-                                  <span>Account</span>
-                              </a>
-                          </nav>
-                      </section>
+                            <h2 className="text-xs font-semibold mb-3 text-[var(--color-muted)] tracking-wide">
+                                YOUR ACCOUNT
+                            </h2>
+                            <nav className="flex flex-col gap-3 font-normal text-sm">
+                                <a href="#" className="flex items-center gap-2 hover:text-[var(--color-accent)] transition">
+                                    <CircleUserRound className="w-6 h-6" />
+                                    <span>Account</span>
+                                </a>
+                            </nav>
+                        </section>
                     </section>
                 )}
             </div>
-            {!isCollapsed && (
+            {showContent && (
                 <div>
                     <div className="flex items-center justify-center mb-4 gap-4">
                         <div className="flex items-center gap-2">
@@ -147,7 +159,7 @@ export default function Sidebar() {
                             <Moon className={`w-5 h-5 ${mode === "dark" ? "text-[var(--color-accent)]" : "text-[var(--color-muted)]"}`} />
                         </div>
                         <button
-                            onClick={() => changeLanguage((language == 'pt') ? 'en' : 'pt')}
+                            onClick={() => changeLanguage(language == "pt" ? "en" : "pt")}
                             className="relative w-20 h-8 rounded-full bg-[var(--color-bg-alt)] flex items-center justify-between px-2"
                             aria-label="Toggle language"
                         >
@@ -164,7 +176,8 @@ export default function Sidebar() {
                             <span
                                 className={`z-10 text-xs translate-x-0.5 font-semibold ${language === "en" ? "text-[var(--color-accent)]" : "text-[var(--color-muted)]"
                                     }`}
-                            >EN
+                            >
+                                EN
                             </span>
                         </button>
                     </div>
