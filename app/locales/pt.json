@@ -3,7 +3,7 @@
   "description": "Explore o que há de novo!",
   "creator": "Criador de Ads",
   "your-stats": "Suas Estatisticas",
-  "agent": "Novo Agente",
+  "agent": "Novos Agentes",
   "stats": "Estatisticas",
   "concierge": "Atendente",
   "credits": "de créditos",
@@ -11,5 +11,89 @@
   "language": {
     "en": "Inglês",
     "pt": "Português"
+  },
+  "newagents": {
+    "customer-support-title": "Suporte ao Cliente",
+    "customer-support-description": "Personalize o agente para atender todas as necessidades dos seus clientes.",
+    "automated-posts-title": "Postagens Automatizadas",
+    "automated-posts-description": "Agende postagens e gere legendas usando nosso agente especializado.",
+    "reminders-title": "Lembretes",
+    "reminders-description": "Evite faltas com este automatizador de e-mails de lembrete e confirmação."
+  },
+  "marketplace": {
+    "title": "Marketplace de Workflows",
+    "description": "Aumente sua produtividade adicionando automações ao seu negócio.",
+    "search-placeholder": "Buscar workflows...",
+    "lead-qualification": {
+      "title": "Qualificação de Leads",
+      "description": "Qualifique leads automaticamente com IA e pontue com base nas respostas."
+    },
+    "appointment-reminders": {
+      "title": "Lembretes de Agendamento",
+      "description": "Envie lembretes por email e SMS para reduzir ausências em compromissos."
+    },
+    "social-post-scheduler": {
+      "title": "Agendador de Posts",
+      "description": "Gere e agende conteúdos para Instagram e LinkedIn automaticamente."
+    },
+    "feedback-collector": {
+      "title": "Coletor de Feedback",
+      "description": "Automatize mensagens de acompanhamento pedindo avaliações após um serviço."
+    },
+    "custom-workflow-builder": {
+      "title": "Construtor de Workflows Personalizado",
+      "description": "Crie seu próprio fluxo de automação com blocos modulares e gatilhos."
+    },
+    "weekly-reports-generator": {
+      "title": "Gerador de Relatórios Semanais",
+      "description": "Receba resumos de desempenho automaticamente por email toda semana."
+    },
+    "client-onboarding-flow": {
+      "title": "Fluxo de Onboarding de Clientes",
+      "description": "Dê boas-vindas e oriente novos clientes com automações passo a passo."
+    },
+    "birthday-greetings-sender": {
+      "title": "Enviador de Cumprimentos de Aniversário",
+      "description": "Surpreenda seus clientes com felicitações automáticas de aniversário."
+    }
+  },
+  "conciergeStats": {
+    "title": "Concierge",
+    "description": "Insights e métricas de sessões de suporte e dados de uso.",
+    "stats": {
+      "sessions": {
+        "title": "1.024 sessões de suporte",
+        "description": "só neste mês com a Concierge"
+      },
+      "questions": {
+        "title": ">3.000 perguntas respondidas",
+        "description": "aos clientes"
+      },
+      "credits": {
+        "title": "5.000 créditos",
+        "description": "Média de uso mensal"
+      }
+    },
+    "usage": {
+      "title": "Uso por dia da semana"
+    },
+    "channels": {
+      "title": "Canais de Suporte",
+      "mostUsed": "Mais utilizados"
+    }
+  },
+  "home": {
+    "greeting": "Bem-vindo de volta, {{name}}!",
+    "subtitle": "Confira seus fluxos de trabalho adquiridos",
+    "products": {
+      "contentImprovement": {
+        "title": "Aprimoramento de Conteúdo com IA",
+        "description": "Aumente a qualidade das suas postagens com este agente personalizado"
+      },
+      "businessAnalysis": {
+        "title": "Análise de negócios agendada",
+        "description": "Agende análises automáticas dos seus dados e receba relatórios completos."
+      }
+    }
   }
 }

@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useMemo } from "react";
+// import libraries
+import React, { useMemo, type JSX } from "react";
 import {
   PieChart,
   Pie,
@@ -18,8 +19,7 @@ type MyResponsivePieChartProps = {
   pieData: PieDataEntry[];
 };
 
-const StatsPieChart: React.FC<MyResponsivePieChartProps> = ({ pieData }) => {
-
+const StatsPieChart = ({ pieData }: MyResponsivePieChartProps): JSX.Element => {
   const totalPie = useMemo(
     () => pieData.reduce((sum, item) => sum + item.value, 0),
     [pieData]
@@ -29,9 +29,9 @@ const StatsPieChart: React.FC<MyResponsivePieChartProps> = ({ pieData }) => {
     <ResponsiveContainer width="100%" height={240}>
       <PieChart>
         <Legend
-          layout={"horizontal"}
-          verticalAlign={"bottom" }
-          align={"center" }
+          layout="horizontal"
+          verticalAlign="bottom"
+          align="center"
           iconType="circle"
           formatter={(value: string) => (
             <span style={{ color: 'var(--color-text)' }}>{value}</span>

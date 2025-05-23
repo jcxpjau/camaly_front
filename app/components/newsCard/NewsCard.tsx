@@ -1,6 +1,11 @@
-import './NewsCard.css';
-import { CircleArrowRight } from 'lucide-react';
+//import libraries
 import { motion } from 'framer-motion';
+import type { JSX } from 'react';
+//import styling
+import './NewsCard.css';
+
+//import icons
+import { CircleArrowRight } from 'lucide-react';
 
 interface ProductCardProps {
   title: string;
@@ -8,11 +13,11 @@ interface ProductCardProps {
   image: string;
 }
 
-const NewsCard = ({ title, description, image }: ProductCardProps) => {
+const NewsCard = ({ title, description, image }: ProductCardProps): JSX.Element => {
   return (
     <motion.div
       whileHover={{ scale: 1.05 }}
-      transition={{ duration: 0.4, ease: "easeInOut" }}
+      transition={{ duration: 0.4, ease: 'easeInOut' }}
       className="card rounded-lg overflow-hidden h-72 relative"
     >
       <div className="p-6 opacity-75">

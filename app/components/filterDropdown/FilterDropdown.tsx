@@ -1,11 +1,15 @@
-// src/components/FilterDropdown.tsx
+// import libraries
 import { useState } from 'react';
+import type { JSX } from 'react';
+// import icons
 import { Filter } from 'lucide-react';
 
-const options = ['All', 'Under $20', '$20 - $40', 'Over $40'];
+type FilterOption = 'All' | 'Under $20' | '$20 - $40' | 'Over $40';
 
-export default function FilterDropdown() {
-  const [selected, setSelected] = useState('All');
+const options: FilterOption[] = ['All', 'Under $20', '$20 - $40', 'Over $40'];
+
+const FilterDropdown = (): JSX.Element => {
+  const [selected, setSelected] = useState<FilterOption>('All');
   const [open, setOpen] = useState(false);
 
   return (
@@ -18,14 +22,15 @@ export default function FilterDropdown() {
       </button>
 
       {open && (
-        <div className="absolute z-10 mt-2 w-48 rounded-lg shadow-lg text-sm"
-             style={{
-               backgroundColor: 'var(--color-bg)',
-               color: 'var(--color-text)',
-               border: '1px solid var(--color-border)',
-             }}
+        <div
+          className="absolute z-10 mt-2 w-48 rounded-lg shadow-lg text-sm"
+          style={{
+            backgroundColor: 'var(--color-bg)',
+            color: 'var(--color-text)',
+            border: '1px solid var(--color-border)',
+          }}
         >
-          {options.map((option) => (
+          {options.map((option: FilterOption) => (
             <div
               key={option}
               onClick={() => {
@@ -45,4 +50,6 @@ export default function FilterDropdown() {
       )}
     </div>
   );
-}
+};
+
+export default FilterDropdown;

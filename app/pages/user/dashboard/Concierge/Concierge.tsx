@@ -1,6 +1,8 @@
 // import libraries
+import { useTranslation } from "react-i18next";
+import type { JSX } from 'react';
 import { motion } from 'framer-motion';
-// import components
+//import components
 import MetricsCard from "~/components/metricsCards/MetricsCards";
 import StatsPieChart from "~/components/pieChart/PieChart";
 import StatsLineChart from "~/components/lineChart/LineChart";
@@ -19,25 +21,27 @@ const pieData = [
   { name: "WhatsApp", value: 34, color: "#25D366" },
 ];
 
-const stats = [
-  {
-    id: 1,
-    title: "1,024 support sessions",
-    description: "just this month with the concierge",
-  },
-  {
-    id: 2,
-    title: ">3,000 questions",
-    description: "answered from customers",
-  },
-  {
-    id: 3,
-    title: "5,000 credits",
-    description: "Average monthly usage",
-  },
-];
+const ConciergeDashboard = (): JSX.Element => {
+  const { t } = useTranslation();
 
-export default function ConciergeDashboard() {
+  const stats = [
+    {
+      id: 1,
+      title: t("conciergeStats.stats.sessions.title"),
+      description: t("conciergeStats.stats.sessions.description"),
+    },
+    {
+      id: 2,
+      title: t("conciergeStats.stats.questions.title"),
+      description: t("conciergeStats.stats.questions.description"),
+    },
+    {
+      id: 3,
+      title: t("conciergeStats.stats.credits.title"),
+      description: t("conciergeStats.stats.credits.description"),
+    },
+  ];
+
   return (
     <div className="min-h-screen bg-[var(--color-bg)] text-[var(--color-text)] px-6 py-10">
       <div className="max-w-7xl mx-auto">
@@ -47,15 +51,15 @@ export default function ConciergeDashboard() {
           transition={{ duration: 1, ease: 'easeOut' }}
         >
           <h1 className="text-3xl font-bold text-[var(--color-text)] mb-2">
-            Concierge
+            {t("conciergeStats.title")}
           </h1>
           <p className="text-[var(--color-muted)] mb-12">
-            Insights and metrics from support sessions and usage data.
+            {t("conciergeStats.description")}
           </p>
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-          {stats.map(product => (
+          {stats.map((product) => (
             <div key={product.id} className="relative">
               <MetricsCard
                 title={product.title}
@@ -68,17 +72,17 @@ export default function ConciergeDashboard() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div className="rounded-xl p-6 bg-[var(--color-bg-alt)]">
             <h3 className="text-lg font-semibold mb-2">
-              Usage by Day of the Week
+              {t("conciergeStats.usage.title")}
             </h3>
             <StatsLineChart lineData={lineData} />
           </div>
 
           <div className="rounded-xl p-6 bg-[var(--color-bg-alt)]">
             <h3 className="text-lg font-semibold mb-2">
-              Support Channels
+              {t("conciergeStats.channels.title")}
             </h3>
             <p className="text-sm mb-4 text-[var(--color-muted)]">
-              Most Used
+              {t("conciergeStats.channels.mostUsed")}
             </p>
             <StatsPieChart pieData={pieData} />
           </div>
@@ -86,4 +90,6 @@ export default function ConciergeDashboard() {
       </div>
     </div>
   );
-}
+};
+
+export default ConciergeDashboard;
