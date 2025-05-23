@@ -2,21 +2,29 @@ import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 
 type ThemeState = {
-  mode: "light" | "dark"
+    mode: "light" | "dark"
 }
 
-const initialState: ThemeState = {
-  mode: "light",
+const getInitialTheme = (): ThemeState => {
+    if (typeof window !== 'undefined') {
+        const storedMode = localStorage.getItem('camaly.theme.mode')
+        if (storedMode === 'dark' || storedMode === 'light') {
+            return { mode: storedMode }
+        }
+    }
+    return { mode: 'light' }
 }
 
 const themeSlice = createSlice({
-  name: 'theme',
-  initialState,
-  reducers: {
-    toggleTheme: (state) => {
-      state.mode = state.mode === 'light' ? 'dark' : 'light'
-    }
-  },
+    name: 'theme',
+    initialState: getInitialTheme(),
+    reducers: {
+        toggleTheme: (state) => {
+            state.mode = state.mode === 'light' ? 'dark' : 'light';
+            localStorage.setItem('camaly.theme.mode', state.mode);
+            console.log( "Mudou" );
+        }
+    },
 })
 
 export const { toggleTheme } = themeSlice.actions

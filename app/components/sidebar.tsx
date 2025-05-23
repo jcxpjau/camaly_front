@@ -7,6 +7,7 @@ import {
     Sun,
     Moon,
     X,
+    CircleUserRound,
 } from "lucide-react";
 import type { RootState } from "../store";
 import { useTheme } from "../context/theme/theme.hooks";
@@ -38,27 +39,26 @@ export default function Sidebar() {
 
     return (
         <aside
-            className={`
-      /* Mobile (<=768px) */
-      ${isMobile ? `
-        fixed z-50 top-0 left-0 h-full w-64
-        transition-transform duration-300 ease-in-out
-        ${isOpen ? "translate-x-0 opacity-100" : "-translate-x-full opacity-0"}
-        p-4
-      ` : `
-      
-      /* Desktop (>768px) */
-        relative
-        transition-all duration-300 ease-in-out
-        ${isCollapsed ? "w-10 p-1.5" : "w-64 p-4"}
-      `}
-
-      /* Estilos comuns */
-      bg-[var(--color-bg)] text-[var(--color-text)]
-      border-r border-[var(--color-border)]
-      flex flex-col justify-between
-    `}
-            style={{ pointerEvents: isMobile && !isOpen ? "none" : "auto" }}
+        className={`
+            /* Mobile (<=768px) */
+            ${isMobile ? `
+            fixed z-50 top-0 left-0 h-full w-64
+            transition-transform duration-500 ease-out
+            ${isOpen ? "translate-x-0" : "-translate-x-full"}
+            opacity-100
+            p-4
+            ` : `
+            /* Desktop (>768px) */
+            relative
+            transition-all duration-500 ease-in-out
+            ${isCollapsed ? "w-10 p-1.5" : "w-64 p-4"}
+            `}
+            /* Estilos comuns */
+            bg-[var(--color-bg)] text-[var(--color-text)]
+            border-r border-[var(--color-border)]
+            flex flex-col justify-between
+        `}
+        style={{ willChange: "transform" }}//Adicionado para resolver bug
         >
             <div>
                 {isMobile && (
@@ -139,6 +139,17 @@ export default function Sidebar() {
                                 <span>{t('stats')}</span>
                             </a>
                         </nav>
+                        <section className="mt-8">
+                          <h2 className="text-xs font-semibold mb-3 text-[var(--color-muted)] tracking-wide">
+                              YOUR ACCOUNT
+                          </h2>
+                          <nav className="flex flex-col gap-3 font-normal text-sm">
+                              <a href="#" className="flex items-center gap-2 hover:text-[var(--color-accent)] transition">
+                                  <CircleUserRound className="w-6 h-6" />
+                                  <span>Account</span>
+                              </a>
+                          </nav>
+                      </section>
                     </section>
                 )}
             </div>

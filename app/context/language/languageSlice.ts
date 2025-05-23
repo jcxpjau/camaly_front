@@ -6,17 +6,25 @@ type LanguageState = {
   language: string | null
 }
 
-const initialState: LanguageState = {
-  language: "en" ,
+
+const getInitialLanguage = (): LanguageState => {
+  if (typeof window !== 'undefined') {
+    const storedMode = localStorage.getItem('camaly.language')
+    if (storedMode === 'pt' || storedMode === 'en') {
+      return { language: storedMode }
+    }
+  }
+  return { language: 'en' }
 }
 
 const languageSlice = createSlice({
   name: 'language',
-  initialState,
+  initialState: getInitialLanguage(),
   reducers: {
     changeLanguage: (state, action: PayloadAction<string>) => {
       state.language = action.payload;
       i18n.changeLanguage(action.payload);
+      localStorage.setItem( 'camaly.language' , state.language );
     }
   },
 })
