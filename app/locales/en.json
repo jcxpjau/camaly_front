@@ -11,5 +11,89 @@
   "language": {
     "en": "English",
     "pt": "Portuguese"
+  },
+  "newagents": {
+    "customer-support-title": "Customer Support",
+    "customer-support-description": "Customize the agent to meet all your customers' needs.",
+    "automated-posts-title": "Automated Posts",
+    "automated-posts-description": "Schedule posts and generate captions using our specialized agent.",
+    "reminders-title": "Reminders",
+    "reminders-description": "Avoid no-shows with this reminder and confirmation email automator."
+  },
+  "marketplace": {
+    "title": "Workflow Marketplace",
+    "description": "Boost your productivity by adding automations to your business.",
+    "search-placeholder": "Search workflows...",
+    "lead-qualification": {
+      "title": "Lead Qualification",
+      "description": "Automatically qualify leads using AI chat and score based on responses."
+    },
+    "appointment-reminders": {
+      "title": "Appointment Reminders",
+      "description": "Send email and SMS reminders for booked appointments to reduce no-shows."
+    },
+    "social-post-scheduler": {
+      "title": "Social Post Scheduler",
+      "description": "Generate and schedule content for Instagram and LinkedIn automatically."
+    },
+    "feedback-collector": {
+      "title": "Feedback Collector",
+      "description": "Automate follow-up messages asking for reviews after a service."
+    },
+    "custom-workflow-builder": {
+      "title": "Custom Workflow Builder",
+      "description": "Build your own automation flow using modular blocks and triggers."
+    },
+    "weekly-reports-generator": {
+      "title": "Weekly Reports Generator",
+      "description": "Send automated performance summaries to your email every week."
+    },
+    "client-onboarding-flow": {
+      "title": "Client Onboarding Flow",
+      "description": "Welcome and guide new clients with step-by-step automations."
+    },
+    "birthday-greetings-sender": {
+      "title": "Birthday Greetings Sender",
+      "description": "Delight your clients with automated birthday wishes."
+    }
+  },
+  "conciergeStats": {
+    "title": "Concierge",
+    "description": "Insights and metrics from support sessions and usage data.",
+    "stats": {
+      "sessions": {
+        "title": "1,024 support sessions",
+        "description": "just this month with Concierge"
+      },
+      "questions": {
+        "title": ">3,000 questions answered",
+        "description": "from customers"
+      },
+      "credits": {
+        "title": "5,000 credits",
+        "description": "Average monthly usage"
+      }
+    },
+    "usage": {
+      "title": "Usage by Day of the Week"
+    },
+    "channels": {
+      "title": "Support Channels",
+      "mostUsed": "Most Used"
+    }
+  },
+  "home": {
+    "greeting": "Welcome back, {{name}}!",
+    "subtitle": "Check out your purchased workflows",
+    "products": {
+      "contentImprovement": {
+        "title": "AI Content Improvement",
+        "description": "Increase the quality of your social media posts with this personalized agent"
+      },
+      "businessAnalysis": {
+        "title": "Scheduled business analysis",
+        "description": "Schedule automated data analysis for your business and receive complete reports."
+      }
+    }
   }
 }
