@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import {
     CirclePlus,
     MessageCircleMore,
@@ -28,6 +28,16 @@ export default function Sidebar() {
 
     const isCollapsed = !isMobile && !isOpen;
 
+    const hasRun = useRef(false);
+
+    useEffect(() => {
+        if (hasRun.current) return;
+        hasRun.current = true;
+
+        if (isMobile && isOpen) {
+            toggleSidebar();
+        }
+    }, [isMobile]);
 
     return (
         <aside
