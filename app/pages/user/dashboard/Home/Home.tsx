@@ -31,7 +31,7 @@ const Home = (): JSX.Element => {
   ];
 
   return (
-    <div className="min-h-screen bg-[var(--color-bg)] text-[var(--color-text)] px-6 py-10">
+    <div className="min-h-screen bg-[var(--color-bg)] text-[var(--color-text)] px-6 py-10 mb-10">
       <div className="max-w-7xl mx-auto">
         <motion.div
           className="mb-16 mx-1"
@@ -39,7 +39,7 @@ const Home = (): JSX.Element => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
         >
-          <h1 className="accent text-3xl font-bold bg-gradient-to-r text-transparent bg-clip-text mb-4 drop-shadow-lg">
+          <h1 className="accent text-3xl bg-gradient-to-r text-transparent bg-clip-text mb-4 drop-shadow-lg">
             {t("home.greeting", { name: "Nanni" })}
           </h1>
           <p className="text-lg md:text-xl text-[color:var(--color-text)] font-light max-w-2xl leading-relaxed animate-fade-in">

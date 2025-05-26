@@ -45,7 +45,7 @@ const NewAgents = (): JSX.Element => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
         >
-          <h1 className="text-3xl font-bold text-[var(--color-text)] mb-2">
+          <h1 className="text-3xl text-[var(--color-text)] mb-2">
             {t("agent")}
           </h1>
 

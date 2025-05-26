@@ -73,14 +73,14 @@ const Marketplace = (): JSX.Element => {
   }, [searchTerm, workflows]);
 
   return (
-    <div className="min-h-screen bg-[var(--color-bg)] text-[var(--color-text)] px-6 py-10">
+    <div className="min-h-screen bg-[var(--color-bg)] text-[var(--color-text)] px-6 py-10 mb-10">
       <div className="max-w-7xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, ease: 'easeInOut' }}
         >
-          <h1 className="text-3xl font-bold text-[var(--color-text)] mb-2">
+          <h1 className="text-3xl text-[var(--color-text)] mb-2">
             {t('marketplace.title')}
           </h1>
         </motion.div>

@@ -35,11 +35,11 @@ const FilterDropdown = (): JSX.Element => {
               key={option}
               onClick={() => {
                 setSelected(option);
-                setOpen(false);
               }}
               style={{
-                backgroundColor: selected === option ? 'var(--color-bg-alt)' : 'transparent',
+                backgroundColor: selected === option ? '#bcacfc' : 'transparent',
                 fontWeight: selected === option ? 600 : 400,
+                color: selected == option? 'black':'var(--color-text)'
               }}
               className="cursor-pointer px-4 py-2 hover:bg-[var(--color-bg-alt)] transition"
             >
