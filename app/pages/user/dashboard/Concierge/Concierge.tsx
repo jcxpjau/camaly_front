@@ -50,7 +50,7 @@ const ConciergeDashboard = (): JSX.Element => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, ease: 'easeOut' }}
         >
-          <h1 className="text-3xl font-bold text-[var(--color-text)] mb-2">
+          <h1 className="text-3xl text-[var(--color-text)] mb-2">
             {t("conciergeStats.title")}
           </h1>
           <p className="text-[var(--color-muted)] mb-12">
