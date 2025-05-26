@@ -15,6 +15,7 @@ import { useEffect, useLayoutEffect } from "react";
 import Header from "./components/header";
 import Sidebar from "./components/sidebar";
 import { useTheme } from "./context/theme/theme.hooks";
+import { useAuth } from "./context/auth/auth.hooks";
 
 export const links: Route.LinksFunction = () => [
     { rel: "preconnect", href: "https://fonts.googleapis.com" },

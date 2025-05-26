@@ -19,8 +19,10 @@ import { useSideBar } from "~/context/theme/sidebar.hooks";
 import useIsMobile from "~/hooks/useIsMobile";
 import { useTranslation } from "react-i18next";
 import { useCustomNavigate } from "~/hooks/useCustomNavigate";
+import { useAuth } from "~/context/auth/auth.hooks";
 
 export default function Sidebar() {
+    const {user} = useAuth();
     const { mode, toggleTheme } = useTheme();
     const { language, changeLanguage } = useLanguage();
     const isMobile = useIsMobile();
@@ -48,6 +50,10 @@ export default function Sidebar() {
             setShowContent(false);
         }
     }, [isCollapsed]);
+
+    if( !user ) {
+        return;
+    }
 
 
     return (
@@ -166,18 +172,17 @@ export default function Sidebar() {
                 {showContent && (
                     <>
                         <nav className="flex flex-col gap-3 mb-8 font-normal text-sm">
-
-                            <a href="#" onClick={(e) => navigate(e, "/user/concierge")} className="flex items-center gap-2 hover:text-[var(--color-accent)] transition">
-                                <ChartPie className="w-6 h-6" />
-                                <span>{t('stats')}</span>
-                            </a>
                             <a href="#" onClick={(e) => navigate(e, "/user/marketplace")} className="flex items-center gap-2 hover:text-[var(--color-accent)] transition">
                                 <ShoppingBag className="w-6 h-6" />
                                 <span>{t('Marketplace')}</span>
                             </a>
+                            <a href="#" onClick={(e) => navigate(e, "/user/concierge")} className="flex items-center gap-2 hover:text-[var(--color-accent)] transition">
+                                <ChartPie className="w-6 h-6" />
+                                <span>{t('stats')}</span>
+                            </a>
                             {isMobile &&
                                 <a href="#" onClick={(e) => navigate(e, "/user/marketplace")} className="flex items-center gap-2 hover:text-[var(--color-accent)] transition">
-                                    <PersonStandingIcon className="w-6 h-6" />
+                                    <CircleUserRound className="w-6 h-6" />
                                     <span>{t('Profile')}</span>
                                 </a>
                             }

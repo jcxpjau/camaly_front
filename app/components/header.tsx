@@ -16,15 +16,18 @@ import Logo from "../assets/imgs/Logo_Camaly.png";
 import LogoAlt from "../assets/imgs/Logo_Camaly(1).png";
 import { useSideBar } from "~/context/theme/sidebar.hooks";
 import { useNavigate } from "react-router";
+import { useCustomNavigate } from "~/hooks/useCustomNavigate";
+import { useAuth } from "~/context/auth/auth.hooks";
 
 export default function Header() {
+    const {user} = useAuth();
     const { isOpen, toggleSidebar } = useSideBar();
     const [showSearchMobile, setShowSearchMobile] = useState(false);
     const [showProfileMenu, setShowProfileMenu] = useState(false);
 
     const searchRef = useRef<HTMLDivElement>(null);
     const profileRef = useRef<HTMLDivElement>(null);
-    const navigate = useNavigate();
+    const navigate = useCustomNavigate();
 
     useEffect(() => {
         function handleClickOutside(event: MouseEvent) {
@@ -46,6 +49,10 @@ export default function Header() {
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
 
+    if( !user ) {
+        return;
+    }
+
     return (
         <header className="flex items-center justify-between px-4 sm:px-6 md:px-10 py-3 bg-[var(--color-bg)] text-[var(--color-text)] border-b border-[var(--color-border)] shadow w-full relative">
             <div className="flex items-center gap-2">
@@ -54,7 +61,7 @@ export default function Header() {
                     alt="Camaly"
                     className="hidden sm:block h-6 w-auto sm:h-7 md:h-8 max-w-[120px]"
                     style={{ cursor: "pointer" }}
-                    onClick={() => navigate( "/user/home" )}
+                    onClick={(e) => navigate( e , "/user/home" )}
                 />
                 <button
                     onClick={toggleSidebar}
@@ -76,7 +83,7 @@ export default function Header() {
 
             {!showSearchMobile && (
                 <div className="absolute left-1/2 -translate-x-1/2 sm:hidden">
-                    <img src={LogoAlt} alt="Camaly" className="h-6 w-auto" />
+                    <img src={LogoAlt} alt="Camaly" className="h-6 w-auto"  style={{ cursor: "pointer" }} onClick={(e) => navigate( e , '/user/home' )}/>
                 </div>
             )}
 
