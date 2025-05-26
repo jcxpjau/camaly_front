@@ -9,6 +9,7 @@ import {
     X,
     ShoppingBag,
     CircleUserRound,
+    PersonStandingIcon,
     Settings
 } from "lucide-react";
 import type { RootState } from "../store";
@@ -69,7 +70,7 @@ export default function Sidebar() {
     `}
             style={{ willChange: "transform" }}
         >
-            <div className="flex flex-col h-50">
+            <div className="flex flex-col">
                 {isMobile && (
                     <button className="ml-auto mb-4" onClick={toggleSidebar}>
                         <X className="w-6 h-6 text-[var(--color-text)]" />
@@ -106,8 +107,6 @@ export default function Sidebar() {
                         </a>
                     </nav>
                 </section>
-
-                {/* Ícones colapsados, se quiser manter */}
                 {isCollapsed && (
                     <nav className="flex flex-col h-50 gap-5">
                         <a
@@ -138,7 +137,7 @@ export default function Sidebar() {
                     </nav>
                 )}
             </div>
-            <div className="flex flex-col h-50">
+            <div className="flex flex-col">
                 {isCollapsed && (
                     <nav className="flex flex-col justify-end h-50 gap-5">
                         <a
@@ -167,6 +166,7 @@ export default function Sidebar() {
                 {showContent && (
                     <>
                         <nav className="flex flex-col gap-3 mb-8 font-normal text-sm">
+
                             <a href="#" onClick={(e) => navigate(e, "/user/concierge")} className="flex items-center gap-2 hover:text-[var(--color-accent)] transition">
                                 <ChartPie className="w-6 h-6" />
                                 <span>{t('stats')}</span>
@@ -175,6 +175,12 @@ export default function Sidebar() {
                                 <ShoppingBag className="w-6 h-6" />
                                 <span>{t('Marketplace')}</span>
                             </a>
+                            {isMobile &&
+                                <a href="#" onClick={(e) => navigate(e, "/user/marketplace")} className="flex items-center gap-2 hover:text-[var(--color-accent)] transition">
+                                    <PersonStandingIcon className="w-6 h-6" />
+                                    <span>{t('Profile')}</span>
+                                </a>
+                            }
                         </nav>
                         <div className="flex items-center justify-center mb-4 gap-4">
                             <div className="flex items-center gap-2">
