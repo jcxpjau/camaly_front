@@ -28,8 +28,7 @@ const Home = (): JSX.Element => {
     const fetchProducts = async () => {
       try {
         setLoading(true);
-        const res = await fetch(
-          "https://new.blumerland.com.br/camaly/purchases/user/682e275f1d6355d68ebff580",
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/purchases/user/682e275f1d6355d68ebff580`,
           {
             method: "GET",
             headers: {

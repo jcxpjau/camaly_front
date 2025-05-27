@@ -44,7 +44,7 @@ const Marketplace = (): JSX.Element => {
       try {
         setLoading(true);
         const res = await fetch(
-          "https://new.blumerland.com.br/camaly/products",
+          `${import.meta.env.VITE_API_URL}/products`,
           {
             method: "GET",
           }
