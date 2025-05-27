@@ -1,4 +1,3 @@
-// inputNotify.tsx
 import type { InputStatus } from "./inputTypes";
 
 interface InputNotifyProps {
@@ -8,7 +7,7 @@ interface InputNotifyProps {
 
 export function InputNotify({ message, status }: InputNotifyProps) {
   const textColor = {
-    error: "text-red-500",
+    error: "text-red-300",
     success: "text-green-500",
     warning: "text-yellow-500",
     info: "text-blue-500",

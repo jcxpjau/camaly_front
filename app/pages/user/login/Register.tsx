@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { FaGoogle, FaApple } from 'react-icons/fa';
 import { Mail, KeyRound, User } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -47,7 +47,6 @@ export default function Register() {
       setConfirmPasswordError('');
     }
 
-
     fetch("https://new.blumerland.com.br/camaly/users", {
       method: "POST",
       headers: {
@@ -60,128 +59,204 @@ export default function Register() {
         console.log(json);
       })
       .catch((erro) => {
+        console.error(erro);
       });
   }
 
-  return (
-    <div className="min-h-screen flex items-center justify-center px-4 bg-[var(--color-bg)] text-[var(--color-text)] login-bg relative">
-      <motion.div
-        className="absolute top-6 left-10"
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        <img
-          src={Logo}
-          alt="Camaly"
-          className="h-10 sm:h-7 md:h-10 w-auto cursor-pointer"
-          onClick={() => window.location.href = "/user/home"}
-        />
-      </motion.div>
-      <motion.div
-        className="w-full max-w-md mx-auto px-6 py-10 rounded-xl shadow-lg"
-        style={{
-          backgroundColor: 'var(--color-card-bg)',
-          color: 'var(--color-card-text)'
-        }}
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-      >
-        <div className="mb-8 text-center">
-          <h2 className="text-3xl font-semibold mb-1">Create your account</h2>
-          <p className="text-sm" style={{ color: 'var(--color-card-subtext)' }}>
-            Join Camaly to get started
-          </p>
-        </div>
-        <form onSubmit={RegisterAuth} className="space-y-4">
-          <Input.Root status={nameError ? 'error' : undefined} message={nameError}>
-            <Input.Icon icon={User} status={nameError ? 'error' : undefined} />
-            <Input.Content
-              placeholder="Name..."
-              type="text"
-              value={name}
-              onChange={setName}
-              status={nameError ? 'error' : undefined}
-            />
-          </Input.Root>
-          <Input.Root status={emailError ? 'error' : undefined} message={emailError}>
-            <Input.Icon icon={Mail} status={emailError ? 'error' : undefined} />
-            <Input.Content
-              placeholder="Email..."
-              type="email"
-              value={email}
-              onChange={setEmail}
-              status={emailError ? 'error' : undefined}
-            />
-          </Input.Root>
-          <Input.Root status={passwordError ? 'error' : undefined} message={passwordError}>
-            <Input.Icon icon={KeyRound} status={passwordError ? 'error' : undefined} />
-            <Input.Content
-              placeholder="Password..."
-              type="password"
-              value={password}
-              onChange={setPassword}
-              status={passwordError ? 'error' : undefined}
-            />
-          </Input.Root>
+  // Estado com posição do mouse na viewport
+  const [mousePos, setMousePos] = useState<{ x: number; y: number } | null>(null);
+  const boxRef = useRef<HTMLDivElement>(null);
 
-          <Input.Root status={confirmPasswordError ? 'error' : undefined} message={confirmPasswordError}>
-            <Input.Icon icon={KeyRound} status={confirmPasswordError ? 'error' : undefined} />
-            <Input.Content
-              placeholder="Confirm Password..."
-              type="password"
-              value={confirmPassword}
-              onChange={setConfirmPassword}
-              status={confirmPasswordError ? 'error' : undefined}
-            />
-          </Input.Root>
-          <button
-            type="submit"
-            className="w-full bg-gradient-to-r from-[#a4b7f4] to-[#bcacfc] text-white rounded-md py-3 font-semibold shadow-md hover:opacity-90 transition"
-          >
-            Create Account
-          </button>
-        </form>
-        <div className="flex items-center my-6">
-          <hr className="flex-grow border-[var(--color-divider)]" />
-          <span className="px-3 text-sm" style={{ color: 'var(--color-card-text)' }}>OR</span>
-          <hr className="flex-grow border-[var(--color-divider)]" />
-        </div>
-        <div className="space-y-3">
-          <button
-            className="w-full flex items-center justify-center gap-3 rounded-md px-4 py-2 font-medium transition"
-            style={{
-              backgroundColor: 'var(--color-button-bg)',
-              color: 'var(--color-card-text)'
-            }}
-            onMouseOver={(e) => e.currentTarget.style.backgroundColor = 'var(--color-button-hover)'}
-            onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'var(--color-button-bg)'}
-          >
-            <FaGoogle className="w-5 h-5" /> Sign up with Google
-          </button>
-          <button
-            className="w-full flex items-center justify-center gap-3 rounded-md px-4 py-2 font-medium transition"
-            style={{
-              backgroundColor: 'var(--color-button-bg)',
-              color: 'var(--color-card-text)'
-            }}
-            onMouseOver={(e) => e.currentTarget.style.backgroundColor = 'var(--color-button-hover)'}
-            onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'var(--color-button-bg)'}
-          >
-            <FaApple className="w-5 h-5" /> Sign up with Apple
-          </button>
-        </div>
-        <p className="text-sm text-center mt-6" style={{ color: 'var(--color-card-subtext)' }}>
-          Already have an account?
+  // Atualiza posição do mouse
+  function handleMouseMove(e: React.MouseEvent<HTMLDivElement>) {
+    setMousePos({ x: e.clientX, y: e.clientY });
+  }
+
+  // Limpa posição quando mouse sai da área (opcional)
+  function handleMouseLeave() {
+    setMousePos(null);
+  }
+
+  // Calcula posição do mouse relativa à box
+  const boxRelativePos = mousePos && boxRef.current
+    ? (() => {
+        const rect = boxRef.current.getBoundingClientRect();
+        return { x: mousePos.x - rect.left, y: mousePos.y - rect.top };
+      })()
+    : null;
+
+  return (
+    <div
+      className="min-h-screen flex items-center justify-center px-4 bg-[var(--color-bg)] text-[var(--color-text)] login-bg relative overflow-hidden"
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+    >
+      {/* Luz difusa no background */}
+      <span
+        className="pointer-events-none absolute top-0 left-0 w-full h-full"
+        style={{
+          opacity: mousePos ? 1 : 0,
+          transition: 'opacity 0.3s ease',
+          background: mousePos
+            ? `radial-gradient(300px circle at ${mousePos.x}px ${mousePos.y}px, rgba(188, 172, 252, 0.25), transparent 300px)`
+            : 'none',
+          filter: 'blur(150px)',
+          zIndex: 0,
+          position: 'absolute',
+          pointerEvents: 'none',
+        }}
+      />
+
+      <div className="flex flex-col items-center gap-8 sm:gap-10 md:gap-20 w-full max-w-md" style={{ position: 'relative', zIndex: 10 }}>
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <img
+            src={Logo}
+            alt="Camaly"
+            className="h-14 sm:h-12 md:h-16 w-auto"
+          />
+        </motion.div>
+
+        <motion.div
+          ref={boxRef}
+          className="relative w-full px-6 py-10 rounded-xl shadow-lg overflow-hidden"
+          style={{
+            backgroundColor: 'var(--color-card-bg)',
+            color: 'var(--color-card-text)',
+            zIndex: 20,
+          }}
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          {/* Luz intensa dentro da box */}
           <span
-            onClick={(e) => navigate(e, "/")}
-            className="text-blue-400 ml-1 underline hover:opacity-80 cursor-pointer"
-          >
-            Sign In
-          </span>
-        </p>
-      </motion.div>
+            className="pointer-events-none absolute rounded-xl"
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              opacity: boxRelativePos ? 1 : 0,
+              transition: 'opacity 0.3s ease',
+              background: boxRelativePos
+                ? `radial-gradient(120px circle at ${boxRelativePos.x}px ${boxRelativePos.y}px, rgba(188,172,252,0.9), transparent 120px)`
+                : 'none',
+              filter: 'blur(70px)',
+              zIndex: 0,
+            }}
+          />
+
+          {/* Conteúdo da caixa */}
+          <div style={{ position: 'relative', zIndex: 1 }}>
+            <div className="mb-8 text-center">
+              <h2 className="text-3xl font-semibold mb-1">Create your account</h2>
+              <p className="text-sm" style={{ color: 'var(--color-card-subtext)' }}>
+                Join Camaly to get started
+              </p>
+            </div>
+
+            <form onSubmit={RegisterAuth} className="space-y-4">
+              <Input.Root status={nameError ? 'error' : undefined} message={nameError}>
+                <Input.Icon icon={User} status={nameError ? 'error' : undefined} />
+                <Input.Content
+                  placeholder="Name..."
+                  type="text"
+                  value={name}
+                  onChange={setName}
+                  status={nameError ? 'error' : undefined}
+                />
+              </Input.Root>
+
+              <Input.Root status={emailError ? 'error' : undefined} message={emailError}>
+                <Input.Icon icon={Mail} status={emailError ? 'error' : undefined} />
+                <Input.Content
+                  placeholder="Email..."
+                  type="email"
+                  value={email}
+                  onChange={setEmail}
+                  status={emailError ? 'error' : undefined}
+                />
+              </Input.Root>
+
+              <Input.Root status={passwordError ? 'error' : undefined} message={passwordError}>
+                <Input.Icon icon={KeyRound} status={passwordError ? 'error' : undefined} />
+                <Input.Content
+                  placeholder="Password..."
+                  type="password"
+                  value={password}
+                  onChange={setPassword}
+                  status={passwordError ? 'error' : undefined}
+                />
+              </Input.Root>
+
+              <Input.Root status={confirmPasswordError ? 'error' : undefined} message={confirmPasswordError}>
+                <Input.Icon icon={KeyRound} status={confirmPasswordError ? 'error' : undefined} />
+                <Input.Content
+                  placeholder="Confirm Password..."
+                  type="password"
+                  value={confirmPassword}
+                  onChange={setConfirmPassword}
+                  status={confirmPasswordError ? 'error' : undefined}
+                />
+              </Input.Root>
+
+              <button
+                type="submit"
+                className="w-full bg-gradient-to-r from-[#a4b7f4] to-[#bcacfc] text-white rounded-md py-3 font-semibold shadow-md hover:opacity-90 transition"
+              >
+                Create Account
+              </button>
+            </form>
+
+            <div className="flex items-center my-6">
+              <hr className="flex-grow border-[var(--color-divider)]" />
+              <span className="px-3 text-sm" style={{ color: 'var(--color-card-text)' }}>OR</span>
+              <hr className="flex-grow border-[var(--color-divider)]" />
+            </div>
+
+            <div className="space-y-3">
+              <button
+                className="w-full flex items-center justify-center gap-3 rounded-md px-4 py-2 font-medium transition"
+                style={{
+                  backgroundColor: 'var(--color-button-bg)',
+                  color: 'var(--color-card-text)',
+                }}
+                onMouseOver={(e) => (e.currentTarget.style.backgroundColor = 'var(--color-button-hover)')}
+                onMouseOut={(e) => (e.currentTarget.style.backgroundColor = 'var(--color-button-bg)')}
+              >
+                <FaGoogle className="w-5 h-5" /> Sign up with Google
+              </button>
+
+              <button
+                className="w-full flex items-center justify-center gap-3 rounded-md px-4 py-2 font-medium transition"
+                style={{
+                  backgroundColor: 'var(--color-button-bg)',
+                  color: 'var(--color-card-text)',
+                }}
+                onMouseOver={(e) => (e.currentTarget.style.backgroundColor = 'var(--color-button-hover)')}
+                onMouseOut={(e) => (e.currentTarget.style.backgroundColor = 'var(--color-button-bg)')}
+              >
+                <FaApple className="w-5 h-5" /> Sign up with Apple
+              </button>
+            </div>
+
+            <p className="text-sm text-center mt-6" style={{ color: 'var(--color-card-subtext)' }}>
+              Already have an account?
+              <span
+                onClick={(e) => navigate(e, "/user/login")}
+                className="text-blue-400 ml-1 underline hover:opacity-80 cursor-pointer"
+              >
+                Sign In
+              </span>
+            </p>
+          </div>
+        </motion.div>
+      </div>
     </div>
   );
 }
