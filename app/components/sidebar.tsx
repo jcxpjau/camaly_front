@@ -51,10 +51,6 @@ export default function Sidebar() {
         }
     }, [isCollapsed]);
 
-    if( !user ) {
-        return;
-    }
-
 
     return (
         <aside

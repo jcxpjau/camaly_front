@@ -175,7 +175,7 @@ export default function Register() {
         <p className="text-sm text-center mt-6" style={{ color: 'var(--color-card-subtext)' }}>
           Already have an account?
           <span
-            onClick={(e) => navigate(e, "/user/login")}
+            onClick={(e) => navigate(e, "/")}
             className="text-blue-400 ml-1 underline hover:opacity-80 cursor-pointer"
           >
             Sign In

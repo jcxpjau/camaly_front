@@ -20,7 +20,7 @@ import { useCustomNavigate } from "~/hooks/useCustomNavigate";
 import { useAuth } from "~/context/auth/auth.hooks";
 
 export default function Header() {
-    const {user} = useAuth();
+    const {user, logout } = useAuth();
     const { isOpen, toggleSidebar } = useSideBar();
     const [showSearchMobile, setShowSearchMobile] = useState(false);
     const [showProfileMenu, setShowProfileMenu] = useState(false);
@@ -48,10 +48,6 @@ export default function Header() {
         document.addEventListener("mousedown", handleClickOutside);
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
-
-    if( !user ) {
-        return;
-    }
 
     return (
         <header className="flex items-center justify-between px-4 sm:px-6 md:px-10 py-3 bg-[var(--color-bg)] text-[var(--color-text)] border-b border-[var(--color-border)] shadow w-full relative">
@@ -145,7 +141,7 @@ export default function Header() {
                                         </a>
                                     </li>
                                     <li>
-                                        <button className="flex items-center gap-2 w-full text-left px-4 py-2 hover:bg-[var(--color-bg)]">
+                                        <button className="flex items-center gap-2 w-full text-left px-4 py-2 hover:bg-[var(--color-bg)]" onClick={() => { logout(); navigate( null, "/" ); }}>
                                             <LogOut className="w-4 h-4" /> Logout
                                         </button>
                                     </li>
