@@ -55,7 +55,7 @@ export default function Login() {
                 return;
             }
             if (json.access_token) {
-                login(json.access_token);
+                login( json.access_token , rememberMe );
                 navigate(null, "/");
             }
         } catch (err: any) {
@@ -63,17 +63,14 @@ export default function Login() {
         }
     }
 
-    // Atualiza a posição do mouse na viewport
     function handleMouseMove(e: React.MouseEvent<HTMLDivElement>) {
         setMousePos({ x: e.clientX, y: e.clientY });
     }
 
-    // Limpa a posição quando o mouse sai da área geral (opcional)
     function handleMouseLeave() {
         setMousePos(null);
     }
 
-    // Calcula posição do mouse relativa à box (para o gradiente interno)
     const boxRelativePos = mousePos && boxRef.current
         ? (() => {
             const rect = boxRef.current.getBoundingClientRect();

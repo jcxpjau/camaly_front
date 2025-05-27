@@ -63,7 +63,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 export default function App() {
 
     const location = useLocation();
-    const publicRoutes = ["/", "/user/register"];
+    const publicRoutes = ["/", "/register"];
     const isPublicRoute = publicRoutes.includes(location.pathname);
 
     return (
