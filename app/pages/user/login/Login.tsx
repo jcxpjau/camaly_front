@@ -238,7 +238,7 @@ export default function Login() {
                         <p className="text-sm text-center mt-6" style={{ color: 'var(--color-card-subtext)' }}>
                             First time at Camaly?
                             <span
-                                onClick={(e) => navigate(e, "/user/register")}
+                                onClick={(e) => navigate(e, "/register")}
                                 className="text-blue-400 ml-1 underline hover:opacity-80 cursor-pointer"
                             >
                                 Create an account
