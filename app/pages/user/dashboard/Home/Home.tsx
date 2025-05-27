@@ -38,8 +38,12 @@ const Home = (): JSX.Element => {
             },
           }
         );
-        const data = await res.json();
-        const mappedData: Purchase[] = data.map((item: any) => ({
+        const json = await res.json();
+        if (!res.ok) {
+          console.error("Error getting purchases:", json);
+          return;
+        }
+        const mappedData: Purchase[] = json.map((item: any) => ({
           id: item.productId._id,
           name: item.productId.name,
           description: item.productId.description,
@@ -48,8 +52,8 @@ const Home = (): JSX.Element => {
         }));
         //console.log(mappedData)
         setPurchases(mappedData);
-      } catch (error) {
-        console.error("Erro ao buscar produtos:", error);
+      } catch (err: any) {
+        console.log(err);
       } finally {
         setLoading(false);
       }
