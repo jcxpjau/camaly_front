@@ -19,7 +19,7 @@ export function InputRoot({ children, status, message }: InputFieldRootProps) {
 
   return (
     <div className="flex flex-col gap-1 w-full">
-      <div className={`flex items-center gap-3 bg-[var(--color-bg-input)] rounded-md px-4 py-2 border ${borderColor[status ?? "undefined"]}`}>
+      <div className={`flex items-center gap-3 bg-[var(--color-bg-input)] rounded-md px-4 py-3 border ${borderColor[status ?? "undefined"]}`}>
         {children}
       </div>
 
