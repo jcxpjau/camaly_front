@@ -1,7 +1,7 @@
-import { InputContent } from "./inputContent";
-import { InputIcon } from "./inputIcon";
-import { InputNotify } from "./inputNotify";
-import { InputRoot } from "./inputRoot";
+import { InputContent } from "./InputContent";
+import { InputIcon } from "./InputIcon";
+import { InputNotify } from "./InputNotify";
+import { InputRoot } from "./InputRoot";
 
 
 export const Input = {
