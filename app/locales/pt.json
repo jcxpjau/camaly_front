@@ -4,7 +4,7 @@
   "creator": "Criador de Ads",
   "your-stats": "Suas Estatisticas",
   "agent": "Novos Agentes",
-  "stats": "Estatisticas",
+  "Reports": "Relatórios",
   "concierge": "Atendente",
   "credits": "de créditos",
   "your-agents": "Seus Agentes",
@@ -25,6 +25,31 @@
     "title": "Marketplace de Workflows",
     "description": "Aumente sua produtividade adicionando automações ao seu negócio.",
     "search-placeholder": "Buscar workflows..."
+  },
+  "reports": {
+    "title": "Relatórios",
+    "description": "Insights e métricas de sessões de suporte e dados de uso.",
+    "stats": {
+      "sessions": {
+        "title": "1.024 sessões de suporte",
+        "description": "só neste mês com a Concierge"
+      },
+      "questions": {
+        "title": ">3.000 perguntas respondidas",
+        "description": "aos clientes"
+      },
+      "credits": {
+        "title": "5.000 créditos",
+        "description": "Média de uso mensal"
+      }
+    },
+    "usage": {
+      "title": "Uso por dia da semana"
+    },
+    "agents": {
+      "title": "Agentes",
+      "mostUsed": "Mais utilizados"
+    }
   },
   "conciergeStats": {
     "title": "Concierge",

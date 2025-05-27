@@ -1,15 +1,15 @@
+import Reports from "~/pages/user/dashboard/Reports/Reports";
 import type { Route } from "../+types/root";
-import Concierge from "~/pages/user/dashboard/Concierge/Concierge";
 
 export function meta({ }: Route.MetaArgs) {
     return [
-        { title: "Camaly | Stats" },
+        { title: "Camaly | Reports" },
         { name: "description", content: "Welcome to Camaly!" },
     ];
 }
 
-  export default function DashboardStats() {
+  export default function DashboardReports() {
     return (
-        <Concierge/>
+        <Reports />
     );
 }

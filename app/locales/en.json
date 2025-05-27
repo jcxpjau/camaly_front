@@ -4,7 +4,7 @@
   "creator": "Ads Creator",
   "your-stats": "Your Stats",
   "agent": "New Agents",
-  "stats": "stats",
+  "Reports": "Reports",
   "concierge": "Creator",
   "credits": "credits",
   "your-agents": "Your Agents",
@@ -25,6 +25,31 @@
     "title": "Workflow Marketplace",
     "description": "Boost your productivity by adding automations to your business.",
     "search-placeholder": "Search workflows..."
+  },
+  "reports": {
+    "title": "Reports",
+    "description": "Insights and metrics from support sessions and usage data.",
+    "stats": {
+      "sessions": {
+        "title": "1,024 support sessions",
+        "description": "just this month with Concierge"
+      },
+      "questions": {
+        "title": ">3,000 questions answered",
+        "description": "from customers"
+      },
+      "credits": {
+        "title": "5,000 credits",
+        "description": "Average monthly usage"
+      }
+    },
+    "usage": {
+      "title": "Usage by Day of the Week"
+    },
+    "agents": {
+      "title": "Agents",
+      "mostUsed": "Most Used"
+    }
   },
   "conciergeStats": {
     "title": "Concierge",
