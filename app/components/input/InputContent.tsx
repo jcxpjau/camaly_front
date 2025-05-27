@@ -1,4 +1,3 @@
-// inputContent.tsx
 import type { InputStatus } from "./inputTypes";
 
 interface InputFieldProps {
@@ -17,7 +16,7 @@ export function InputContent({
   status,
 }: InputFieldProps) {
   const textColor = {
-    error: "text-red-400 placeholder-red-400",
+    error: "text-red-300 placeholder-red-300",
     success: "text-green-400 placeholder-green-400",
     warning: "text-yellow-400 placeholder-yellow-400",
     info: "text-blue-400 placeholder-blue-400",
