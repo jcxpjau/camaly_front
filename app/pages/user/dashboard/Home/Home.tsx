@@ -22,10 +22,12 @@ interface Purchase {
 const Home = (): JSX.Element => {
   const { t } = useTranslation();
   const [purchases, setPurchases] = useState<Purchase[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
+        setLoading(true);
         const res = await fetch(
           "https://new.blumerland.com.br/camaly/purchases/user/682e275f1d6355d68ebff580",
           {
@@ -48,10 +50,23 @@ const Home = (): JSX.Element => {
         setPurchases(mappedData);
       } catch (error) {
         console.error("Erro ao buscar produtos:", error);
+      } finally {
+        setLoading(false);
       }
     };
     fetchProducts();
   }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[var(--color-bg)] text-[var(--color-text)]">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-8 h-8 border-4 border-[var(--color-accent)] border-t-transparent rounded-full animate-spin" />
+          <p className="text-sm text-[var(--color-muted)]">{t("loading")}</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[var(--color-bg)] text-[var(--color-text)] px-6 py-10 mb-10">
@@ -69,21 +84,29 @@ const Home = (): JSX.Element => {
             {t("home.subtitle")}
           </p>
         </motion.div>
-
-        <ProductPanel itemsPerPage={3}>
-          {purchases.map((purchase) => (
-            <ProductCard.Root key={purchase.id}>
-              <ProductCard.Header icon={purchase.icon} price={`$${purchase.price.toFixed(2)}`}/>
-              <ProductCard.Title>{purchase.name}</ProductCard.Title>
-              <ProductCard.Description>
-                {purchase.description}
-              </ProductCard.Description>
-              <ProductCard.Footer>
-                <ProductCard.MoreInfoButton />
-              </ProductCard.Footer>
-            </ProductCard.Root>
-          ))}
-        </ProductPanel>
+        {purchases.length > 0 ? (
+          <ProductPanel itemsPerPage={3}>
+            {purchases.map((purchase) => (
+              <ProductCard.Root key={purchase.id}>
+                <ProductCard.Header
+                  icon={purchase.icon}
+                  price={`$${purchase.price.toFixed(2)}`}
+                />
+                <ProductCard.Title>{purchase.name}</ProductCard.Title>
+                <ProductCard.Description>
+                  {purchase.description}
+                </ProductCard.Description>
+                <ProductCard.Footer>
+                  <ProductCard.MoreInfoButton />
+                </ProductCard.Footer>
+              </ProductCard.Root>
+            ))}
+          </ProductPanel>
+        ) : (
+          <div className="h-[300px] flex items-center justify-center">
+            <p className="text-xl"> {t("home.noProducts")} </p>
+          </div>
+        )}
       </div>
     </div>
   );

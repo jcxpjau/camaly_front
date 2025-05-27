@@ -38,10 +38,12 @@ const Marketplace = (): JSX.Element => {
   const [searchTerm, setSearchTerm] = useState("");
   const [workflows, setWorkflows] = useState<Workflow[]>([]);
   const [error, setError] = useState<string | null>(null);
- 
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     const fetchWorkflows = async () => {
       try {
+        setLoading(true);
         const res = await fetch(
           "https://new.blumerland.com.br/camaly/products"
         );
@@ -49,7 +51,6 @@ const Marketplace = (): JSX.Element => {
         if (!res.ok) throw new Error(`HTTP error: ${res.status}`);
 
         const data = await res.json();
-        //console.log(data);
         const mappedData: Workflow[] = data.map((item: any) => ({
           name: item.name,
           description: item.description,
@@ -61,11 +62,13 @@ const Marketplace = (): JSX.Element => {
       } catch (err: any) {
         setError("Erro ao carregar os workflows");
         console.error(err);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchWorkflows();
-  });
+  }, []);
 
   const filteredWorkflows = useMemo(() => {
     return workflows.filter(
@@ -74,6 +77,19 @@ const Marketplace = (): JSX.Element => {
         wf.description.toLowerCase().includes(searchTerm.toLowerCase())
     );
   }, [searchTerm, workflows]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[var(--color-bg)] text-[var(--color-text)]">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-8 h-8 border-4 border-[var(--color-accent)] border-t-transparent rounded-full animate-spin" />
+          <p className="text-sm text-[var(--color-muted)]">
+            {t("loading")}
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[var(--color-bg)] text-[var(--color-text)] px-6 py-10 mb-10">
