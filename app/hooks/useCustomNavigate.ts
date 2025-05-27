@@ -7,8 +7,8 @@ export function useCustomNavigate() {
     const { isOpen, toggleSidebar } = useSideBar();
     const isMobile = useIsMobile();
 
-    return (e: React.MouseEvent, route: string) => {
-        e.preventDefault();
+    return (e: React.MouseEvent | null, route: string) => {
+        if (e) e.preventDefault();
         if (isOpen && isMobile) {
             toggleSidebar();
         }

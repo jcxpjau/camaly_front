@@ -8,7 +8,7 @@ export const useAuth = () => {
 
   return {
     ...auth,
-    login: (user: string) => dispatch(login(user)),
+    login: (user: string ) => dispatch(login(user)),
     logout: () => dispatch(logout()),
   }
 }

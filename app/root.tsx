@@ -7,14 +7,17 @@ import {
     ScrollRestoration,
 } from "react-router";
 import { Provider } from "react-redux";
+import { useLocation } from "react-router";
 import { store, type RootState } from "./store";
-
+import { useEffect, useLayoutEffect } from "react";
 import type { Route } from "./+types/root";
 import "./app.css";
-import { useEffect, useLayoutEffect } from "react";
 import Header from "./components/header";
 import Sidebar from "./components/sidebar";
 import { useTheme } from "./context/theme/theme.hooks";
+import Login from "./pages/user/login/Login";
+import Register from "./pages/user/login/Register";
+import { useAuth } from "./context/auth/auth.hooks";
 
 export const links: Route.LinksFunction = () => [
     { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -26,7 +29,7 @@ export const links: Route.LinksFunction = () => [
 ];
 
 function ThemeWrapper({ children }: { children: React.ReactNode }) {
-    const {mode} = useTheme();
+    const { mode } = useTheme();
 
     useLayoutEffect(() => {
         if (mode === "dark") {
@@ -58,14 +61,29 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
+
+    const location = useLocation();
+    const publicRoutes = ["/", "/user/register"];
+    const isPublicRoute = publicRoutes.includes(location.pathname);
+
     return (
         <Provider store={store}>
             <ThemeWrapper>
-                <Header/>
+                {store.getState().auth.isAuthenticated &&
+                    <Header />
+                }
                 <div className="flex flex-1 overflow-hidden">
-                    <Sidebar />
+                    {store.getState().auth.isAuthenticated &&
+                        <Sidebar />
+                    }
                     <main className="flex-1 overflow-auto bg-[var(--color-bg)]">
-                        <Outlet />
+                        {!store.getState().auth.isAuthenticated && location.pathname === "/register" ? (
+                            <Register />
+                        ) : !store.getState().auth.isAuthenticated ? (
+                            <Login />
+                        ) : (
+                            <Outlet />
+                        )}
                     </main>
                 </div>
             </ThemeWrapper>

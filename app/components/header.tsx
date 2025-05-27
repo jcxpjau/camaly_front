@@ -16,15 +16,18 @@ import Logo from "../assets/imgs/Logo_Camaly.png";
 import LogoAlt from "../assets/imgs/Logo_Camaly(1).png";
 import { useSideBar } from "~/context/theme/sidebar.hooks";
 import { useNavigate } from "react-router";
+import { useCustomNavigate } from "~/hooks/useCustomNavigate";
+import { useAuth } from "~/context/auth/auth.hooks";
 
 export default function Header() {
+    const {user, logout } = useAuth();
     const { isOpen, toggleSidebar } = useSideBar();
     const [showSearchMobile, setShowSearchMobile] = useState(false);
     const [showProfileMenu, setShowProfileMenu] = useState(false);
 
     const searchRef = useRef<HTMLDivElement>(null);
     const profileRef = useRef<HTMLDivElement>(null);
-    const navigate = useNavigate();
+    const navigate = useCustomNavigate();
 
     useEffect(() => {
         function handleClickOutside(event: MouseEvent) {
@@ -54,7 +57,7 @@ export default function Header() {
                     alt="Camaly"
                     className="hidden sm:block h-6 w-auto sm:h-7 md:h-8 max-w-[120px]"
                     style={{ cursor: "pointer" }}
-                    onClick={() => navigate( "/user/home" )}
+                    onClick={(e) => navigate( e , "/user/home" )}
                 />
                 <button
                     onClick={toggleSidebar}
@@ -76,7 +79,7 @@ export default function Header() {
 
             {!showSearchMobile && (
                 <div className="absolute left-1/2 -translate-x-1/2 sm:hidden">
-                    <img src={LogoAlt} alt="Camaly" className="h-6 w-auto" />
+                    <img src={LogoAlt} alt="Camaly" className="h-6 w-auto"  style={{ cursor: "pointer" }} onClick={(e) => navigate( e , '/user/home' )}/>
                 </div>
             )}
 
@@ -138,7 +141,7 @@ export default function Header() {
                                         </a>
                                     </li>
                                     <li>
-                                        <button className="flex items-center gap-2 w-full text-left px-4 py-2 hover:bg-[var(--color-bg)]">
+                                        <button className="flex items-center gap-2 w-full text-left px-4 py-2 hover:bg-[var(--color-bg)]" onClick={() => { logout(); navigate( null, "/" ); }}>
                                             <LogOut className="w-4 h-4" /> Logout
                                         </button>
                                     </li>

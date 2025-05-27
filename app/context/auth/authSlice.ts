@@ -1,29 +1,42 @@
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 
+
 type AuthState = {
-  isAuthenticated: boolean
-  user: string | null
+    isAuthenticated: boolean
+    user: string | null
 }
 
 const initialState: AuthState = {
-  isAuthenticated: false,
-  user: null,
+    isAuthenticated: false,
+    user: null,
+}
+
+const getInitialUser = (): AuthState => {
+    if (typeof window !== 'undefined') {
+        const storedUser = localStorage.getItem('camaly.user')
+        if( storedUser ) {
+            return { isAuthenticated: true , user: storedUser }
+        }
+    }
+    return { isAuthenticated: false, user : null }
 }
 
 const authSlice = createSlice({
-  name: 'auth',
-  initialState,
-  reducers: {
-    login: (state, action: PayloadAction<string>) => {
-      state.isAuthenticated = true
-      state.user = action.payload
+    name: 'auth',
+    initialState: getInitialUser(),
+    reducers: {
+        login: (state, action: PayloadAction<string>) => {
+            state.isAuthenticated = true;
+            state.user = action.payload;
+            localStorage.setItem('camaly.user', state.user);
+        },
+        logout: (state) => {
+            state.isAuthenticated = false;
+            state.user = null;
+            localStorage.removeItem( 'camaly.user' );
+        },
     },
-    logout: (state) => {
-      state.isAuthenticated = false
-      state.user = null
-    },
-  },
 })
 
 export const { login, logout } = authSlice.actions
