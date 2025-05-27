@@ -15,44 +15,46 @@ export default function Login() {
     const [passwordError, setPasswordError] = useState('');
     const navigate = useCustomNavigate();
 
-    function LoginAuth(e: React.FormEvent<HTMLFormElement>) {
+    async function LoginAuth(e: React.FormEvent<HTMLFormElement>) {
+        e.preventDefault();
         let hasError = false;
-
         if (!email.trim()) {
             setEmailError("Email is required.");
             hasError = true;
         } else {
             setEmailError('');
         }
-
         if (!password.trim()) {
             setPasswordError("Password is required.");
             hasError = true;
         } else {
             setPasswordError('');
         }
-
-        e.preventDefault();
         if (hasError) return;
-
-        fetch("https://new.blumerland.com.br/camaly/auth/login", {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                email,
-                password
-            })
-        })
-            .then((res) => res.json())
-            .then((json) => {
-                login( json.access_token );
-                navigate( null,  "/" );
-            })
-            .catch((erro) => {
-                console.error(erro);
+        
+        try {
+            const res = await fetch("https://new.blumerland.com.br/camaly/auth/login", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    email,
+                    password
+                })
             });
+            const json = await res.json();
+            if (!res.ok) {
+                console.error("Erro de login:", json);
+                return;
+            }
+            if (json.access_token) {
+                login(json.access_token);
+                navigate(null, "/");
+            }
+        } catch (err: any) {
+            console.log(err);
+        }
     }
 
     return (
