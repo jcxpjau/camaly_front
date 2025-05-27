@@ -1,19 +1,36 @@
 // import libraries
-import { useState } from 'react';
-import type { JSX } from 'react';
+import { useState, useEffect, useRef } from "react";
+import type { JSX } from "react";
 // import icons
-import { Filter } from 'lucide-react';
+import { Filter } from "lucide-react";
 
-type FilterOption = 'All' | 'Under $20' | '$20 - $40' | 'Over $40';
+type FilterOption = "All" | "Under $20" | "$20 - $40" | "Over $40";
 
-const options: FilterOption[] = ['All', 'Under $20', '$20 - $40', 'Over $40'];
+const options: FilterOption[] = ["All", "Under $20", "$20 - $40", "Over $40"];
 
 const FilterDropdown = (): JSX.Element => {
-  const [selected, setSelected] = useState<FilterOption>('All');
+  const [selected, setSelected] = useState<FilterOption>("All");
   const [open, setOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
-    <div className="relative">
+    <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setOpen(!open)}
         className="flex items-center gap-2 bg-[var(--color-accent)] text-white px-3 py-2 rounded-xl text-sm hover:brightness-110 transition"
@@ -25,9 +42,9 @@ const FilterDropdown = (): JSX.Element => {
         <div
           className="absolute z-10 mt-2 w-48 rounded-lg shadow-lg text-sm"
           style={{
-            backgroundColor: 'var(--color-bg)',
-            color: 'var(--color-text)',
-            border: '1px solid var(--color-border)',
+            backgroundColor: "var(--color-bg)",
+            color: "var(--color-text)",
+            border: "1px solid var(--color-border)",
           }}
         >
           {options.map((option: FilterOption) => (
@@ -37,9 +54,10 @@ const FilterDropdown = (): JSX.Element => {
                 setSelected(option);
               }}
               style={{
-                backgroundColor: selected === option ? '#bcacfc' : 'transparent',
+                backgroundColor:
+                  selected === option ? "#bcacfc" : "transparent",
                 fontWeight: selected === option ? 600 : 400,
-                color: selected == option? 'black':'var(--color-text)'
+                color: selected == option ? "black" : "var(--color-text)",
               }}
               className="cursor-pointer px-4 py-2 hover:bg-[var(--color-bg-alt)] transition"
             >

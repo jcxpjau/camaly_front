@@ -37,7 +37,6 @@ const Marketplace = (): JSX.Element => {
   const { t } = useTranslation();
   const [searchTerm, setSearchTerm] = useState("");
   const [workflows, setWorkflows] = useState<Workflow[]>([]);
-  const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -45,23 +44,27 @@ const Marketplace = (): JSX.Element => {
       try {
         setLoading(true);
         const res = await fetch(
-          "https://new.blumerland.com.br/camaly/products"
+          `${import.meta.env.VITE_API_URL}/products`,
+          {
+            method: "GET",
+          }
         );
 
-        if (!res.ok) throw new Error(`HTTP error: ${res.status}`);
-
-        const data = await res.json();
-        const mappedData: Workflow[] = data.map((item: any) => ({
+        const json = await res.json();
+       
+        if (!res.ok) {
+          console.error("Error getting products:", json);
+          return;
+        }
+        const mappedData: Workflow[] = json.map((item: any) => ({
           name: item.name,
           description: item.description,
           price: item.price,
           icon: getIconComponent("bot"),
         }));
-
         setWorkflows(mappedData);
       } catch (err: any) {
-        setError("Erro ao carregar os workflows");
-        console.error(err);
+        console.log(err);
       } finally {
         setLoading(false);
       }
@@ -83,9 +86,7 @@ const Marketplace = (): JSX.Element => {
       <div className="min-h-screen flex items-center justify-center bg-[var(--color-bg)] text-[var(--color-text)]">
         <div className="flex flex-col items-center gap-4">
           <div className="w-8 h-8 border-4 border-[var(--color-accent)] border-t-transparent rounded-full animate-spin" />
-          <p className="text-sm text-[var(--color-muted)]">
-            {t("loading")}
-          </p>
+          <p className="text-sm text-[var(--color-muted)]">{t("loading")}</p>
         </div>
       </div>
     );
