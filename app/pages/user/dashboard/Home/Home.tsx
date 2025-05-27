@@ -2,6 +2,7 @@
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import type { JSX } from "react";
+import { useState, useEffect } from "react";
 //import styling
 import "./Home.css";
 //import components
@@ -10,25 +11,62 @@ import ProductPanel from "~/components/productPanel/ProductPanel";
 //import icons
 import { Bot, Mail } from "lucide-react";
 
+interface Purchase {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  icon: JSX.Element;
+}
+
 const Home = (): JSX.Element => {
   const { t } = useTranslation();
+  const [purchases, setPurchases] = useState<Purchase[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const products = [
-    {
-      id: 1,
-      title: t("home.products.contentImprovement.title"),
-      description: t("home.products.contentImprovement.description"),
-      icon: <Bot className="w-5 h-5 text-[color:var(--color-accent)]" />,
-      price: "$25",
-    },
-    {
-      id: 2,
-      title: t("home.products.businessAnalysis.title"),
-      description: t("home.products.businessAnalysis.description"),
-      icon: <Mail className="w-5 h-5 text-[color:var(--color-accent)]" />,
-      price: "$12",
-    },
-  ];
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        setLoading(true);
+        const res = await fetch(
+          "https://new.blumerland.com.br/camaly/purchases/user/682e275f1d6355d68ebff580",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImluamVjYW8yQHRlc3RlLmNvbSIsInN1YiI6IjY4MmUyNzVmMWQ2MzU1ZDY4ZWJmZjU4MCIsImlhdCI6MTc0ODI4ODQ3MywiZXhwIjoxNzUwMDE2NDczfQ.tVCBjFe5nRrL2tWj4M_Zg0HfqLA2sqMgzjew3I-Jrts`,
+            },
+          }
+        );
+        const data = await res.json();
+        const mappedData: Purchase[] = data.map((item: any) => ({
+          id: item.productId._id,
+          name: item.productId.name,
+          description: item.productId.description,
+          price: item.productId.price,
+          icon: <Bot className="w-5 h-5 text-[color:var(--color-accent)]" />,
+        }));
+        //console.log(mappedData)
+        setPurchases(mappedData);
+      } catch (error) {
+        console.error("Erro ao buscar produtos:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProducts();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[var(--color-bg)] text-[var(--color-text)]">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-8 h-8 border-4 border-[var(--color-accent)] border-t-transparent rounded-full animate-spin" />
+          <p className="text-sm text-[var(--color-muted)]">{t("loading")}</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[var(--color-bg)] text-[var(--color-text)] px-6 py-10 mb-10">
@@ -46,19 +84,29 @@ const Home = (): JSX.Element => {
             {t("home.subtitle")}
           </p>
         </motion.div>
-
-        <ProductPanel itemsPerPage={3}>
-          {products.map((product) => (
-            <ProductCard.Root key={product.id}>
-              <ProductCard.Header icon={product.icon} price={product.price} />
-              <ProductCard.Title>{product.title}</ProductCard.Title>
-              <ProductCard.Description>{product.description}</ProductCard.Description>
-              <ProductCard.Footer>
-                <ProductCard.MoreInfoButton />
-              </ProductCard.Footer>
-            </ProductCard.Root>
-          ))}
-        </ProductPanel>
+        {purchases.length > 0 ? (
+          <ProductPanel itemsPerPage={3}>
+            {purchases.map((purchase) => (
+              <ProductCard.Root key={purchase.id}>
+                <ProductCard.Header
+                  icon={purchase.icon}
+                  price={`$${purchase.price.toFixed(2)}`}
+                />
+                <ProductCard.Title>{purchase.name}</ProductCard.Title>
+                <ProductCard.Description>
+                  {purchase.description}
+                </ProductCard.Description>
+                <ProductCard.Footer>
+                  <ProductCard.MoreInfoButton />
+                </ProductCard.Footer>
+              </ProductCard.Root>
+            ))}
+          </ProductPanel>
+        ) : (
+          <div className="h-[300px] flex items-center justify-center">
+            <p className="text-xl"> {t("home.noProducts")} </p>
+          </div>
+        )}
       </div>
     </div>
   );
