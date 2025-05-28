@@ -1,6 +1,5 @@
 //import libraries
 import type { JSX } from "react";
-import { useTranslation } from "react-i18next";
 //import icons
 import { Zap, Image, CalendarCheck, Bot, Smile } from "lucide-react";
 

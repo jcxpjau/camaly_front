@@ -9,7 +9,7 @@ type IconSelectorBarProps = {
   selectedIcons: string[];
 };
 
-const IconBar = ({
+const IconCloud = ({
   onSelect,
   selectedIcons,
 }: IconSelectorBarProps): JSX.Element => {
@@ -38,4 +38,4 @@ const IconBar = ({
   );
 };
 
-export default IconBar;
+export default IconCloud;

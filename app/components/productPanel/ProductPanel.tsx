@@ -1,15 +1,9 @@
 // import libraries
 import { useState, Children, useMemo, type JSX } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTranslation } from "react-i18next";
 //import icons
 import { ChevronLeft, ChevronRight } from "lucide-react";
-
-interface Props {
-  children: React.ReactNode;
-  itemsPerPage: number;
-  currentPage: number;
-  onPageChange: (page: number) => void;
-}
 
 const slideVariants = {
   initial: (direction: number) => ({
@@ -31,7 +25,9 @@ interface Props {
   itemsPerPage: number;
   currentPage: number;
   onPageChange: (page: number) => void;
-  paginate?: boolean; // ✅ nova prop opcional
+  paginate?: boolean;
+  pageCount?: number;
+  loading?: boolean;
 }
 
 const ProductPanel = ({
@@ -40,26 +36,40 @@ const ProductPanel = ({
   currentPage,
   onPageChange,
   paginate = true,
+  pageCount,
+  loading
 }: Props): JSX.Element => {
+  const { t } = useTranslation();
   const [direction, setDirection] = useState(1);
-
   const allChildren = useMemo(() => Children.toArray(children), [children]);
-
-  const pageCount = Math.ceil(allChildren.length / itemsPerPage);
+  const totalPages = paginate
+    ? pageCount ?? Math.ceil(allChildren.length / itemsPerPage)
+    : 1;
 
   const currentItems = paginate
-    ? allChildren.slice(
+    ? allChildren
+    : allChildren.slice(
         (currentPage - 1) * itemsPerPage,
         currentPage * itemsPerPage
-      )
-    : allChildren;
+      );
 
   const handlePageChange = (page: number) => {
-    if (page >= 1 && page <= pageCount) {
+    if (page >= 1 && page <= totalPages) {
       setDirection(page > currentPage ? 1 : -1);
       onPageChange(page);
     }
   };
+
+  if (loading) {
+    return (
+      <div className="h-[300px] flex items-center justify-center bg-[var(--color-bg)] text-[var(--color-text)]">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-8 h-8 border-4 border-[var(--color-accent)] border-t-transparent rounded-full animate-spin" />
+          <p className="text-sm text-[var(--color-muted)]">{t("loading")}</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="overflow-x-hidden">
@@ -78,7 +88,7 @@ const ProductPanel = ({
         </motion.div>
       </AnimatePresence>
 
-      {paginate && (
+      {paginate && totalPages > 1 && (
         <div className="flex justify-center mt-5">
           <div className="flex gap-2">
             <button
@@ -89,7 +99,7 @@ const ProductPanel = ({
               <ChevronLeft />
             </button>
 
-            {Array.from({ length: pageCount }, (_, i) => (
+            {Array.from({ length: totalPages }, (_, i) => (
               <button
                 key={i}
                 style={{
@@ -109,9 +119,8 @@ const ProductPanel = ({
 
             <button
               className="text-sm px-3 py-1.5 rounded-lg hover:brightness-110 transition"
-              type="button"
               onClick={() => handlePageChange(currentPage + 1)}
-              disabled={currentPage === pageCount}
+              disabled={currentPage === totalPages}
             >
               <ChevronRight />
             </button>
@@ -122,5 +131,4 @@ const ProductPanel = ({
   );
 };
 
-
-export default ProductPanel
+export default ProductPanel;

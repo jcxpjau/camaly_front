@@ -3,13 +3,14 @@ import { useState, useEffect, useRef } from "react";
 import type { JSX } from "react";
 // import icons
 import { Filter } from "lucide-react";
-
 type FilterOption = "All" | "Under $20" | "$20 - $40" | "Over $40";
 
-const options: FilterOption[] = ["All", "Under $20", "$20 - $40", "Over $40"];
+type FilterDropdownProps = {
+  selected: FilterOption;
+  onSelect: (value: FilterOption) => void;
+};
 
-const FilterDropdown = (): JSX.Element => {
-  const [selected, setSelected] = useState<FilterOption>("All");
+const FilterDropdown = ({ selected, onSelect }: FilterDropdownProps): JSX.Element => {
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -29,6 +30,8 @@ const FilterDropdown = (): JSX.Element => {
     };
   }, []);
 
+  const options: FilterOption[] = ["All", "Under $20", "$20 - $40", "Over $40"];
+
   return (
     <div className="relative" ref={dropdownRef}>
       <button
@@ -47,17 +50,17 @@ const FilterDropdown = (): JSX.Element => {
             border: "1px solid var(--color-border)",
           }}
         >
-          {options.map((option: FilterOption) => (
+          {options.map((option) => (
             <div
               key={option}
               onClick={() => {
-                setSelected(option);
+                onSelect(option); // avisa o Marketplace
+                setOpen(false);
               }}
               style={{
-                backgroundColor:
-                  selected === option ? "#bcacfc" : "transparent",
+                backgroundColor: selected === option ? "#bcacfc" : "transparent",
                 fontWeight: selected === option ? 600 : 400,
-                color: selected == option ? "black" : "var(--color-text)",
+                color: selected === option ? "black" : "var(--color-text)",
               }}
               className="cursor-pointer px-4 py-2 hover:bg-[var(--color-bg-alt)] transition"
             >
