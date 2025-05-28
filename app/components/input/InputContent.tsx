@@ -21,13 +21,16 @@ export function InputContent({
 
   const isPassword = type === "password";
 
-  const textColor = {
-    error: "text-red-300 placeholder-red-300",
-    success: "text-green-400 placeholder-green-400",
-    warning: "text-yellow-400 placeholder-yellow-400",
-    info: "text-blue-400 placeholder-blue-400",
-    undefined: "text-white placeholder-white/60",
+  const textColors = {
+    error: "var(--color-text-error)",
+    success: "var(--color-text-success)",
+    warning: "var(--color-text-warning)",
+    info: "var(--color-text-info)",
+    undefined: "var(--color-text-default)",
   };
+
+
+  const textColor = textColors[status ?? "undefined"];//Se o text color vier na chamada do componente ele atribui, caso contrário será undefined
 
   return (
     <div className="relative w-full flex items-center">
@@ -36,16 +39,26 @@ export function InputContent({
         placeholder={placeholder}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className={`bg-transparent focus:outline-none w-full pr-8 ${textColor[status ?? "undefined"]}`}
+        style={{
+          color: textColor,
+          caretColor: textColor,
+          backgroundColor: "transparent",
+          paddingRight: "2rem",
+        }}
+        className="focus:outline-none w-full"
       />
-
-      {isPassword && (
+      {isPassword && (//Somente se for do tipo password irá mostrar o olho
         <button
           type="button"
           onClick={() => setShowPassword((prev) => !prev)}
           className="absolute right-0 pr-1 text-[var(--color-card-subtext)] hover:text-[var(--color-card-text)] transition"
+          aria-label={showPassword ? "Hide password" : "Show password"}
         >
-          {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+          {showPassword ? (
+            <EyeOff className="w-5 h-5" />
+          ) : (
+            <Eye className="w-5 h-5" />
+          )}
         </button>
       )}
     </div>

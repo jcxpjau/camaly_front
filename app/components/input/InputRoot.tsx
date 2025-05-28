@@ -6,20 +6,35 @@ interface InputFieldRootProps {
   children: ReactNode;
   status?: InputStatus;
   message?: string;
+  label?: string;
 }
 
-export function InputRoot({ children, status, message }: InputFieldRootProps) {
-  const borderColor = {
-    error: "border-red-400",
-    success: "border-green-500",
-    warning: "border-yellow-500",
-    info: "border-blue-500",
-    undefined: "border-transparent",
+export function InputRoot({ children, status, message, label }: InputFieldRootProps) {
+  const borderColors = {
+    error: "var(--color-error)",
+    success: "var(--color-success)",
+    warning: "var(--color-warning)",
+    info: "var(--color-info)",
+    undefined: "var(--color-border-input)",
   };
+  const borderColor = borderColors[status ?? "undefined"];
+
+  const labelColor = "var(--color-label-text)";
 
   return (
     <div className="flex flex-col gap-1 w-full">
-      <div className={`flex items-center gap-3 bg-[var(--color-bg-input)] rounded-md px-4 py-3 border ${borderColor[status ?? "undefined"]}`}>
+      {label && (
+        <label 
+          className="text-sm pl-1" 
+          style={{ color: labelColor }}
+        >
+          {label}
+        </label>
+      )}
+      <div
+        className="flex items-center gap-3 bg-[var(--color-bg-input)] rounded-md px-4 py-3 border"
+        style={{ borderColor }}
+      >
         {children}
       </div>
 

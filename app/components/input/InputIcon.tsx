@@ -7,13 +7,15 @@ interface InputFieldIconProps {
 }
 
 export function InputIcon({ icon: Icon, status }: InputFieldIconProps) {
-  const color = {
-    error: "text-red-300",
-    success: "text-green-500",
-    warning: "text-yellow-500",
-    info: "text-blue-500",
-    undefined: "text-white",
+  const colors = {
+    error: "var(--color-icon-error)",
+    success: "var(--color-icon-success)",
+    warning: "var(--color-icon-warning)",
+    info: "var(--color-icon-info)",
+    undefined: "var(--color-icon-default)",
   };
 
-  return <Icon className={`w-5 h-5 ${color[status ?? "undefined"]}`} />;
+  const color = colors[status ?? "undefined"];
+
+  return <Icon className="w-5 h-5" style={{ color }} />;
 }

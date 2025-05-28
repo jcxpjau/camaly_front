@@ -131,12 +131,12 @@ export default function Header() {
                             >
                                 <ul className="py-1 text-sm text-[var(--color-text)]">
                                     <li>
-                                        <a href="/profile" className="flex items-center gap-2 px-4 py-2 hover:bg-[var(--color-bg)]">
+                                        <a  onClick={(e) => navigate( e , "/user/settings" )} className="flex items-center gap-2 px-4 py-2 hover:bg-[var(--color-bg)]">
                                             <User className="w-4 h-4" /> My Profile
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="/settings" className="flex items-center gap-2 px-4 py-2 hover:bg-[var(--color-bg)]">
+                                        <a onClick={(e) => navigate( e , "/user/settings" )} className="flex items-center gap-2 px-4 py-2 hover:bg-[var(--color-bg)]">
                                             <Settings className="w-4 h-4" /> Settings
                                         </a>
                                     </li>

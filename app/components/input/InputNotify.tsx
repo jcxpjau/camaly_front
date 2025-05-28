@@ -6,16 +6,18 @@ interface InputNotifyProps {
 }
 
 export function InputNotify({ message, status }: InputNotifyProps) {
-  const textColor = {
-    error: "text-red-300",
-    success: "text-green-500",
-    warning: "text-yellow-500",
-    info: "text-blue-500",
-    undefined: "text-white",
+  const textColors = {
+    error: "var(--color-text-error)",
+    success: "var(--color-text-success)",
+    warning: "var(--color-text-warning)",
+    info: "var(--color-text-info)",
+    undefined: "var(--color-text-default)",
   };
 
+  const color = textColors[status ?? "undefined"];
+
   return (
-    <span className={`text-sm ${textColor[status ?? "undefined"]}`}>
+    <span className="text-sm" style={{ color }}>
       {message}
     </span>
   );

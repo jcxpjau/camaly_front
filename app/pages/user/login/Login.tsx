@@ -199,7 +199,7 @@ export default function Login() {
                                     <label>Stay signed in</label>
                                 </div>
                                 <span
-                                    onClick={() => navigate(null, "/forgot-password")}
+                                    //onClick={() => navigate(null, "/forgot-password")}
                                     className="text-blue-400 underline cursor-pointer hover:opacity-80"
                                 >
                                     Forgot password?
