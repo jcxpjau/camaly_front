@@ -1,69 +1,76 @@
 // import libraries
-import { useState, useMemo, useEffect, type JSX } from "react";
+import { useState, useEffect, type JSX, use } from "react";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 //import components
 import ProductPanel from "~/components/productPanel/ProductPanel";
-import FilterDropdown from "~/components/filterDropdown/FilterDropdown";
 import { ProductCard } from "~/components/productCard";
+import { FilterControls } from "~/components/filterBar";
+
 //import icons
-import { Zap, Bot, CalendarCheck, Mail, Settings2, Search } from "lucide-react";
-
-function getIconComponent(name: string): JSX.Element {
-  const icons: Record<string, JSX.Element> = {
-    zap: <Zap className="w-5 h-5 text-[color:var(--color-accent)]" />,
-    calendarCheck: (
-      <CalendarCheck className="w-5 h-5 text-[color:var(--color-accent)]" />
-    ),
-    bot: <Bot className="w-5 h-5 text-[color:var(--color-accent)]" />,
-    mail: <Mail className="w-5 h-5 text-[color:var(--color-accent)]" />,
-    settings: (
-      <Settings2 className="w-5 h-5 text-[color:var(--color-accent)]" />
-    ),
-  };
-  return (
-    icons[name] ?? <Zap className="w-5 h-5 text-[color:var(--color-accent)]" />
-  );
-}
-
-type Workflow = {
-  name: string;
-  description: string;
-  icon: JSX.Element;
-  price: string;
-};
+import { ICONS } from "~/components/filterBar/iconCategories";
 
 const Marketplace = (): JSX.Element => {
   const { t } = useTranslation();
-  const [searchTerm, setSearchTerm] = useState("");
-  const [workflows, setWorkflows] = useState<Workflow[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [workflows, setWorkflows] = useState<{
+    name: string;
+    description: string;
+    icon: JSX.Element;
+    price: string;
+  }[]>([]);
 
+  //pagination for the panel
+  const [loading, setLoading] = useState(true);
+  const [itemsPerPage, setItemsPerPage] = useState(4);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [paginate, setPaginate] = useState(true);
+  const [lastPage, setLastPage] = useState(1);
+
+  //filtering states
+  const [searchTerm, setSearchTerm] = useState("");
+  const [showIcons, setShowIcons] = useState(false);
+  const [selectedIcons, setSelectedIcons] = useState<string[]>([]);
+  const [selectedPriceRange, setSelectedPriceRange] = useState<[number, number]>([0, 100]);
+
+  const toggleIconSelection = (iconName: string) => {
+    setSelectedIcons((prev) =>
+      prev.includes(iconName)
+        ? prev.filter((name) => name !== iconName)
+        : [...prev, iconName]
+    );
+  };
+
+  console.log("Search term: ",searchTerm);
   useEffect(() => {
     const fetchWorkflows = async () => {
       try {
         setLoading(true);
-        const res = await fetch(
-          `${import.meta.env.VITE_API_URL}/products`,
-          {
-            method: "GET",
-          }
-        );
-
+        const baseUrl = `${import.meta.env.VITE_API_URL}products`;
+        const url = paginate
+          ? `${baseUrl}?limit=${itemsPerPage}&page=${currentPage}`
+          : `${baseUrl}?limit=9999`;
+        console.log(url)
+        const res = await fetch(url);
         const json = await res.json();
-       
+
         if (!res.ok) {
           console.error("Error getting products:", json);
           return;
         }
-        const mappedData: Workflow[] = json.map((item: any) => ({
+
+        const mappedData = json.data.map((item: any) => ({
           name: item.name,
           description: item.description,
           price: item.price,
-          icon: getIconComponent("bot"),
+          icon: item.iconName ?? ICONS["bot"],
         }));
+
         setWorkflows(mappedData);
-      } catch (err: any) {
+
+        if (paginate && json.lastPage) {
+          setLastPage(json.lastPage);
+        }
+      } catch (err) {
         console.log(err);
       } finally {
         setLoading(false);
@@ -71,26 +78,7 @@ const Marketplace = (): JSX.Element => {
     };
 
     fetchWorkflows();
-  }, []);
-
-  const filteredWorkflows = useMemo(() => {
-    return workflows.filter(
-      (wf) =>
-        wf.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        wf.description.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-  }, [searchTerm, workflows]);
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-[var(--color-bg)] text-[var(--color-text)]">
-        <div className="flex flex-col items-center gap-4">
-          <div className="w-8 h-8 border-4 border-[var(--color-accent)] border-t-transparent rounded-full animate-spin" />
-          <p className="text-sm text-[var(--color-muted)]">{t("loading")}</p>
-        </div>
-      </div>
-    );
-  }
+  }, [currentPage, itemsPerPage, paginate]);
 
   return (
     <div className="min-h-screen bg-[var(--color-bg)] text-[var(--color-text)] px-6 py-10 mb-10">
@@ -100,37 +88,52 @@ const Marketplace = (): JSX.Element => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, ease: "easeInOut" }}
         >
-          <h1 className="text-3xl text-[var(--color-text)] mb-2">
-            {t("marketplace.title")}
-          </h1>
+          <h1 className="text-3xl mb-2">{t("marketplace.title")}</h1>
         </motion.div>
 
         <p className="text-[var(--color-muted)] mb-16">
           {t("marketplace.description")}
         </p>
 
-        <div className="flex flex-row gap-4 items-center mb-6">
-          <div className="flex items-center gap-2 bg-[var(--color-bg-alt)] px-3 py-2 rounded-xl w-full max-w-md border border-[var(--color-border)]">
-            <Search className="w-4 h-4 text-[var(--color-muted)]" />
-            <input
-              type="text"
-              placeholder={t("marketplace.search-placeholder")}
-              className="bg-transparent outline-none text-sm text-[var(--color-text)] w-full"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+        <div className="flex flex-col w-full gap-2 mb-10">
+          <FilterControls.Root>
+            <FilterControls.Group>
+              <FilterControls.SearchBar
+                value={searchTerm}
+                onChange={setSearchTerm}
+              />
+              <FilterControls.FilterPrice
+                selected={selectedPriceRange}
+                onSelect={setSelectedPriceRange}
+              />
+            </FilterControls.Group>
+
+            <FilterControls.CategoryToggle
+              onClick={() => setShowIcons((prev) => !prev)}
             />
-          </div>
-          <FilterDropdown />
+          </FilterControls.Root>
+
+          {showIcons && (
+            <FilterControls.IconCloud
+              selectedIcons={selectedIcons}
+              onSelect={toggleIconSelection}
+            />
+          )}
         </div>
 
-        <ProductPanel itemsPerPage={4}>
-          {filteredWorkflows.map((workflow, idx) => (
+        <ProductPanel
+          itemsPerPage={itemsPerPage}
+          currentPage={currentPage}
+          onPageChange={setCurrentPage}
+          paginate={paginate}
+          pageCount={lastPage}
+          loading={loading}
+        >
+          {workflows.map((workflow, idx) => (
             <ProductCard.Root key={idx}>
               <ProductCard.Header icon={workflow.icon} price={workflow.price} />
               <ProductCard.Title>{workflow.name}</ProductCard.Title>
-              <ProductCard.Description>
-                {workflow.description}
-              </ProductCard.Description>
+              <ProductCard.Description>{workflow.description}</ProductCard.Description>
               <ProductCard.Footer>
                 <ProductCard.BuyButton />
                 <ProductCard.MoreInfoButton />

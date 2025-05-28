@@ -24,7 +24,8 @@
   "marketplace": {
     "title": "Workflow Marketplace",
     "description": "Boost your productivity by adding automations to your business.",
-    "search-placeholder": "Search workflows..."
+    "search-placeholder": "Search workflows...",
+    "categoryChoice": "Select category"
   },
   "reports": {
     "title": "Reports",
@@ -80,5 +81,12 @@
     "greeting": "Welcome back, {{name}}!",
     "subtitle": "Check out your purchased workflows",
     "noProducts": "You don't have any active workflows"
+  },
+  "category":{
+    "posts": "Social media",
+    "insight": "Insights",
+    "schedule": "Scheduling",
+    "bot": "Chatbot",
+    "personalization": "Client experience"
   }
 }

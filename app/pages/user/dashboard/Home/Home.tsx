@@ -1,15 +1,11 @@
-// import libraries
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import type { JSX } from "react";
 import { useState, useEffect } from "react";
-//import styling
 import "./Home.css";
-//import components
 import { ProductCard } from "~/components/productCard";
 import ProductPanel from "~/components/productPanel/ProductPanel";
-//import icons
-import { Bot, Mail } from "lucide-react";
+import { ICONS } from "~/components/filterBar/iconCategories";
 
 interface Purchase {
   id: string;
@@ -23,17 +19,19 @@ const Home = (): JSX.Element => {
   const { t } = useTranslation();
   const [purchases, setPurchases] = useState<Purchase[]>([]);
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1); // ✅ novo estado da página
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         setLoading(true);
-        const res = await fetch(`${import.meta.env.VITE_API_URL}/purchases/user/682e275f1d6355d68ebff580`,
+        const res = await fetch(
+          `${import.meta.env.VITE_API_URL}purchases/user/682e275f1d6355d68ebff580`,
           {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
-              Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImluamVjYW8yQHRlc3RlLmNvbSIsInN1YiI6IjY4MmUyNzVmMWQ2MzU1ZDY4ZWJmZjU4MCIsImlhdCI6MTc0ODI4ODQ3MywiZXhwIjoxNzUwMDE2NDczfQ.tVCBjFe5nRrL2tWj4M_Zg0HfqLA2sqMgzjew3I-Jrts`,
+              Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImR1ZGFwaW1lbnRlbEBtYWlsLmNvbSIsInN1YiI6IjY4MzcwZTgwMDA1YWU5ZDBiMjY5Zjk2NCIsImlhdCI6MTc0ODQ0OTYxOCwiZXhwIjoxNzUwMTc3NjE4fQ.6iSWb8w_oWEkug7u8z-wHTj0ds3teBQPPXtuyg_OiJM`,
             },
           }
         );
@@ -47,9 +45,8 @@ const Home = (): JSX.Element => {
           name: item.productId.name,
           description: item.productId.description,
           price: item.productId.price,
-          icon: <Bot className="w-5 h-5 text-[color:var(--color-accent)]" />,
+           icon: ICONS[item.productId.iconName] ?? ICONS["bot"], 
         }));
-        //console.log(mappedData)
         setPurchases(mappedData);
       } catch (err: any) {
         console.log(err);
@@ -88,12 +85,16 @@ const Home = (): JSX.Element => {
           </p>
         </motion.div>
         {purchases.length > 0 ? (
-          <ProductPanel itemsPerPage={3}>
+          <ProductPanel
+            itemsPerPage={3}
+            currentPage={currentPage}
+            onPageChange={setCurrentPage}
+          >
             {purchases.map((purchase) => (
               <ProductCard.Root key={purchase.id}>
                 <ProductCard.Header
                   icon={purchase.icon}
-                  price={`$${purchase.price.toFixed(2)}`}
+                  price={`$${purchase.price.toFixed(0)}`}
                 />
                 <ProductCard.Title>{purchase.name}</ProductCard.Title>
                 <ProductCard.Description>
