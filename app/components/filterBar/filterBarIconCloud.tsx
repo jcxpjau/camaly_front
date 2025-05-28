@@ -16,7 +16,7 @@ const IconCloud = ({
   const { t } = useTranslation();
 
   return (
-    <div className="w-full flex flex-row gap-1 overflow-x-auto">
+    <div className="w-full flex flex-row gap-1 overflow-x-auto mt-2">
       {Object.entries(ICONS).map(([name, icon]) => {
         const isSelected = selectedIcons.includes(name);
         return (

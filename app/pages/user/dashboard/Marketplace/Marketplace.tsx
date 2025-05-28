@@ -1,23 +1,21 @@
-// import libraries
-import { useState, useEffect, type JSX, use } from "react";
+import { useState, useEffect, type JSX } from "react";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
-//import components
 import ProductPanel from "~/components/productPanel/ProductPanel";
 import { ProductCard } from "~/components/productCard";
 import { FilterControls } from "~/components/filterBar";
-
-//import icons
 import { ICONS } from "~/components/filterBar/iconCategories";
 
 const Marketplace = (): JSX.Element => {
   const { t } = useTranslation();
-  const [workflows, setWorkflows] = useState<{
-    name: string;
-    description: string;
-    icon: JSX.Element;
-    price: string;
-  }[]>([]);
+  const [workflows, setWorkflows] = useState<
+    {
+      name: string;
+      description: string;
+      icon: JSX.Element;
+      price: string;
+    }[]
+  >([]);
 
   //pagination for the panel
   const [loading, setLoading] = useState(true);
@@ -30,8 +28,7 @@ const Marketplace = (): JSX.Element => {
   const [searchTerm, setSearchTerm] = useState("");
   const [showIcons, setShowIcons] = useState(false);
   const [selectedIcons, setSelectedIcons] = useState<string[]>([]);
-  const [selectedPriceRange, setSelectedPriceRange] = useState<[number, number]>([0, 100]);
-
+  const [selectedMaxPrice, setSelectedMaxPrice] = useState<number>(0);
   const toggleIconSelection = (iconName: string) => {
     setSelectedIcons((prev) =>
       prev.includes(iconName)
@@ -40,18 +37,45 @@ const Marketplace = (): JSX.Element => {
     );
   };
 
-  console.log("Search term: ",searchTerm);
+  useEffect(() => {
+    if ((searchTerm || selectedMaxPrice > 0)) {
+      setPaginate(false);
+      setItemsPerPage(99);
+    } else {
+      setPaginate(true);
+      setCurrentPage(1);
+      setItemsPerPage(4);
+    }
+  }, [searchTerm, selectedMaxPrice]);
+
   useEffect(() => {
     const fetchWorkflows = async () => {
       try {
         setLoading(true);
         const baseUrl = `${import.meta.env.VITE_API_URL}products`;
-        const url = paginate
-          ? `${baseUrl}?limit=${itemsPerPage}&page=${currentPage}`
-          : `${baseUrl}?limit=9999`;
-        console.log(url)
+        let url = new URL(baseUrl);
+
+        if (paginate) {
+          url.searchParams.append("limit", itemsPerPage.toString());
+          url.searchParams.append("page", currentPage.toString());
+        } else {
+          url.searchParams.append("limit", "99");
+        }
+
+        if (searchTerm) {
+          url.searchParams.append("name", searchTerm);
+        }
+
+        if (selectedMaxPrice > 0) {
+          url.searchParams.append("maxPrice", selectedMaxPrice.toString());
+        }
+
+        console.log("Fetching URL:", url.toString());
+
         const res = await fetch(url);
         const json = await res.json();
+
+        console.log("API Response:", json);
 
         if (!res.ok) {
           console.error("Error getting products:", json);
@@ -78,7 +102,7 @@ const Marketplace = (): JSX.Element => {
     };
 
     fetchWorkflows();
-  }, [currentPage, itemsPerPage, paginate]);
+  }, [currentPage, itemsPerPage, paginate, searchTerm, selectedMaxPrice]);
 
   return (
     <div className="min-h-screen bg-[var(--color-bg)] text-[var(--color-text)] px-6 py-10 mb-10">
@@ -95,7 +119,8 @@ const Marketplace = (): JSX.Element => {
           {t("marketplace.description")}
         </p>
 
-        <div className="flex flex-col w-full gap-2 mb-10">
+        {/* Filters */}
+        <div className="flex flex-col col-1 w-full gap-2 mb-10">
           <FilterControls.Root>
             <FilterControls.Group>
               <FilterControls.SearchBar
@@ -103,8 +128,8 @@ const Marketplace = (): JSX.Element => {
                 onChange={setSearchTerm}
               />
               <FilterControls.FilterPrice
-                selected={selectedPriceRange}
-                onSelect={setSelectedPriceRange}
+                selected={selectedMaxPrice}
+                onSelect={setSelectedMaxPrice}
               />
             </FilterControls.Group>
 
@@ -121,6 +146,7 @@ const Marketplace = (): JSX.Element => {
           )}
         </div>
 
+        {/* Panel */}
         <ProductPanel
           itemsPerPage={itemsPerPage}
           currentPage={currentPage}
@@ -133,7 +159,9 @@ const Marketplace = (): JSX.Element => {
             <ProductCard.Root key={idx}>
               <ProductCard.Header icon={workflow.icon} price={workflow.price} />
               <ProductCard.Title>{workflow.name}</ProductCard.Title>
-              <ProductCard.Description>{workflow.description}</ProductCard.Description>
+              <ProductCard.Description>
+                {workflow.description}
+              </ProductCard.Description>
               <ProductCard.Footer>
                 <ProductCard.BuyButton />
                 <ProductCard.MoreInfoButton />

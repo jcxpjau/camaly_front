@@ -6,14 +6,11 @@ type RootProps = {
 };
 
 const Group = ({ children }: RootProps): JSX.Element => {
-
-    return(
-        <>
-        
-            {children}
-        </>
-        
-    )
-}
+  return (
+    <div className="flex flex-1 min-w-0 gap-2">
+      {children}
+    </div>
+  );
+};
 
 export default Group
