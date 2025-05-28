@@ -14,6 +14,7 @@ export default function Login() {
     const [emailError, setEmailError] = useState('');
     const [passwordError, setPasswordError] = useState('');
     const [rememberMe, setRememberMe ] = useState(false);
+    const [error, setError] = useState(false)
     const navigate = useCustomNavigate();
 
     const [mousePos, setMousePos] = useState<{ x: number; y: number } | null>(null);
@@ -52,6 +53,7 @@ export default function Login() {
             const json = await res.json();
             if (!res.ok) {
                 console.error("Erro de login:", json);
+                setError(true)
                 return;
             }
             if (json.access_token) {
@@ -99,13 +101,13 @@ export default function Login() {
                     pointerEvents: 'none',
                 }}
             />
-            <div className="flex flex-col items-center gap-8 sm:gap-10 md:gap-20 w-full max-w-md" style={{ position: 'relative', zIndex: 10 }}>
+            <div className="flex flex-col items-center gap-6 sm:gap-8 md:gap-15 w-full max-w-md" style={{ position: 'relative', zIndex: 10 }}>
                 <motion.div
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5 }}
                 >
-                    <img src={Logo} alt="Camaly" className="h-14 sm:h-12 md:h-16 w-auto" />
+                    <img src={Logo} alt="Camaly" className="h-13 sm:h-11 md:h-15 w-auto" />
                 </motion.div>
                 <motion.div
                     ref={boxRef}
@@ -137,13 +139,18 @@ export default function Login() {
                         }}
                     />
                     <div style={{ position: 'relative', zIndex: 1 }}>
-                        <div className="mb-8 text-center">
+                        <div className="text-center">
                             <h2 className="text-3xl font-semibold mb-1">Welcome back</h2>
                             <p className="text-sm" style={{ color: 'var(--color-card-subtext)' }}>
                                 Login to continue using Camaly
                             </p>
                         </div>
-                        <form onSubmit={LoginAuth} className="space-y-4">
+                        {error && (
+                        <div className="text-red-300 text-sm p-3 rounded text-center my-4">
+                            Usuário ou senha incorretos. Por favor, verifique suas credenciais e tente novamente.
+                        </div>
+                        )}
+                        <form onSubmit={LoginAuth} className="space-y-4 mt-6">
                             <Input.Root status={emailError ? "error" : undefined} message={emailError}>
                                 <Input.Icon icon={Mail} status={emailError ? "error" : undefined} />
                                 <Input.Content
@@ -164,37 +171,39 @@ export default function Login() {
                                     status={passwordError ? "error" : undefined}
                                 />
                             </Input.Root>
-                            <div className="flex items-center gap-2 text-sm text-[var(--color-card-text)] select-none">
-                                <motion.div
-                                    className="relative w-5 h-5 rounded-[4px] border border-[#bcacfc] flex items-center justify-center cursor-pointer"
+                            <div className="flex items-center justify-between w-full text-sm text-[var(--color-card-text)] select-none mt-1">
+                                <div className="flex items-center gap-2 cursor-pointer" onClick={() => setRememberMe(!rememberMe)}>
+                                    <motion.div
+                                    className="w-5 h-5 rounded-[4px] border border-[#bcacfc] flex items-center justify-center"
                                     initial={false}
                                     animate={{
                                         backgroundColor: rememberMe ? "#bcacfc" : "transparent",
                                         borderColor: rememberMe ? "#bcacfc" : "#bcacfc"
                                     }}
                                     transition={{ duration: 0.2 }}
-                                    onClick={() => setRememberMe(!rememberMe)}
-                                >
+                                    >
                                     <AnimatePresence>
                                         {rememberMe && (
-                                            <motion.div
-                                                key="check"
-                                                initial={{ scale: 0 }}
-                                                animate={{ scale: 1 }}
-                                                exit={{ scale: 0 }}
-                                                transition={{ duration: 0.2 }}
-                                            >
-                                                <Check className="w-3 h-3 text-white" strokeWidth={3} />
-                                            </motion.div>
+                                        <motion.div
+                                            key="check"
+                                            initial={{ scale: 0 }}
+                                            animate={{ scale: 1 }}
+                                            exit={{ scale: 0 }}
+                                            transition={{ duration: 0.2 }}
+                                        >
+                                            <Check className="w-3 h-3 text-white" strokeWidth={3} />
+                                        </motion.div>
                                         )}
                                     </AnimatePresence>
-                                </motion.div>
-                                <label
-                                    onClick={() => setRememberMe(!rememberMe)}
-                                    className="cursor-pointer"
+                                    </motion.div>
+                                    <label>Stay signed in</label>
+                                </div>
+                                <span
+                                    onClick={() => navigate(null, "/forgot-password")}
+                                    className="text-blue-400 underline cursor-pointer hover:opacity-80"
                                 >
-                                    Stay signed in
-                                </label>
+                                    Forgot password?
+                                </span>
                             </div>
                             <button
                                 type="submit"
