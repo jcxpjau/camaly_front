@@ -1,131 +1,90 @@
 import React, { useState } from "react";
-import { Code, Eye, EyeOff, Copy } from "lucide-react";
+import { Code, Eye, EyeOff, Copy, Check } from "lucide-react";
+import { Input } from "../input/input";
+import ButtonSettings from "./buttonSettings";
 
 export function ApiSettings() {
   const [showApiKey, setShowApiKey] = useState(false);
   const [apiLogs, setApiLogs] = useState(false);
+  const [checked, setChecked] = useState(false);
+
+  const [url, setUrl] = useState('');
+  const [key, setKey] = useState('');
 
   return (
-    <section
-      className="space-y-6 p-6 rounded-lg"
-      style={{
-        color: "var(--color-card-text)",
-      }}
-    >
+    <section className="space-y-6 p-6 rounded-lg text-[var(--color-card-text)]">
       <div>
         <h2 className="flex items-center gap-2 text-xl font-semibold">
           <Code className="h-5 w-5" />
           API Settings
         </h2>
-        <p
-          className="text-sm"
-          style={{ color: "var(--color-card-subtext)" }}
-        >
+        <p className="text-sm text-[var(--color-card-subtext)]">
           Configure your API keys and endpoints.
         </p>
       </div>
       <form className="space-y-4">
         <div className="flex flex-col">
-          <label
-            htmlFor="apiEndpoint"
-            className="mb-1 text-sm font-medium"
-            style={{ color: "var(--color-label-text)" }}
-          >
-            API Endpoint
-          </label>
-          <input
-            id="apiEndpoint"
-            type="url"
-            placeholder="https://api.example.com/v1"
-            className="rounded-md px-3 py-2 focus:outline-none focus:ring-2"
-            style={{
-              backgroundColor: "var(--color-bg-input)",
-              border: "1px solid var(--color-border-input)",
-              color: "var(--color-text-default)",
-            }}
-          />
+          <Input.Root label="API Endpoint">
+            <Input.Content
+              placeholder="https://api.example.com/v1"
+              type="text"
+              value={url}
+              onChange={setUrl}
+            />
+          </Input.Root>
         </div>
-        <div className="flex flex-col">
-          <label
-            htmlFor="apiKey"
-            className="mb-1 text-sm font-medium"
-            style={{ color: "var(--color-label-text)" }}
-          >
-            API Key
-          </label>
-          <div className="flex gap-2 items-center">
-            <input
-              id="apiKey"
-              type={showApiKey ? "text" : "password"}
+        <div className="flex flex-row">
+          <Input.Root label="API Key">
+            <Input.Content
               placeholder="sk_live_xxxxxxxxxxxx"
-              className="flex-1 rounded-md px-3 py-2 focus:outline-none focus:ring-2"
-              style={{
-                backgroundColor: "var(--color-bg-input)",
-                border: "1px solid var(--color-border-input)",
-                color: "var(--color-text-default)",
-              }}
+              type="password"
+              value={key}
+              onChange={setKey}
             />
             <button
               type="button"
-              onClick={() => setShowApiKey(!showApiKey)}
-              aria-label={showApiKey ? "Hide API key" : "Show API key"}
-              className="rounded p-1 transition"
-              style={{
-                border: "1px solid var(--color-border)",
-                backgroundColor: "var(--color-button-bg)",
-              }}
-            >
-              {showApiKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-            </button>
-            <button
-              type="button"
               aria-label="Copy API key"
-              className="rounded p-1 transition"
-              style={{
-                border: "1px solid var(--color-border)",
-                backgroundColor: "var(--color-button-bg)",
-              }}
+              className="rounded p-1 text-[var(--color-card-subtext)] hover:text-[var(--color-card-text)] transition"
               onClick={() => {
                 navigator.clipboard.writeText(
                   (document.getElementById("apiKey") as HTMLInputElement)?.value || ""
                 );
               }}
             >
-              <Copy className="h-4 w-4" />
+              <Copy className="h-5 w-5" />
             </button>
+          </Input.Root>
+        </div>
+        <div className="flex flex-col gap-5 items-center space-x-0 space-y-2 justify-between sm:flex-row sm:space-x-2 sm:space-y-0">
+          <div className="flex flex-row items-center gap-1">
+            <div
+              className="flex items-center gap-2 cursor-pointer select-none"
+              onClick={() => setChecked(!checked)}
+              role="checkbox"
+              aria-checked={checked}
+              tabIndex={0}
+            >
+              <div
+                className={`w-5 h-5 rounded-[4px] border flex items-center justify-center ${
+                  checked
+                    ? "bg-indigo-400 border-indigo-400"
+                    : "border-[--color-text] bg-transparent"
+                }`}
+              >
+                {checked && (
+                  <Check className="w-3 h-3 text-white" strokeWidth={3} />
+                )}
+              </div>
+            </div>
+            <label
+              htmlFor="enabled-logs"
+              className="select-none cursor-pointer text-[var(--color-card-text)]"
+            >
+              Enabled Logs
+            </label>
           </div>
+          <ButtonSettings text="Save Changes" />
         </div>
-        <div className="flex items-center space-x-2">
-          <input
-            id="apiLogs"
-            type="checkbox"
-            checked={apiLogs}
-            onChange={() => setApiLogs(!apiLogs)}
-            className="h-5 w-5 rounded focus:ring-2"
-            style={{
-              border: "1px solid var(--color-border-input)",
-              backgroundColor: "var(--color-bg-input)",
-              accentColor: "var(--color-accent)",
-            }}
-          />
-          <label
-            htmlFor="apiLogs"
-            className="text-sm select-none"
-            style={{ color: "var(--color-card-text)" }}
-          >
-            Enable API Logs
-          </label>
-        </div>
-        <button
-          type="submit"
-          className="inline-block rounded-md px-6 py-2 focus:outline-none focus:ring-2"
-          style={{
-            backgroundColor: "var(--color-accent)",
-            color: "#fff",
-          }}
-        >
-          Save Settings
-        </button>
       </form>
     </section>
   );

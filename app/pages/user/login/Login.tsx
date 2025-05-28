@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useLayoutEffect } from 'react';
 import { FaGoogle, FaApple } from 'react-icons/fa';
 import { Mail, KeyRound, Check } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -6,6 +6,7 @@ import Logo from "../../../assets/imgs/Logo_Camaly.png";
 import { Input } from '~/components/input/input';
 import { useCustomNavigate } from "~/hooks/useCustomNavigate";
 import { useAuth } from '~/context/auth/auth.hooks';
+import { useTheme } from '~/context/theme/theme.hooks';
 
 export default function Login() {
     const { login } = useAuth();
@@ -22,6 +23,16 @@ export default function Login() {
     // Ref da box para calcular posição relativa do mouse dentro dela
     const boxRef = useRef<HTMLDivElement>(null);
 
+    const { mode } = useTheme();
+
+    useLayoutEffect(() => {
+        if (mode === "dark") {
+            document.documentElement.classList.add("dark");
+        } else {
+            document.documentElement.classList.add("dark");
+        }
+    }, [mode]);
+    
     async function LoginAuth(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
         let hasError = false;

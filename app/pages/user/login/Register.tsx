@@ -1,10 +1,11 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useLayoutEffect } from 'react';
 import { FaGoogle, FaApple } from 'react-icons/fa';
 import { Mail, KeyRound, User } from 'lucide-react';
 import { motion } from 'framer-motion';
 import Logo from "../../../assets/imgs/Logo_Camaly.png";
 import { Input } from '~/components/input/input';
 import { useCustomNavigate } from "~/hooks/useCustomNavigate";
+import { useTheme } from '~/context/theme/theme.hooks';
 
 export default function Register() {
   const [name, setName] = useState('');
@@ -18,6 +19,16 @@ export default function Register() {
   const [error, setError] = useState(false)
 
   const navigate = useCustomNavigate();
+
+      const { mode } = useTheme();
+  
+      useLayoutEffect(() => {
+          if (mode === "dark") {
+              document.documentElement.classList.add("dark");
+          } else {
+              document.documentElement.classList.add("dark");
+          }
+      }, [mode]);
 
   async function RegisterAuth(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();

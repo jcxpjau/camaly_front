@@ -1,110 +1,58 @@
 import React from "react";
-import { CreditCard, CheckCircle } from "lucide-react";
+import { CreditCard } from "lucide-react";
+import ButtonSettings from "./buttonSettings";
 
 export function PlansSettings() {
-  const plans = [
-    {
-      name: "Free",
-      price: "$0",
-      features: ["Basic support", "1 project"],
-      active: false,
-    },
-    {
-      name: "Pro",
-      price: "$15/mo",
-      features: ["Priority support", "10 projects", "API access"],
-      active: true,
-    },
-    {
-      name: "Enterprise",
-      price: "Contact us",
-      features: [
-        "Dedicated support",
-        "Unlimited projects",
-        "Custom integrations",
-      ],
-      active: false,
-    },
-  ];
-
   return (
-    <section
-      className="space-y-6 p-6 rounded-lg"
-      style={{
-        color: "var(--color-card-text)",
-      }}
-    >
-      <header>
+    <section className="space-y-6 p-6 rounded-lg text-[var(--color-card-text)]">
+      <div>
         <h2 className="flex items-center gap-2 text-xl font-semibold">
           <CreditCard className="h-5 w-5 text-[var(--color-icon-default)]" />
           Subscription Plans
         </h2>
-        <p className="text-sm" style={{ color: "var(--color-card-subtext)" }}>
+        <p className="text-sm text-[var(--color-card-subtext)]">
           Choose the plan that fits your needs.
         </p>
-      </header>
-
-      <div className="grid gap-6 md:grid-cols-3">
-        {plans.map((plan) => (
-          <div
-            key={plan.name}
-            className="rounded-lg p-4 shadow-sm"
-            style={{
-              border: `1px solid ${
-                plan.active
-                  ? "var(--color-accent)"
-                  : "var(--color-border)"
-              }`,
-              backgroundColor: plan.active
-                ? "var(--color-accent-bg)"
-                : "var(--color-bg-alt)",
-            }}
-          >
-            <h3 className="text-lg font-semibold mb-2">{plan.name}</h3>
-            <p className="text-2xl font-bold mb-4">{plan.price}</p>
-            <ul className="mb-4 space-y-1 text-sm">
-              {plan.features.map((feature) => (
-                <li key={feature} className="flex items-center gap-2">
-                  <CheckCircle
-                    className="h-4 w-4"
-                    style={{ color: "var(--color-success)" }}
-                  />
-                  {feature}
-                </li>
-              ))}
-            </ul>
-            {plan.active ? (
-              <button
-                disabled
-                className="w-full rounded-md px-4 py-2 cursor-default"
-                style={{
-                  backgroundColor: "var(--color-accent)",
-                  color: "var(--color-button-text)",
-                }}
-              >
-                Current Plan
-              </button>
-            ) : (
-              <button
-                className="w-full rounded-md px-4 py-2"
-                style={{
-                  border: "1px solid var(--color-accent)",
-                  color: "var(--color-accent)",
-                  backgroundColor: "transparent",
-                }}
-                onMouseOver={(e) =>
-                  (e.currentTarget.style.backgroundColor =
-                    "var(--color-accent-bg)")
-                }
-                onMouseOut={(e) =>
-                  (e.currentTarget.style.backgroundColor = "transparent")
-                }
-              >
-                Choose Plan
-              </button>
-            )}
+      </div>
+      <div className="space-y-6">
+        <div className="bg-[var(--color-card-bg)] border border-[var(--color-border)] rounded-lg p-6  space-y-4">
+          <div className="p-4 border rounded-lg border-[var(--color-border)]">
+            <div className="flex justify-between items-center mb-2">
+              <h3 className="font-medium text-[var(--color-text-default)]">
+                Current Plan: Pro
+              </h3>
+              <span className="px-2 py-0.5 rounded border border-[var(--color-success)] text-[var(--color-text-success)]">
+                Active
+              </span>
+            </div>
+            <p className="text-sm text-[var(--color-muted)] mb-4">
+              $99.90/month • Next billing: 02/15/2024
+            </p>
+            <div className="grid grid-cols-3 gap-4 text-sm">
+              <div>
+                <div className="font-medium">Requests</div>
+                <div className="text-[var(--color-muted)]">
+                  45,230 / 100,000
+                </div>
+              </div>
+              <div>
+                <div className="font-medium">Storage</div>
+                <div className="text-[var(--color-muted)]">2.1 GB / 10 GB</div>
+              </div>
+              <div>
+                <div className="font-medium">Users</div>
+                <div className="text-[var(--color-muted)]">12 / 50</div>
+              </div>
+            </div>
           </div>
-        ))}
+
+          <div className="flex gap-2">
+            <ButtonSettings text="Upgrade Plan"/>
+            <button className="px-4 py-2 rounded-md border border-[var(--color-border)] text-[var(--color-text-default)] hover:bg-[var(--color-button-hover)]">
+              Billing History
+            </button>
+          </div>
+        </div>
       </div>
     </section>
   );
