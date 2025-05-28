@@ -172,9 +172,9 @@ export default function Sidebar() {
                                 <ShoppingBag className="w-6 h-6" />
                                 <span>{t('Marketplace')}</span>
                             </a>
-                            <a href="#" onClick={(e) => navigate(e, "/user/concierge")} className="flex items-center gap-2 hover:text-[var(--color-accent)] transition">
+                            <a href="#" onClick={(e) => navigate(e, "/user/reports")} className="flex items-center gap-2 hover:text-[var(--color-accent)] transition">
                                 <ChartPie className="w-6 h-6" />
-                                <span>{t('stats')}</span>
+                                <span>{t('Reports')}</span>
                             </a>
                             {isMobile &&
                                 <a href="#" onClick={(e) => navigate(e, "/user/marketplace")} className="flex items-center gap-2 hover:text-[var(--color-accent)] transition">

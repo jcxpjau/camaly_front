@@ -7,10 +7,16 @@ type AuthState = {
     user: string | null
 }
 
+interface LoginPayload {
+    user: string
+    remember: boolean
+}
+
 const initialState: AuthState = {
     isAuthenticated: false,
     user: null,
 }
+
 
 const getInitialUser = (): AuthState => {
     if (typeof window !== 'undefined') {
@@ -26,10 +32,14 @@ const authSlice = createSlice({
     name: 'auth',
     initialState: getInitialUser(),
     reducers: {
-        login: (state, action: PayloadAction<string>) => {
+        login: (state, action: PayloadAction<LoginPayload> ) => {
+            const { user, remember } = action.payload;
             state.isAuthenticated = true;
-            state.user = action.payload;
-            localStorage.setItem('camaly.user', state.user);
+            state.user = user;
+            if( remember ) {
+                localStorage.setItem('camaly.user', state.user);
+            }
+            
         },
         logout: (state) => {
             state.isAuthenticated = false;
