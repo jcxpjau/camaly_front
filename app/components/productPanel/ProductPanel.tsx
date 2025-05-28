@@ -6,7 +6,9 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface Props {
   children: React.ReactNode;
-  itemsPerPage?: number;
+  itemsPerPage: number;
+  currentPage: number;
+  onPageChange: (page: number) => void;
 }
 
 const slideVariants = {
@@ -24,23 +26,38 @@ const slideVariants = {
   }),
 };
 
-const ProductPanel = ({ children, itemsPerPage = 4 }: Props): JSX.Element=> {
-  const [currentPage, setCurrentPage] = useState(1);
+interface Props {
+  children: React.ReactNode;
+  itemsPerPage: number;
+  currentPage: number;
+  onPageChange: (page: number) => void;
+  paginate?: boolean; // ✅ nova prop opcional
+}
+
+const ProductPanel = ({
+  children,
+  itemsPerPage,
+  currentPage,
+  onPageChange,
+  paginate = true,
+}: Props): JSX.Element => {
   const [direction, setDirection] = useState(1);
 
   const allChildren = useMemo(() => Children.toArray(children), [children]);
 
   const pageCount = Math.ceil(allChildren.length / itemsPerPage);
 
-  const currentItems = allChildren.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
+  const currentItems = paginate
+    ? allChildren.slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage
+      )
+    : allChildren;
 
   const handlePageChange = (page: number) => {
     if (page >= 1 && page <= pageCount) {
       setDirection(page > currentPage ? 1 : -1);
-      setCurrentPage(page);
+      onPageChange(page);
     }
   };
 
@@ -61,54 +78,49 @@ const ProductPanel = ({ children, itemsPerPage = 4 }: Props): JSX.Element=> {
         </motion.div>
       </AnimatePresence>
 
-      <div className="flex justify-center mt-5">
-        <div className="flex gap-2">
-          <button
-            style={{
-              backgroundColor: "var(--color-bg-alt)",
-              color: "var(--color-text)",
-              border: "1px solid var(--color-border)",
-            }}
-            className="text-sm px-3 py-1.5 rounded-lg hover:brightness-110 transition"
-            onClick={() => handlePageChange(currentPage - 1)}
-            disabled={currentPage === 1}
-          >
-            <ChevronLeft color="var(--color-text)"/>
-          </button>
-
-          {Array.from({ length: pageCount }, (_, i) => (
+      {paginate && (
+        <div className="flex justify-center mt-5">
+          <div className="flex gap-2">
             <button
-              key={i}
-              style={{
-                backgroundColor:
-                  currentPage === i + 1
-                    ? "var(--color-accent)"
-                    : "var(--color-bg-alt)",
-                color: currentPage === i + 1 ? "#fff" : "var(--color-text)",
-                border: "1px solid var(--color-border)",
-              }}
               className="text-sm px-3 py-1.5 rounded-lg hover:brightness-110 transition"
-              onClick={() => handlePageChange(i + 1)}
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
             >
-              {i + 1}
+              <ChevronLeft />
             </button>
-          ))}
 
-          <button
-            style={{
-              backgroundColor: "var(--color-bg-alt)",
-              border: "1px solid var(--color-border)",
-            }}
-            className="text-sm px-3 py-1.5 rounded-lg hover:brightness-110 transition"
-            onClick={() => handlePageChange(currentPage + 1)}
-            disabled={currentPage === pageCount}
-          >
-            <ChevronRight color="var(--color-text)"/>
-          </button>
+            {Array.from({ length: pageCount }, (_, i) => (
+              <button
+                key={i}
+                style={{
+                  backgroundColor:
+                    currentPage === i + 1
+                      ? "var(--color-accent)"
+                      : "var(--color-bg-alt)",
+                  color: currentPage === i + 1 ? "#fff" : "var(--color-text)",
+                  border: "1px solid var(--color-border)",
+                }}
+                className="text-sm px-3 py-1.5 rounded-lg hover:brightness-110 transition"
+                onClick={() => handlePageChange(i + 1)}
+              >
+                {i + 1}
+              </button>
+            ))}
+
+            <button
+              className="text-sm px-3 py-1.5 rounded-lg hover:brightness-110 transition"
+              type="button"
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === pageCount}
+            >
+              <ChevronRight />
+            </button>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
-}
+};
+
 
 export default ProductPanel
