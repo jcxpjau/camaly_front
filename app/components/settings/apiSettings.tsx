@@ -12,7 +12,7 @@ export function ApiSettings() {
   const [key, setKey] = useState('');
 
   return (
-    <section className="space-y-6 p-6 rounded-lg text-[var(--color-card-text)]">
+    <section  className="space-y-6 rounded-lg" style={{ color: "var(--color-card-text)" }}>
       <div>
         <h2 className="flex items-center gap-2 text-xl font-semibold">
           <Code className="h-5 w-5" />

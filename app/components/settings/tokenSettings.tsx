@@ -19,7 +19,7 @@ const tokens = [
 
 export function TokenSettings() {
   return (
-    <section className="space-y-6 p-6 rounded-lg text-[var(--color-card-text)]">
+    <section  className="space-y-6 rounded-lg" style={{ color: "var(--color-card-text)" }}>
       <header>
         <h2 className="flex items-center gap-2 text-xl font-semibold">
           <Key className="h-5 w-5 text-[var(--color-icon-default)]" />
