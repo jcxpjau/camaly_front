@@ -11,12 +11,19 @@ import "./productOverview.css";
 
 type ProductOverviewProps = {
   onClick: () => void;
-  title: string;
-  price: string;
+  workflow: {
+    name: string;
+    description: string;
+    icon: JSX.Element;
+    price: string;
+  };
 };
 
-const ProductOverview = ({ onClick, title, price }: ProductOverviewProps): JSX.Element => {
+
+const ProductOverview = ({ onClick, workflow }: ProductOverviewProps): JSX.Element => {
   const { t } = useTranslation();
+  const { name, price, description, icon } = workflow;
+  console.log(workflow)
   return (
     <motion.div
       className="fixed inset-0 z-50 flex items-center justify-end pointer-events-none"
@@ -25,7 +32,7 @@ const ProductOverview = ({ onClick, title, price }: ProductOverviewProps): JSX.E
       exit={{ opacity: 0 }}
     >
       <motion.div
-        className="productOverview w-1/3 h-full bg-white dark:bg-[var(--color-bg)] rounded-lg flex flex-col pointer-events-auto border border-[var(--color-border)] shadow-lg px-15 py-20 gap-4"
+        className="productOverview lg:w-1/3 md:w-1/2 w-11/12 h-full bg-white dark:bg-[var(--color-bg)] rounded-lg flex flex-col pointer-events-auto border border-[var(--color-border)] shadow-lg px-15 py-20 gap-4"
         initial={{ x: "100%" }}
         animate={{ x: 0 }}
         exit={{ x: "100%" }}
@@ -34,7 +41,7 @@ const ProductOverview = ({ onClick, title, price }: ProductOverviewProps): JSX.E
         {/* Header */}
         <div className="flex items-center justify-between w-full mb-8">
           <div>
-            <h2 className="text-2xl text-[var(--color-text)]">{title}</h2>
+            <h2 className="text-2xl text-[var(--color-text)]">{name}</h2>
             <p className="text-base text-[var(--color-text)] mt-1"> {t('marketplace.prices')} ${Number(price).toFixed(2)}</p>
           </div>
           <button

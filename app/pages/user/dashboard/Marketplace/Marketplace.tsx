@@ -14,6 +14,7 @@ const Marketplace = (): JSX.Element => {
   const { t } = useTranslation();
   const [workflows, setWorkflows] = useState<
     {
+      id: string;
       name: string;
       description: string;
       icon: JSX.Element;
@@ -80,8 +81,6 @@ const Marketplace = (): JSX.Element => {
           url.searchParams.append("maxPrice", selectedMaxPrice.toString());
         }
 
-        console.log("Fetching URL:", url.toString());
-
         const res = await fetch(url);
         const json = await res.json();
 
@@ -93,6 +92,7 @@ const Marketplace = (): JSX.Element => {
         }
 
         const mappedData = json.data.map((item: any) => ({
+          id: item._id,
           name: item.name,
           description: item.description,
           price: item.price,
@@ -166,13 +166,13 @@ const Marketplace = (): JSX.Element => {
         >
           {workflows.map((workflow, idx) => (
             <ProductCard.Root key={idx}>
-              <ProductCard.Header icon={workflow.icon} price={workflow.price} />
+              <ProductCard.Header icon={workflow.icon} price={Number(workflow.price)} />
               <ProductCard.Title>{workflow.name}</ProductCard.Title>
               <ProductCard.Description>
                 {workflow.description}
               </ProductCard.Description>
               <ProductCard.Footer>
-                <BuyBtn/>
+                <BuyBtn />
                 <ProductCard.MoreInfoButton
                   onClick={() => setSelectedProduct(workflow)}
                 />
@@ -185,8 +185,7 @@ const Marketplace = (): JSX.Element => {
         {selectedProduct && (
           <ProductOverview
             onClick={() => setSelectedProduct(null)}
-            title={selectedProduct.name}
-            price={selectedProduct.price}
+            workflow={selectedProduct}
           />
         )}
       </AnimatePresence>

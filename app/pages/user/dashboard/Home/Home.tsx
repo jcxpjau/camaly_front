@@ -31,7 +31,7 @@ const Home = (): JSX.Element => {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
-              Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImR1ZGFwaW1lbnRlbEBtYWlsLmNvbSIsInN1YiI6IjY4MzcwZTgwMDA1YWU5ZDBiMjY5Zjk2NCIsImlhdCI6MTc0ODQ0OTYxOCwiZXhwIjoxNzUwMTc3NjE4fQ.6iSWb8w_oWEkug7u8z-wHTj0ds3teBQPPXtuyg_OiJM`,
+              Authorization: `Bearer ${localStorage.getItem('camaly.user')}`,
             },
           }
         );
@@ -94,15 +94,12 @@ const Home = (): JSX.Element => {
               <ProductCard.Root key={purchase.id}>
                 <ProductCard.Header
                   icon={purchase.icon}
-                  price={`$${purchase.price}`}
+                  price={purchase.price}
                 />
                 <ProductCard.Title>{purchase.name}</ProductCard.Title>
                 <ProductCard.Description>
                   {purchase.description}
                 </ProductCard.Description>
-                {/* <ProductCard.Footer>
-                  <ProductCard.MoreInfoButton />
-                </ProductCard.Footer> */}
               </ProductCard.Root>
             ))}
           </ProductPanel>
