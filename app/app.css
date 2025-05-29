@@ -36,7 +36,6 @@ html, body {
     radial-gradient(90% 10% at 50% 0%, rgba(164, 183, 244, 0.05), transparent 90%);
 }
 
-/* Variáveis do tema claro */
 :root {
   --color-bg: #f9fafb;
   --color-border: #e5e7eb;
@@ -46,17 +45,36 @@ html, body {
   --color-accent: #4f46e5;
   --color-progress-bg: #d1d5db;
   --color-progress: #6366f1;
-  --color-card-bg: #f0f2f5; /* leve cinza para destacar */
+  --color-card-bg: #f0f2f5;
   --color-card-text: #111827;
   --color-card-subtext: #6b7280;
   --color-divider: #e5e7eb;
   --color-button-bg: rgba(0, 0, 0, 0.05);
   --color-button-hover: rgba(0, 0, 0, 0.1);
-  --color-bg-input: rgba(0,0,0,0.15); /* ou até 0.2 ou 0.25 */
-
+  --color-bg-input: transparent;
+  --color-border-input: black;
+  --color-error: #f87171;
+  --color-success: #22c55e;
+  --color-warning: #eab308;
+  --color-info: #3b82f6;
+  --color-text-error: #f87171;
+  --color-text-success: #22c55e;
+  --color-text-warning: #eab308;
+  --color-text-info: #3b82f6;
+  --color-text-default: #111827;
+  --color-icon-error: #f87171;
+  --color-icon-success: #22c55e;
+  --color-icon-warning: #eab308;
+  --color-icon-info: #3b82f6;
+  --color-icon-default: #111827;
+  --color-placeholder-error: #fca5a5;
+  --color-placeholder-success: #4ade80;
+  --color-placeholder-warning: #fbbf24;
+  --color-placeholder-info: #60a5fa;
+  --color-placeholder-default: rgba(17, 24, 39, 0.6);
+  --color-label-text: rgba(0, 0, 0, 0.7);
 }
 
-/* Variáveis do tema escuro (mantidas) */
 .dark {
   --color-bg: #2A2A2A;
   --color-border: #353535;
@@ -73,4 +91,25 @@ html, body {
   --color-button-bg: rgba(255, 255, 255, 0.1);
   --color-button-hover: rgba(255, 255, 255, 0.2);
   --color-bg-input: rgba(0,0,0,0.25);
+  --color-border-input: #353535; 
+  --color-error: #fca5a5;
+  --color-success: #4ade80;
+  --color-warning: #fbbf24;
+  --color-info: #60a5fa;
+  --color-text-error: #fca5a5;
+  --color-text-success: #4ade80;
+  --color-text-warning: #fbbf24;
+  --color-text-info: #60a5fa;
+  --color-text-default: #ffffff; 
+  --color-icon-error: #fca5a5;
+  --color-icon-success: #4ade80;
+  --color-icon-warning: #fbbf24;
+  --color-icon-info: #60a5fa;
+  --color-icon-default: #ffffff;
+  --color-placeholder-error: #f87171;
+  --color-placeholder-success: #22c55e;
+  --color-placeholder-warning: #eab308;
+  --color-placeholder-info: #3b82f6;
+  --color-placeholder-default: rgba(255, 255, 255, 0.6);
+  --color-label-text: rgba(255, 255, 255, 0.8);
 }
