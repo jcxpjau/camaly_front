@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Mail, User, Shield } from "lucide-react";
 import { Input } from "../input/input";
 import ButtonSettings from "./buttonSettings";
+import { useAuth } from "~/context/auth/auth.hooks";
 
 export function PersonalSettings() {
   const [notifications, setNotifications] = useState(false);//Estado para o toogle de receber emails
@@ -11,6 +12,18 @@ export function PersonalSettings() {
   const [oldpassword, setOldPassowrd] = useState('');
   const [newpassword, setNewPassowrd] = useState('');
   const [confirmnewpassword, setConfirmNewPassowrd] = useState('');
+
+  const {user} = useAuth();
+  
+  //Useeffect para pegar as infos do usuário e ele conseguir editar
+  useEffect(() => {
+  if (user?.email) {
+    setEmail(user.email);
+  }
+  if (user?.name) {
+    setName(user.name);
+  }
+}, [user]);
 
   return (
     <div className="flex flex-col gap-15">
@@ -66,16 +79,13 @@ export function PersonalSettings() {
                   role="switch"
                   aria-checked={notifications}
                   onClick={() => setNotifications(!notifications)}
-                  className={`relative inline-flex h-6 w-12 items-center rounded-full transition-colors duration-300 focus:outline-none ${
-                    notifications ? 'bg-[var(--color-accent)]' : 'bg-[var(--color-bg-input)]'
+                  className={`relative inline-flex h-6 w-12 items-center rounded-full transition-colors duration-300 ${
+                    notifications ? 'bg-[var(--color-accent)]' : 'bg-[var(--color-muted)]'
                   }`}
-                  style={{
-                    border: '1px solid var(--color-border)',
-                  }}
                 >
                   <span
-                    className={`inline-block h-5 w-5 transform rounded-full bg-[var(--color-text)] transition-transform duration-300 ${
-                      notifications ? 'translate-x-5' : 'translate-x-1'
+                    className={`inline-block w-5 h-5 rounded-full bg-white shadow-md transition-transform duration-300 transform ${
+                      notifications ? 'translate-x-6' : 'translate-x-0.5'
                     }`}
                   />
                 </button>

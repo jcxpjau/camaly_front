@@ -190,7 +190,7 @@ export default function Register() {
             </div>
             {error && (
               <div className="text-red-300 text-sm p-3 rounded text-center my-4">
-                O endereço de e-mail informado já está vinculado a uma conta. Por favor, utilize outro e-mail ou realize o login com suas credenciais.
+                The email address you entered is already linked to an account. Please use a different email address or log in with your credentials.
               </div>
             )}
             <form onSubmit={RegisterAuth} className="space-y-4 mt-6">
