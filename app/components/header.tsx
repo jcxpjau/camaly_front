@@ -107,12 +107,9 @@ export default function Header() {
                         style={{ zIndex: 5 }}
                     />
                 </div>
-
                 <button className="rounded-full p-2 hover:bg-[var(--color-bg-alt)] hidden sm:block">
                     <CircleHelp className="w-6 h-6 text-[var(--color-muted)]" />
                 </button>
-
-                {/* Profile + Submenu */}
                 <div className="relative hidden sm:block" ref={profileRef}>
                     <button
                         onClick={() => setShowProfileMenu((prev) => !prev)}

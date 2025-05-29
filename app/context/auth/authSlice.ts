@@ -4,28 +4,29 @@ import type { PayloadAction } from '@reduxjs/toolkit'
 
 type AuthState = {
     isAuthenticated: boolean
-    user: string | null
+    token: string | null,
+    user: any | null
 }
-
 interface LoginPayload {
-    user: string
+    token: string
     remember: boolean
 }
 
 const initialState: AuthState = {
     isAuthenticated: false,
-    user: null,
+    token: null,
+    user: null
 }
 
 
 const getInitialUser = (): AuthState => {
     if (typeof window !== 'undefined') {
-        const storedUser = localStorage.getItem('camaly.user')
-        if( storedUser ) {
-            return { isAuthenticated: true , user: storedUser }
+        const storeToken = localStorage.getItem('camaly.token')
+        if( storeToken ) {
+            return { isAuthenticated: true , token: storeToken, user: null }
         }
     }
-    return { isAuthenticated: false, user : null }
+    return { isAuthenticated: false, token : null, user: null }
 }
 
 const authSlice = createSlice({
@@ -33,21 +34,23 @@ const authSlice = createSlice({
     initialState: getInitialUser(),
     reducers: {
         login: (state, action: PayloadAction<LoginPayload> ) => {
-            const { user, remember } = action.payload;
+            const { token, remember } = action.payload;
             state.isAuthenticated = true;
-            state.user = user;
+            state.token = token;
             if( remember ) {
-                localStorage.setItem('camaly.user', state.user);
+                localStorage.setItem('camaly.token', state.token);
             }
-            
         },
         logout: (state) => {
             state.isAuthenticated = false;
-            state.user = null;
-            localStorage.removeItem( 'camaly.user' );
+            state.token = null;
+            localStorage.removeItem( 'camaly.token' );
         },
+        setUser: ( state, action: PayloadAction<any> ) => {
+            state.user = action.payload;
+        }
     },
 })
 
-export const { login, logout } = authSlice.actions
+export const { login, logout, setUser } = authSlice.actions
 export default authSlice.reducer

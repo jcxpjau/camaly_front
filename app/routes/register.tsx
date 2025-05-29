@@ -3,8 +3,8 @@ import Registerr from "~/pages/user/login/Register";
 
 export function meta({ }: Route.MetaArgs) {
     return [
-        { title: "Camaly | Home" },
-        { name: "description", content: "Welcome to Camaly!" },
+        { title: "Camaly | Sign Up" },
+        { name: "description", content: " Sign Up to Camaly" },
     ];
 }
 
