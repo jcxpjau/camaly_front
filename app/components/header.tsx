@@ -107,12 +107,9 @@ export default function Header() {
                         style={{ zIndex: 5 }}
                     />
                 </div>
-
                 <button className="rounded-full p-2 hover:bg-[var(--color-bg-alt)] hidden sm:block">
                     <CircleHelp className="w-6 h-6 text-[var(--color-muted)]" />
                 </button>
-
-                {/* Profile + Submenu */}
                 <div className="relative hidden sm:block" ref={profileRef}>
                     <button
                         onClick={() => setShowProfileMenu((prev) => !prev)}
@@ -131,17 +128,26 @@ export default function Header() {
                             >
                                 <ul className="py-1 text-sm text-[var(--color-text)]">
                                     <li>
-                                        <a  onClick={(e) => navigate( e , "/user/settings" )} className="flex items-center gap-2 px-4 py-2 hover:bg-[var(--color-bg)]">
+                                        <a  
+                                            onClick={(e) => navigate( e , "/user/settings" )} 
+                                            className="flex items-center gap-2 px-4 py-2 hover:bg-[var(--color-bg)] cursor-pointer"
+                                        >
                                             <User className="w-4 h-4" /> My Profile
                                         </a>
                                     </li>
                                     <li>
-                                        <a onClick={(e) => navigate( e , "/user/settings" )} className="flex items-center gap-2 px-4 py-2 hover:bg-[var(--color-bg)]">
+                                        <a 
+                                            onClick={(e) => navigate( e , "/user/settings" )} 
+                                            className="flex items-center gap-2 px-4 py-2 hover:bg-[var(--color-bg)] cursor-pointer"
+                                        >
                                             <Settings className="w-4 h-4" /> Settings
                                         </a>
                                     </li>
                                     <li>
-                                        <button className="flex items-center gap-2 w-full text-left px-4 py-2 hover:bg-[var(--color-bg)]" onClick={() => { logout(); navigate( null, "/" ); }}>
+                                        <button 
+                                            className="flex items-center gap-2 w-full text-left px-4 py-2 hover:bg-[var(--color-bg)] cursor-pointer" 
+                                            onClick={() => { logout(); navigate( null, "/" ); }}
+                                        >
                                             <LogOut className="w-4 h-4" /> Logout
                                         </button>
                                     </li>

@@ -7,7 +7,7 @@ import {
     ScrollRestoration,
 } from "react-router";
 import { Provider } from "react-redux";
-import { useLocation } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import { store, type RootState } from "./store";
 import { useEffect, useLayoutEffect } from "react";
 import type { Route } from "./+types/root";
@@ -15,9 +15,8 @@ import "./app.css";
 import Header from "./components/header";
 import Sidebar from "./components/sidebar";
 import { useTheme } from "./context/theme/theme.hooks";
-import Login from "./pages/user/login/Login";
-import Register from "./pages/user/login/Register";
 import { useAuth } from "./context/auth/auth.hooks";
+
 
 export const links: Route.LinksFunction = () => [
     { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -42,6 +41,62 @@ function ThemeWrapper({ children }: { children: React.ReactNode }) {
     return <>{children}</>;
 }
 
+function AppContent() {
+    const location = useLocation();
+    const navigate = useNavigate();
+    const { isAuthenticated, token, setUser } = useAuth();
+    const publicRoutes = ["/login", "/register"];
+    const isPublicRoute = publicRoutes.includes(location.pathname);
+
+    useEffect(() => {
+        if (!isAuthenticated && !isPublicRoute) {
+            navigate("/login");
+        }
+    }, [isAuthenticated, isPublicRoute, navigate]);
+
+    async function getUser()
+    {
+        try {
+            const res = await fetch(
+                import.meta.env.VITE_API_URL + "users/me",
+                {
+                    method: "GET",
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`,
+                    },
+                }
+            );
+            const json = await res.json();
+            if (!res.ok) {
+                console.error("Error getting user:", json );
+                return;
+            }
+            setUser( json );
+        } catch( err : any ) {
+            console.log( err );
+        }
+    }
+
+    useEffect( () => {
+        if( token ) {
+            getUser();
+        }
+    }, [token])
+    
+    return (
+        <>
+            {isAuthenticated && <Header />}
+            <div className="flex flex-1 overflow-hidden">
+                {isAuthenticated && <Sidebar />}
+                <main className="flex-1 overflow-auto bg-[var(--color-bg)]">
+                    <Outlet />
+                </main>
+            </div>
+        </>
+    );
+}
+
 export function Layout({ children }: { children: React.ReactNode }) {
     return (
         <html lang="en">
@@ -61,31 +116,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-
-    const location = useLocation();
-    const publicRoutes = ["/", "/register"];
-    const isPublicRoute = publicRoutes.includes(location.pathname);
-
     return (
         <Provider store={store}>
             <ThemeWrapper>
-                {store.getState().auth.isAuthenticated &&
-                    <Header />
-                }
-                <div className="flex flex-1 overflow-hidden">
-                    {store.getState().auth.isAuthenticated &&
-                        <Sidebar />
-                    }
-                    <main className="flex-1 overflow-auto bg-[var(--color-bg)]">
-                        {!store.getState().auth.isAuthenticated && location.pathname === "/register" ? (
-                            <Register />
-                        ) : !store.getState().auth.isAuthenticated ? (
-                            <Login />
-                        ) : (
-                            <Outlet />
-                        )}
-                    </main>
-                </div>
+                <AppContent />
             </ThemeWrapper>
         </Provider>
     );

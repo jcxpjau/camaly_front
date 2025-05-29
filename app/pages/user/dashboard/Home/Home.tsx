@@ -1,15 +1,12 @@
-// import libraries
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import type { JSX } from "react";
 import { useState, useEffect } from "react";
-//import styling
 import "./Home.css";
-//import components
 import { ProductCard } from "~/components/productCard";
 import ProductPanel from "~/components/productPanel/ProductPanel";
-//import icons
-import { Bot, Mail } from "lucide-react";
+import { ICONS } from "~/components/filterBar/iconCategories";
+import { useAuth } from "~/context/auth/auth.hooks";
 
 interface Purchase {
   id: string;
@@ -20,20 +17,24 @@ interface Purchase {
 }
 
 const Home = (): JSX.Element => {
+  const {user} = useAuth();
   const { t } = useTranslation();
   const [purchases, setPurchases] = useState<Purchase[]>([]);
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         setLoading(true);
-        const res = await fetch(`${import.meta.env.VITE_API_URL}/purchases/user/682e275f1d6355d68ebff580`,
+        const res = await fetch(
+          `${import.meta.env.VITE_API_URL}purchases/user/682e275f1d6355d68ebff580`,
           {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
-              Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImluamVjYW8yQHRlc3RlLmNvbSIsInN1YiI6IjY4MmUyNzVmMWQ2MzU1ZDY4ZWJmZjU4MCIsImlhdCI6MTc0ODI4ODQ3MywiZXhwIjoxNzUwMDE2NDczfQ.tVCBjFe5nRrL2tWj4M_Zg0HfqLA2sqMgzjew3I-Jrts`,
+              Authorization: `Bearer ${localStorage.getItem('camaly.user')}`,
             },
           }
         );
@@ -47,9 +48,8 @@ const Home = (): JSX.Element => {
           name: item.productId.name,
           description: item.productId.description,
           price: item.productId.price,
-          icon: <Bot className="w-5 h-5 text-[color:var(--color-accent)]" />,
+           icon: ICONS[item.productId.iconName] ?? ICONS["bot"], 
         }));
-        //console.log(mappedData)
         setPurchases(mappedData);
       } catch (err: any) {
         console.log(err);
@@ -60,7 +60,8 @@ const Home = (): JSX.Element => {
     fetchProducts();
   }, []);
 
-  if (loading) {
+
+  if (loading || !user) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[var(--color-bg)] text-[var(--color-text)]">
         <div className="flex flex-col items-center gap-4">
@@ -81,27 +82,28 @@ const Home = (): JSX.Element => {
           transition={{ duration: 0.8, ease: "easeOut" }}
         >
           <h1 className="accent text-3xl bg-gradient-to-r text-transparent bg-clip-text mb-4 drop-shadow-lg">
-            {t("home.greeting", { name: "Nanni" })}
+            {t("home.greeting", { name: user?.name })}
           </h1>
           <p className="text-lg md:text-xl text-[color:var(--color-text)] font-light max-w-2xl leading-relaxed animate-fade-in">
             {t("home.subtitle")}
           </p>
         </motion.div>
         {purchases.length > 0 ? (
-          <ProductPanel itemsPerPage={3}>
+          <ProductPanel
+            itemsPerPage={3}
+            currentPage={currentPage}
+            onPageChange={setCurrentPage}
+          >
             {purchases.map((purchase) => (
               <ProductCard.Root key={purchase.id}>
                 <ProductCard.Header
                   icon={purchase.icon}
-                  price={`$${purchase.price.toFixed(2)}`}
+                  price={purchase.price}
                 />
                 <ProductCard.Title>{purchase.name}</ProductCard.Title>
                 <ProductCard.Description>
                   {purchase.description}
                 </ProductCard.Description>
-                <ProductCard.Footer>
-                  <ProductCard.MoreInfoButton />
-                </ProductCard.Footer>
               </ProductCard.Root>
             ))}
           </ProductPanel>

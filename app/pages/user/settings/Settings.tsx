@@ -22,7 +22,7 @@ export default function Settings() {
     <div className="min-h-screen bg-[var(--color-bg)] p-6 transition-colors">
       <div className="max-w-6xl mx-auto">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-[var(--color-text)] mb-2">Settings</h1>
+          <h1 className="text-3xl text-[var(--color-text)] mb-2">Settings</h1>
           <p className="text-[var(--color-muted)]">Manage your account preferences and settings</p>
         </div>
         <div className="space-y-6 mb-6">

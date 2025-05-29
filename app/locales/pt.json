@@ -4,7 +4,7 @@
   "creator": "Criador de Ads",
   "your-stats": "Suas Estatisticas",
   "agent": "Novos Agentes",
-  "stats": "Estatisticas",
+  "Reports": "Relatórios",
   "concierge": "Atendente",
   "credits": "de créditos",
   "your-agents": "Seus Agentes",
@@ -24,7 +24,35 @@
   "marketplace": {
     "title": "Marketplace de Workflows",
     "description": "Aumente sua produtividade adicionando automações ao seu negócio.",
-    "search-placeholder": "Buscar workflows..."
+    "search-placeholder": "Buscar workflows...",
+    "prices": "Preço",
+    "categoryChoice": "Selecionar categoria",
+    "author": "Autor"
+  },
+  "reports": {
+    "title": "Relatórios",
+    "description": "Insights e métricas de sessões de suporte e dados de uso.",
+    "stats": {
+      "sessions": {
+        "title": "1.024 sessões de suporte",
+        "description": "só neste mês com a Concierge"
+      },
+      "questions": {
+        "title": ">3.000 perguntas respondidas",
+        "description": "aos clientes"
+      },
+      "credits": {
+        "title": "5.000 créditos",
+        "description": "Média de uso mensal"
+      }
+    },
+    "usage": {
+      "title": "Uso por dia da semana"
+    },
+    "agents": {
+      "title": "Agentes",
+      "mostUsed": "Mais utilizados"
+    }
   },
   "conciergeStats": {
     "title": "Concierge",
@@ -55,5 +83,27 @@
     "greeting": "Bem-vindo de volta, {{name}}!",
     "subtitle": "Confira seus fluxos de trabalho adquiridos",
     "noProducts": "Você não tem nenhum fluxo ativo"
+  },
+  "category": {
+    "posts": "Redes sociais",
+    "insight": "Insights",
+    "schedule": "Agendamentos",
+    "bot": "Atendimento",
+    "personalization": "Experiência do cliente",
+    "user": "Usuários",
+    "settings": "Configurações",
+    "notifications": "Notificações",
+    "messages": "Mensagens",
+    "files": "Arquivos",
+    "documents": "Documentos",
+    "analytics": "Análises",
+    "global": "Presença global",
+    "favorites": "Favoritos",
+    "likes": "Engajamento",
+    "security": "Segurança",
+    "privacy": "Privacidade",
+    "access": "Controle de acesso",
+    "ai": "Recursos de IA",
+    "success": "Sucesso"
   }
 }

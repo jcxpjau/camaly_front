@@ -16,10 +16,7 @@ export default function Login() {
     const [rememberMe, setRememberMe ] = useState(false);
     const [error, setError] = useState(false)
     const navigate = useCustomNavigate();
-
     const [mousePos, setMousePos] = useState<{ x: number; y: number } | null>(null);
-
-    // Ref da box para calcular posição relativa do mouse dentro dela
     const boxRef = useRef<HTMLDivElement>(null);
 
     async function LoginAuth(e: React.FormEvent<HTMLFormElement>) {

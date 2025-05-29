@@ -3,8 +3,8 @@ import Loginn from "~/pages/user/login/Login";
 
 export function meta({ }: Route.MetaArgs) {
     return [
-        { title: "Camaly | Login" },
-        { name: "description", content: "Welcome to Camaly!" },
+        { title: "Camaly | Sign In" },
+        { name: "description", content: "Sign In to Camaly!" },
     ];
 }
 
