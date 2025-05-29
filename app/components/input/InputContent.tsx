@@ -8,7 +8,6 @@ interface InputFieldProps {
   value: string;
   onChange: (value: string) => void;
   status?: InputStatus;
-  typeLogin?: boolean; // para tema escuro
 }
 
 export function InputContent({
@@ -17,7 +16,6 @@ export function InputContent({
   value,
   onChange,
   status,
-  typeLogin,
 }: InputFieldProps) {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -28,11 +26,11 @@ export function InputContent({
     success: "var(--color-text-success)",
     warning: "var(--color-text-warning)",
     info: "var(--color-text-info)",
-    undefined: typeLogin ? "#ffffff" : "var(--color-text-default)",
+    undefined: "var(--color-text-default)",
   };
 
-  //Se tem status e ele for diferente de indefinido usa a cor do status se não pega a indefinida
-  const textColor = status && status !== undefined ? textColors[status] : textColors.undefined;
+
+  const textColor = textColors[status ?? "undefined"];//Se o text color vier na chamada do componente ele atribui, caso contrário será undefined
 
   return (
     <div className="relative w-full flex items-center">
@@ -49,14 +47,18 @@ export function InputContent({
         }}
         className="focus:outline-none w-full"
       />
-      {isPassword && (
+      {isPassword && (//Somente se for do tipo password irá mostrar o olho
         <button
           type="button"
           onClick={() => setShowPassword((prev) => !prev)}
           className="absolute right-0 pr-1 text-[var(--color-card-subtext)] hover:text-[var(--color-card-text)] transition"
           aria-label={showPassword ? "Hide password" : "Show password"}
         >
-          {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+          {showPassword ? (
+            <EyeOff className="w-5 h-5" />
+          ) : (
+            <Eye className="w-5 h-5" />
+          )}
         </button>
       )}
     </div>
