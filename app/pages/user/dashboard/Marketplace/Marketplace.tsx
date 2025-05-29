@@ -1,15 +1,20 @@
+// import libraries
 import { useState, useEffect, type JSX } from "react";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
+// import components
 import ProductPanel from "~/components/productPanel/ProductPanel";
 import { ProductCard } from "~/components/productCard";
 import { FilterControls } from "~/components/filterBar";
 import { ICONS } from "~/components/filterBar/iconCategories";
+import ProductOverview from "~/components/productOverview/productOverview";
+import BuyBtn from "~/components/buyBtn/butBtn";
 
 const Marketplace = (): JSX.Element => {
   const { t } = useTranslation();
   const [workflows, setWorkflows] = useState<
     {
+      id: string;
       name: string;
       description: string;
       icon: JSX.Element;
@@ -37,8 +42,14 @@ const Marketplace = (): JSX.Element => {
     );
   };
 
+  //productviewer controls
+  const [selectedProduct, setSelectedProduct] = useState<
+    null | (typeof workflows)[number]
+  >(null);
+
+  // activate and deactivate pagination as a filter is applied
   useEffect(() => {
-    if ((searchTerm || selectedMaxPrice > 0)) {
+    if (searchTerm || selectedMaxPrice > 0) {
       setPaginate(false);
       setItemsPerPage(99);
     } else {
@@ -70,8 +81,6 @@ const Marketplace = (): JSX.Element => {
           url.searchParams.append("maxPrice", selectedMaxPrice.toString());
         }
 
-        console.log("Fetching URL:", url.toString());
-
         const res = await fetch(url);
         const json = await res.json();
 
@@ -83,6 +92,7 @@ const Marketplace = (): JSX.Element => {
         }
 
         const mappedData = json.data.map((item: any) => ({
+          id: item._id,
           name: item.name,
           description: item.description,
           price: item.price,
@@ -137,13 +147,12 @@ const Marketplace = (): JSX.Element => {
               onClick={() => setShowIcons((prev) => !prev)}
             /> */}
             {showIcons && (
-            <FilterControls.IconCloud
-              selectedIcons={selectedIcons}
-              onSelect={toggleIconSelection}
-            />
-          )}
+              <FilterControls.IconCloud
+                selectedIcons={selectedIcons}
+                onSelect={toggleIconSelection}
+              />
+            )}
           </FilterControls.Root>
-
         </div>
 
         {/* Panel */}
@@ -157,19 +166,29 @@ const Marketplace = (): JSX.Element => {
         >
           {workflows.map((workflow, idx) => (
             <ProductCard.Root key={idx}>
-              <ProductCard.Header icon={workflow.icon} price={workflow.price} />
+              <ProductCard.Header icon={workflow.icon} price={Number(workflow.price)} />
               <ProductCard.Title>{workflow.name}</ProductCard.Title>
               <ProductCard.Description>
                 {workflow.description}
               </ProductCard.Description>
               <ProductCard.Footer>
-                <ProductCard.BuyButton />
-                <ProductCard.MoreInfoButton />
+                <BuyBtn />
+                <ProductCard.MoreInfoButton
+                  onClick={() => setSelectedProduct(workflow)}
+                />
               </ProductCard.Footer>
             </ProductCard.Root>
           ))}
         </ProductPanel>
       </div>
+      <AnimatePresence>
+        {selectedProduct && (
+          <ProductOverview
+            onClick={() => setSelectedProduct(null)}
+            workflow={selectedProduct}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 };

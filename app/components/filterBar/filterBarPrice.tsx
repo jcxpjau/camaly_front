@@ -32,7 +32,7 @@ const FilterPrice = ({ selected, onSelect, maxRange = 100 }: FilterProps) => {
           }
           setOpen(!open);
         }}
-        className="flex items-center gap-2 bg-[var(--color-accent)] text-white px-3 py-2 rounded-xl text-sm hover:brightness-110 transition"
+        className="flex items-center gap-2 bg-[var(--color-accent)] text-white px-3 py-2 rounded-xl text-sm hover:brightness-110 transition hover:cursor-pointer h-full"
       >
         <Filter className="w-4 h-4" /> {t("marketplace.prices")}
       </button>

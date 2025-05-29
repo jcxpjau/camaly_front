@@ -3,7 +3,7 @@ import type {ReactElement, JSX } from "react";
 
 type HeaderProps = {
   icon: ReactElement;
-  price: string;
+  price: number;
 };
 
 const Header = ({ icon, price }: HeaderProps): JSX.Element => {

@@ -92,7 +92,7 @@ const ProductPanel = ({
         <div className="flex justify-center mt-5">
           <div className="flex gap-2">
             <button
-              className="text-sm px-3 py-1.5 rounded-lg hover:brightness-110 transition"
+              className="text-sm px-3 py-1.5 rounded-lg hover:brightness-110 transition hover:cursor-pointer"
               onClick={() => handlePageChange(currentPage - 1)}
               disabled={currentPage === 1}
             >
@@ -108,9 +108,9 @@ const ProductPanel = ({
                       ? "var(--color-accent)"
                       : "var(--color-bg-alt)",
                   color: currentPage === i + 1 ? "#fff" : "var(--color-text)",
-                  border: "1px solid var(--color-border)",
+                  border: "1px solid var(--color-border) ",
                 }}
-                className="text-sm px-3 py-1.5 rounded-lg hover:brightness-110 transition"
+                className="text-sm px-3 py-1.5 rounded-lg hover:brightness-110 transition hover:cursor-pointer"
                 onClick={() => handlePageChange(i + 1)}
               >
                 {i + 1}
@@ -118,7 +118,7 @@ const ProductPanel = ({
             ))}
 
             <button
-              className="text-sm px-3 py-1.5 rounded-lg hover:brightness-110 transition"
+              className="text-sm px-3 py-1.5 rounded-lg hover:brightness-110 transition hover:cursor-pointer"
               onClick={() => handlePageChange(currentPage + 1)}
               disabled={currentPage === totalPages}
             >

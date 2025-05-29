@@ -17,7 +17,7 @@ const SearchBar = ({ value, onChange }: SearchBarProps): JSX.Element => {
       <input
         type="text"
         placeholder={t("marketplace.search-placeholder")}
-        className="bg-transparent outline-none text-sm text-[var(--color-text)] w-full"
+        className="bg-transparent outline-none text-sm text-[var(--color-text)] w-full h-full"
         value={value}
         onChange={(e) => onChange(e.target.value)}
       />
