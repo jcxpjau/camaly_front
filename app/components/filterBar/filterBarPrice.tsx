@@ -1,80 +1,45 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Filter } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 type FilterProps = {
-  selected: [number, number];
-  onSelect: (value: [number, number]) => void;
+  selected: number; // Now only a single number for max price
+  onSelect: (value: number) => void; // Emits a single number
+  maxRange?: number; // Optional prop to define the max value of the slider
 };
 
-const FilterPrice = ({ selected, onSelect }: FilterProps) => {
+const FilterPrice = ({ selected, onSelect, maxRange = 100 }: FilterProps) => {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
+  const [currentMaxValue, setCurrentMaxValue] = useState(selected);
 
-  // Estado interno string para permitir apagar e digitar
-  const [minValue, setMinValue] = useState(selected[0].toString());
-  const [maxValue, setMaxValue] = useState(selected[1].toString());
-
+  // Sincroniza valor interno quando 'selected' muda no pai
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
-        // Aplica o filtro ao clicar fora (fechando dropdown)
-        applyCurrentValues();
-        setOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [minValue, maxValue]);
-
-  // Sincroniza valores internos quando selected muda no pai
-  useEffect(() => {
-    setMinValue(selected[0].toString());
-    setMaxValue(selected[1].toString());
+    setCurrentMaxValue(selected);
   }, [selected]);
 
-  // Função para validar e aplicar valores ao pai
-  const applyCurrentValues = () => {
-    let minNum = parseInt(minValue);
-    let maxNum = parseInt(maxValue);
-
-    if (isNaN(minNum) || minNum < 0) minNum = 0;
-    if (isNaN(maxNum) || maxNum < 0) maxNum = 0;
-
-    if (minNum > maxNum) minNum = maxNum;
-
-    setMinValue(minNum.toString());
-    setMaxValue(maxNum.toString());
-
-    onSelect([minNum, maxNum]);
+  // Aplica o valor ao pai quando o slider muda ou o popover fecha
+  const applyCurrentValue = () => {
+    onSelect(currentMaxValue);
   };
 
-  // Handlers para onBlur dos inputs, aplicando filtro
-  const onMinBlur = () => applyCurrentValues();
-  const onMaxBlur = () => applyCurrentValues();
-
   return (
-    <div className="shrink-0 relative" ref={dropdownRef}>
+    <div className="shrink-0 relative">
       <button
         onClick={() => {
           if (open) {
-            applyCurrentValues(); // Aplica filtro antes de fechar
+            applyCurrentValue();
           }
           setOpen(!open);
         }}
         className="flex items-center gap-2 bg-[var(--color-accent)] text-white px-3 py-2 rounded-xl text-sm hover:brightness-110 transition"
       >
-        <Filter className="w-4 h-4" /> Filter
+        <Filter className="w-4 h-4" /> {t("marketplace.prices")}
       </button>
 
       {open && (
         <div
-          className="absolute z-10 mt-2 w-60 rounded-lg shadow-lg p-4 flex flex-col gap-3 text-sm"
+          className="absolute z-10 top-full right-0 mt-2 w-60 rounded-lg shadow-lg p-4 flex flex-col gap-3 text-sm"
           style={{
             backgroundColor: "var(--color-bg)",
             color: "var(--color-text)",
@@ -82,27 +47,16 @@ const FilterPrice = ({ selected, onSelect }: FilterProps) => {
           }}
         >
           <label className="flex flex-col gap-1">
-            Min Price
+            Max: ${currentMaxValue}
             <input
-              type="number"
-              className="border rounded-md px-2 py-1 text-sm appearance-none"
-              value={minValue}
-              onChange={(e) => setMinValue(e.target.value)}
-              onBlur={onMinBlur}
-              min={0}
-              style={{ MozAppearance: "textfield" }}
-            />
-          </label>
-          <label className="flex flex-col gap-1">
-            Max Price
-            <input
-              type="number"
-              className="border rounded-md px-2 py-1 text-sm appearance-none"
-              value={maxValue}
-              onChange={(e) => setMaxValue(e.target.value)}
-              onBlur={onMaxBlur}
-              min={0}
-              style={{ MozAppearance: "textfield" }}
+              type="range"
+              min="0"
+              max={maxRange}
+              value={currentMaxValue}
+              onChange={(e) => setCurrentMaxValue(parseInt(e.target.value))}
+              onMouseUp={applyCurrentValue}
+              onTouchEnd={applyCurrentValue} // For touch devices
+              className="w-full h-2 bg-[var(--color-border)] rounded-lg appearance-none cursor-pointer accent-[var(--color-accent)]"
             />
           </label>
         </div>

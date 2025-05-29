@@ -94,7 +94,7 @@ const Home = (): JSX.Element => {
               <ProductCard.Root key={purchase.id}>
                 <ProductCard.Header
                   icon={purchase.icon}
-                  price={`$${purchase.price.toFixed(0)}`}
+                  price={`$${purchase.price}`}
                 />
                 <ProductCard.Title>{purchase.name}</ProductCard.Title>
                 <ProductCard.Description>

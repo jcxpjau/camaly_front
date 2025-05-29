@@ -7,12 +7,11 @@ type RootProps = {
 
 const Root = ({ children }: RootProps): JSX.Element => {
   return (
-    <div className="flex w-full justify-start mb-2 ">
-      <div className="flex flex-row gap-2 w-full max-w-[50%]">
-        {children}
-      </div>
+    <div className="flex flex-wrap w-full justify-start mb-2 gap-2">
+      {children}
     </div>
   );
 };
+
 
 export default Root;
