@@ -1,10 +1,14 @@
+// import libraries
 import { useState, useEffect, type JSX } from "react";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
+// import components
 import ProductPanel from "~/components/productPanel/ProductPanel";
 import { ProductCard } from "~/components/productCard";
 import { FilterControls } from "~/components/filterBar";
 import { ICONS } from "~/components/filterBar/iconCategories";
+import ProductOverview from "~/components/productOverview/productOverview";
+import BuyBtn from "~/components/buyBtn/butBtn";
 
 const Marketplace = (): JSX.Element => {
   const { t } = useTranslation();
@@ -37,8 +41,14 @@ const Marketplace = (): JSX.Element => {
     );
   };
 
+  //productviewer controls
+  const [selectedProduct, setSelectedProduct] = useState<
+    null | (typeof workflows)[number]
+  >(null);
+
+  // activate and deactivate pagination as a filter is applied
   useEffect(() => {
-    if ((searchTerm || selectedMaxPrice > 0)) {
+    if (searchTerm || selectedMaxPrice > 0) {
       setPaginate(false);
       setItemsPerPage(99);
     } else {
@@ -137,13 +147,12 @@ const Marketplace = (): JSX.Element => {
               onClick={() => setShowIcons((prev) => !prev)}
             /> */}
             {showIcons && (
-            <FilterControls.IconCloud
-              selectedIcons={selectedIcons}
-              onSelect={toggleIconSelection}
-            />
-          )}
+              <FilterControls.IconCloud
+                selectedIcons={selectedIcons}
+                onSelect={toggleIconSelection}
+              />
+            )}
           </FilterControls.Root>
-
         </div>
 
         {/* Panel */}
@@ -163,13 +172,24 @@ const Marketplace = (): JSX.Element => {
                 {workflow.description}
               </ProductCard.Description>
               <ProductCard.Footer>
-                <ProductCard.BuyButton />
-                <ProductCard.MoreInfoButton />
+                <BuyBtn/>
+                <ProductCard.MoreInfoButton
+                  onClick={() => setSelectedProduct(workflow)}
+                />
               </ProductCard.Footer>
             </ProductCard.Root>
           ))}
         </ProductPanel>
       </div>
+      <AnimatePresence>
+        {selectedProduct && (
+          <ProductOverview
+            onClick={() => setSelectedProduct(null)}
+            title={selectedProduct.name}
+            price={selectedProduct.price}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 };

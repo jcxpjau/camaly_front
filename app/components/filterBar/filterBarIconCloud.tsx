@@ -23,7 +23,7 @@ const IconCloud = ({
           <button
             key={name}
             onClick={() => onSelect(name)}
-            className={`shrink-0 p-2 rounded-lg border border-[var(--color-border)]  hover:brightness-110 transition flex flex-row items-center gap-2 ${
+            className={`shrink-0 p-2 rounded-lg border border-[var(--color-border)] hover:cursor-pointer  hover:brightness-110 transition flex flex-row items-center gap-2 ${
               isSelected ? "bg-[var(--color-accent)] text-white" : "bg-[var(--color-bg-alt)] text-[var(--color-text)]"
             }`}
           >

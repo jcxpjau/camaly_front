@@ -25,8 +25,9 @@
     "title": "Workflow Marketplace",
     "description": "Boost your productivity by adding automations to your business.",
     "search-placeholder": "Search workflows...",
-    "prices": "Prices",
-    "categoryChoice": "Select category"
+    "prices": "Price",
+    "categoryChoice": "Select category",
+    "author": "Author"
   },
   "reports": {
     "title": "Reports",

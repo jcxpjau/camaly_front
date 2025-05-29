@@ -100,9 +100,9 @@ const Home = (): JSX.Element => {
                 <ProductCard.Description>
                   {purchase.description}
                 </ProductCard.Description>
-                <ProductCard.Footer>
+                {/* <ProductCard.Footer>
                   <ProductCard.MoreInfoButton />
-                </ProductCard.Footer>
+                </ProductCard.Footer> */}
               </ProductCard.Root>
             ))}
           </ProductPanel>
