@@ -27,7 +27,8 @@
     "search-placeholder": "Buscar workflows...",
     "prices": "Preço",
     "categoryChoice": "Selecionar categoria",
-    "author": "Autor"
+    "author": "Autor",
+    "noProducts": "Não há nenhum workflow com este(s) filtro(s)"
   },
   "reports": {
     "title": "Relatórios",

@@ -1,11 +1,17 @@
+//import libraries
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import type { JSX } from "react";
 import { useState, useEffect } from "react";
+//import styling
 import "./Home.css";
+//import components
 import { ProductCard } from "~/components/productCard";
 import ProductPanel from "~/components/productPanel/ProductPanel";
 import { ICONS } from "~/components/filterBar/iconCategories";
+import PopUpAction from "~/components/popUpAction/popUpAction";
+//import icons
+import { Trash } from "lucide-react";
 
 interface Purchase {
   id: string;
@@ -19,7 +25,8 @@ const Home = (): JSX.Element => {
   const { t } = useTranslation();
   const [purchases, setPurchases] = useState<Purchase[]>([]);
   const [loading, setLoading] = useState(true);
-  const [currentPage, setCurrentPage] = useState(1); // ✅ novo estado da página
+  const [currentPage, setCurrentPage] = useState(1);
+  const [popUpOpen, setPopUpOpen] = useState(true);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -84,6 +91,7 @@ const Home = (): JSX.Element => {
             {t("home.subtitle")}
           </p>
         </motion.div>
+       
         {purchases.length > 0 ? (
           <ProductPanel
             itemsPerPage={3}
@@ -100,6 +108,11 @@ const Home = (): JSX.Element => {
                 <ProductCard.Description>
                   {purchase.description}
                 </ProductCard.Description>
+                <ProductCard.Footer>
+                  <button className="text-[var(--color-text)] hover:cursor-pointer">
+                    <Trash size={16}/>
+                  </button>
+                </ProductCard.Footer>
               </ProductCard.Root>
             ))}
           </ProductPanel>
@@ -109,6 +122,10 @@ const Home = (): JSX.Element => {
           </div>
         )}
       </div>
+     {/*  {
+        popUpOpen &&
+        <PopUpAction/>
+      } */}
     </div>
   );
 };
