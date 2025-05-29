@@ -17,7 +17,7 @@ const Header = ({ icon, price }: HeaderProps): JSX.Element => {
           color: "#fff",
         }}
       >
-        {price}
+        $ {Number(price).toFixed(2)}
       </div>
     </div>
   );

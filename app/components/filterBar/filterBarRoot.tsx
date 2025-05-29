@@ -7,7 +7,7 @@ type RootProps = {
 
 const Root = ({ children }: RootProps): JSX.Element => {
   return (
-    <div className="flex flex-wrap w-full justify-start mb-2 lg:max-w-[50%] gap-2">
+    <div className="flex flex-wrap w-full justify-start mb-2 gap-2">
       {children}
     </div>
   );

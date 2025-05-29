@@ -26,7 +26,7 @@ const Marketplace = (): JSX.Element => {
 
   //filtering states
   const [searchTerm, setSearchTerm] = useState("");
-  const [showIcons, setShowIcons] = useState(false);
+  const [showIcons, setShowIcons] = useState(true);
   const [selectedIcons, setSelectedIcons] = useState<string[]>([]);
   const [selectedMaxPrice, setSelectedMaxPrice] = useState<number>(0);
   const toggleIconSelection = (iconName: string) => {
@@ -133,17 +133,17 @@ const Marketplace = (): JSX.Element => {
               />
             </FilterControls.Group>
 
-            <FilterControls.CategoryToggle
+            {/* <FilterControls.CategoryToggle
               onClick={() => setShowIcons((prev) => !prev)}
-            />
-          </FilterControls.Root>
-
-          {showIcons && (
+            /> */}
+            {showIcons && (
             <FilterControls.IconCloud
               selectedIcons={selectedIcons}
               onSelect={toggleIconSelection}
             />
           )}
+          </FilterControls.Root>
+
         </div>
 
         {/* Panel */}

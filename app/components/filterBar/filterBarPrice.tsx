@@ -39,7 +39,7 @@ const FilterPrice = ({ selected, onSelect, maxRange = 100 }: FilterProps) => {
 
       {open && (
         <div
-          className="absolute z-10 mt-2 w-60 rounded-lg shadow-lg p-4 flex flex-col gap-3 text-sm"
+          className="absolute z-10 top-full right-0 mt-2 w-60 rounded-lg shadow-lg p-4 flex flex-col gap-3 text-sm"
           style={{
             backgroundColor: "var(--color-bg)",
             color: "var(--color-text)",
@@ -47,14 +47,14 @@ const FilterPrice = ({ selected, onSelect, maxRange = 100 }: FilterProps) => {
           }}
         >
           <label className="flex flex-col gap-1">
-            Max Price: ${currentMaxValue}
+            Max: ${currentMaxValue}
             <input
               type="range"
               min="0"
-              max={maxRange} // Use the maxRange prop for the slider's upper limit
+              max={maxRange}
               value={currentMaxValue}
               onChange={(e) => setCurrentMaxValue(parseInt(e.target.value))}
-              onMouseUp={applyCurrentValue} // Apply when done dragging (for better UX)
+              onMouseUp={applyCurrentValue}
               onTouchEnd={applyCurrentValue} // For touch devices
               className="w-full h-2 bg-[var(--color-border)] rounded-lg appearance-none cursor-pointer accent-[var(--color-accent)]"
             />

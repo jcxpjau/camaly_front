@@ -83,11 +83,26 @@
     "subtitle": "Confira seus fluxos de trabalho adquiridos",
     "noProducts": "Você não tem nenhum fluxo ativo"
   },
-  "category":{
+  "category": {
     "posts": "Redes sociais",
     "insight": "Insights",
     "schedule": "Agendamentos",
     "bot": "Atendimento",
-    "personalization": "Experiência do cliente"
+    "personalization": "Experiência do cliente",
+    "user": "Usuários",
+    "settings": "Configurações",
+    "notifications": "Notificações",
+    "messages": "Mensagens",
+    "files": "Arquivos",
+    "documents": "Documentos",
+    "analytics": "Análises",
+    "global": "Presença global",
+    "favorites": "Favoritos",
+    "likes": "Engajamento",
+    "security": "Segurança",
+    "privacy": "Privacidade",
+    "access": "Controle de acesso",
+    "ai": "Recursos de IA",
+    "success": "Sucesso"
   }
 }
