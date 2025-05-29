@@ -12,7 +12,7 @@ const getInitialTheme = (): ThemeState => {
             return { mode: storedMode }
         }
     }
-    return { mode: 'dark' }
+    return { mode: 'light' }
 }
 
 const themeSlice = createSlice({
