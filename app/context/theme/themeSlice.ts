@@ -22,7 +22,6 @@ const themeSlice = createSlice({
         toggleTheme: (state) => {
             state.mode = state.mode === 'light' ? 'dark' : 'light';
             localStorage.setItem('camaly.theme.mode', state.mode);
-            console.log( "Mudou" );
         }
     },
 })

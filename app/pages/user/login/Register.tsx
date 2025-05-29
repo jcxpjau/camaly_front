@@ -1,10 +1,11 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useLayoutEffect } from 'react';
 import { FaGoogle, FaApple } from 'react-icons/fa';
 import { Mail, KeyRound, User } from 'lucide-react';
 import { motion } from 'framer-motion';
 import Logo from "../../../assets/imgs/Logo_Camaly.png";
 import { Input } from '~/components/input/input';
 import { useCustomNavigate } from "~/hooks/useCustomNavigate";
+import { useTheme } from '~/context/theme/theme.hooks';
 
 export default function Register() {
   const [name, setName] = useState('');
@@ -112,8 +113,20 @@ export default function Register() {
     : null;
 
   return (
-    <div
-      className="min-h-screen flex items-center justify-center px-4 bg-[var(--color-bg)] text-[var(--color-text)] login-bg relative overflow-hidden"
+   <div
+      className="min-h-screen flex items-center justify-center px-4 login-bg relative overflow-hidden"
+      style={{
+        backgroundColor: "#2A2A2A", // --color-bg
+        color: "#ffffff", // --color-text
+        backgroundImage: `
+          radial-gradient(circle at center, rgba(110, 85, 200, 0.4), transparent 60%),
+          radial-gradient(circle at 30% 140%, rgba(151, 126, 252, 0.3), transparent 37%),
+          radial-gradient(circle at 50% 310%, rgba(188, 172, 252, 0.15), transparent 78%),
+          linear-gradient(transparent, rgba(42, 42, 42, 0.15)),
+          radial-gradient(circle at 50% -30%, rgba(164, 183, 244, 0.2), transparent),
+          radial-gradient(90% 10% at 50% 0%, rgba(164, 183, 244, 0.05), transparent 90%)
+`
+      }}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
     >
@@ -143,8 +156,8 @@ export default function Register() {
           ref={boxRef}
           className="relative w-full px-6 py-10 rounded-xl shadow-lg overflow-hidden"
           style={{
-            backgroundColor: 'var(--color-card-bg)',
-            color: 'var(--color-card-text)',
+            backgroundColor: "rgba(255, 255, 255, 0.05)", // --color-card-bg
+            color: "#ffffff", // --color-card-text
             zIndex: 20,
           }}
           initial={{ opacity: 0, y: 30 }}
@@ -170,56 +183,32 @@ export default function Register() {
           />
           <div style={{ position: 'relative', zIndex: 1 }}>
             <div className="text-center">
-                <h2 className="text-3xl font-semibold mb-1">Welcome back</h2>
-                <p className="text-sm" style={{ color: 'var(--color-card-subtext)' }}>
-                    Login to continue using Camaly
-                </p>
+              <h2 className="text-3xl font-semibold mb-1">Welcome back</h2>
+              <p className="text-sm" style={{ color: "rgba(255, 255, 255, 0.7)" /* --color-card-subtext */ }}>
+                Login to continue using Camaly
+              </p>
             </div>
             {error && (
-            <div className="text-red-300 text-sm p-3 rounded text-center my-4">
+              <div className="text-red-300 text-sm p-3 rounded text-center my-4">
                 O endereço de e-mail informado já está vinculado a uma conta. Por favor, utilize outro e-mail ou realize o login com suas credenciais.
-            </div>
+              </div>
             )}
             <form onSubmit={RegisterAuth} className="space-y-4 mt-6">
-              <Input.Root status={nameError ? 'error' : undefined} message={nameError}>
-                <Input.Icon icon={User} status={nameError ? 'error' : undefined} />
-                <Input.Content
-                  placeholder="Name..."
-                  type="text"
-                  value={name}
-                  onChange={setName}
-                  status={nameError ? 'error' : undefined}
-                />
+              <Input.Root status={nameError ? 'error' : undefined} message={nameError} typeLogin>
+                <Input.Icon icon={User} status={nameError ? 'error' : undefined} typeLogin/>
+                <Input.Content placeholder="Name..." type="text" value={name} onChange={setName} status={nameError ? 'error' : undefined} typeLogin/>
               </Input.Root>
-              <Input.Root status={emailError ? 'error' : undefined} message={emailError}>
-                <Input.Icon icon={Mail} status={emailError ? 'error' : undefined} />
-                <Input.Content
-                  placeholder="Email..."
-                  type="email"
-                  value={email}
-                  onChange={setEmail}
-                  status={emailError ? 'error' : undefined}
-                />
+              <Input.Root status={emailError ? 'error' : undefined} message={emailError} typeLogin>
+                <Input.Icon icon={Mail} status={emailError ? 'error' : undefined} typeLogin/>
+                <Input.Content placeholder="Email..." type="email" value={email} onChange={setEmail} status={emailError ? 'error' : undefined} typeLogin/>
               </Input.Root>
-              <Input.Root status={passwordError ? 'error' : undefined} message={passwordError}>
-                <Input.Icon icon={KeyRound} status={passwordError ? 'error' : undefined} />
-                <Input.Content
-                  placeholder="Password..."
-                  type="password"
-                  value={password}
-                  onChange={setPassword}
-                  status={passwordError ? 'error' : undefined}
-                />
+              <Input.Root status={passwordError ? 'error' : undefined} message={passwordError} typeLogin>
+                <Input.Icon icon={KeyRound} status={passwordError ? 'error' : undefined} typeLogin/>
+                <Input.Content placeholder="Password..." type="password" value={password} onChange={setPassword} status={passwordError ? 'error' : undefined} typeLogin/>
               </Input.Root>
-              <Input.Root status={confirmPasswordError ? 'error' : undefined} message={confirmPasswordError}>
-                <Input.Icon icon={KeyRound} status={confirmPasswordError ? 'error' : undefined} />
-                <Input.Content
-                  placeholder="Confirm Password..."
-                  type="password"
-                  value={confirmPassword}
-                  onChange={setConfirmPassword}
-                  status={confirmPasswordError ? 'error' : undefined}
-                />
+              <Input.Root status={confirmPasswordError ? 'error' : undefined} message={confirmPasswordError} typeLogin>
+                <Input.Icon icon={KeyRound} status={confirmPasswordError ? 'error' : undefined} typeLogin/>
+                <Input.Content placeholder="Confirm Password..." type="password" value={confirmPassword} onChange={setConfirmPassword} status={confirmPasswordError ? 'error' : undefined} typeLogin/>
               </Input.Root>
               <button
                 type="submit"
@@ -229,35 +218,35 @@ export default function Register() {
               </button>
             </form>
             <div className="flex items-center my-6">
-              <hr className="flex-grow border-[var(--color-divider)]" />
-              <span className="px-3 text-sm" style={{ color: 'var(--color-card-text)' }}>OR</span>
-              <hr className="flex-grow border-[var(--color-divider)]" />
+              <hr className="flex-grow border-[rgba(255, 255, 255, 0.2)]" />
+              <span className="px-3 text-sm" style={{ color: "#ffffff" }}>OR</span>
+              <hr className="flex-grow border-[rgba(255, 255, 255, 0.2)]" />
             </div>
             <div className="space-y-3">
               <button
                 className="w-full flex items-center justify-center gap-3 rounded-md px-4 py-2 font-medium transition"
                 style={{
-                  backgroundColor: 'var(--color-button-bg)',
-                  color: 'var(--color-card-text)',
+                  backgroundColor: "rgba(255, 255, 255, 0.1)", // --color-button-bg
+                  color: "#ffffff", // --color-card-text
                 }}
-                onMouseOver={(e) => (e.currentTarget.style.backgroundColor = 'var(--color-button-hover)')}
-                onMouseOut={(e) => (e.currentTarget.style.backgroundColor = 'var(--color-button-bg)')}
+                onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "rgba(255, 255, 255, 0.2)" /* --color-button-hover */)}
+                onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "rgba(255, 255, 255, 0.1)" /* --color-button-bg */)}
               >
                 <FaGoogle className="w-5 h-5" /> Sign up with Google
               </button>
               <button
                 className="w-full flex items-center justify-center gap-3 rounded-md px-4 py-2 font-medium transition"
                 style={{
-                  backgroundColor: 'var(--color-button-bg)',
-                  color: 'var(--color-card-text)',
+                  backgroundColor: "rgba(255, 255, 255, 0.1)", // --color-button-bg
+                  color: "#ffffff", // --color-card-text
                 }}
-                onMouseOver={(e) => (e.currentTarget.style.backgroundColor = 'var(--color-button-hover)')}
-                onMouseOut={(e) => (e.currentTarget.style.backgroundColor = 'var(--color-button-bg)')}
+                onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "rgba(255, 255, 255, 0.2)" /* --color-button-hover */)}
+                onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "rgba(255, 255, 255, 0.1)" /* --color-button-bg */)}
               >
                 <FaApple className="w-5 h-5" /> Sign up with Apple
               </button>
             </div>
-            <p className="text-sm text-center mt-6" style={{ color: 'var(--color-card-subtext)' }}>
+            <p className="text-sm text-center mt-6" style={{ color: "rgba(255, 255, 255, 0.7)" }}>
               Already have an account?
               <span
                 onClick={(e) => navigate(e, "/login")}
