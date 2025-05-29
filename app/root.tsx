@@ -5,9 +5,8 @@ import {
     Outlet,
     Scripts,
     ScrollRestoration,
-    useNavigate,
 } from "react-router";
-import { Provider, useSelector } from "react-redux";
+import { Provider } from "react-redux";
 import { useLocation } from "react-router";
 import { store, type RootState } from "./store";
 import { useEffect, useLayoutEffect } from "react";
@@ -18,6 +17,7 @@ import Sidebar from "./components/sidebar";
 import { useTheme } from "./context/theme/theme.hooks";
 import Login from "./pages/user/login/Login";
 import Register from "./pages/user/login/Register";
+import { useAuth } from "./context/auth/auth.hooks";
 
 export const links: Route.LinksFunction = () => [
     { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -29,29 +29,17 @@ export const links: Route.LinksFunction = () => [
 ];
 
 function ThemeWrapper({ children }: { children: React.ReactNode }) {
-  const { mode } = useTheme();
-  const location = useLocation();
+    const { mode } = useTheme();
 
-  // Rotas que forçam modo escuro
-  const forceDarkRoutes = ["/login", "/register"];
+    useLayoutEffect(() => {
+        if (mode === "dark") {
+            document.documentElement.classList.add("dark");
+        } else {
+            document.documentElement.classList.remove("dark");
+        }
+    }, [mode]);
 
-  useLayoutEffect(() => {
-    const isForceDark = forceDarkRoutes.includes(location.pathname);
-
-    if (isForceDark) {
-      // Força modo escuro independente do estado
-      document.documentElement.classList.add("dark");
-    } else {
-      // Aplica modo normal conforme o estado
-      if (mode === "dark") {
-        document.documentElement.classList.add("dark");
-      } else {
-        document.documentElement.classList.remove("dark");
-      }
-    }
-  }, [mode, location.pathname]);
-
-  return <>{children}</>;
+    return <>{children}</>;
 }
 
 export function Layout({ children }: { children: React.ReactNode }) {
@@ -72,53 +60,35 @@ export function Layout({ children }: { children: React.ReactNode }) {
     );
 }
 
-    function AppContent() {
-    // Pega a rota atual
+export default function App() {
+
     const location = useLocation();
-
-    // Função para navegar entre as rotas
-    const navigate = useNavigate();
-
-    // Pega do estado global do Redux se o usuário está autenticado (true/false)
-    const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
-
-    // Lista das rotas públicas, que podem ser acessadas mesmo sem login
-    const publicRoutes = ["/login", "/register"];
-
-    // Verifica se a rota atual está dentro das rotas públicas
+    const publicRoutes = ["/", "/register"];
     const isPublicRoute = publicRoutes.includes(location.pathname);
 
-    useEffect(() => {
-    // Se o usuário NÃO está autenticado E a rota atual NÃO é pública
-    if (!isAuthenticated && !isPublicRoute) {
-        // Redireciona para a página de login
-        navigate("/login");
-    }
-    // O efeito roda sempre que isAuthenticated, isPublicRoute ou navigate mudarem
-    }, [isAuthenticated, isPublicRoute, navigate]);
-
-
-  return (
-    <>
-      {isAuthenticated && <Header />}
-      <div className="flex flex-1 overflow-hidden">
-        {isAuthenticated && <Sidebar />}
-        <main className="flex-1 overflow-auto bg-[var(--color-bg)]">
-          <Outlet />
-        </main>
-      </div>
-    </>
-  );
-}
-
-export default function App() {
-  return (
-    <Provider store={store}>
-      <ThemeWrapper>
-        <AppContent />
-      </ThemeWrapper>
-    </Provider>
-  );
+    return (
+        <Provider store={store}>
+            <ThemeWrapper>
+                {store.getState().auth.isAuthenticated &&
+                    <Header />
+                }
+                <div className="flex flex-1 overflow-hidden">
+                    {store.getState().auth.isAuthenticated &&
+                        <Sidebar />
+                    }
+                    <main className="flex-1 overflow-auto bg-[var(--color-bg)]">
+                        {!store.getState().auth.isAuthenticated && location.pathname === "/register" ? (
+                            <Register />
+                        ) : !store.getState().auth.isAuthenticated ? (
+                            <Login />
+                        ) : (
+                            <Outlet />
+                        )}
+                    </main>
+                </div>
+            </ThemeWrapper>
+        </Provider>
+    );
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {

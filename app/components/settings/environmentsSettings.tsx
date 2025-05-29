@@ -10,13 +10,8 @@ export function EnvironmentsSettings() {
   ];
 
   return (
-    <section
-      className="space-y-6 p-6 rounded-lg"
-      style={{
-        color: "var(--color-card-text)",
-      }}
-    >
-      <header>
+    <section  className="space-y-6 rounded-lg" style={{ color: "var(--color-card-text)" }}>
+      <div>
         <h2 className="flex items-center gap-2 text-xl font-semibold">
           <Globe className="h-5 w-5 text-[var(--color-icon-default)]" />
           Environments
@@ -24,7 +19,7 @@ export function EnvironmentsSettings() {
         <p className="text-sm" style={{ color: "var(--color-card-subtext)" }}>
           Manage your deployment environments.
         </p>
-      </header>
+      </div>
 
       <div>
         <div className="flex justify-between items-center mb-4">

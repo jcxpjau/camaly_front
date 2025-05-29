@@ -4,7 +4,7 @@ import ButtonSettings from "./buttonSettings";
 
 export function PlansSettings() {
   return (
-    <section className="space-y-6 p-6 rounded-lg text-[var(--color-card-text)]">
+    <section className="space-y-6 rounded-lg" style={{ color: "var(--color-card-text)" }}>
       <div>
         <h2 className="flex items-center gap-2 text-xl font-semibold">
           <CreditCard className="h-5 w-5 text-[var(--color-icon-default)]" />
