@@ -3,12 +3,13 @@ import type { ElementType } from "react";
 interface ButtonSettingsProps {
   text: string;
   icon?: ElementType;
+  type?: "button" | "submit" | "reset";
 }
 
-export default function ButtonSettings({ text, icon: Icon }: ButtonSettingsProps) {
+export default function ButtonSettings({ text, icon: Icon, type = "button" }: ButtonSettingsProps) {
   return (
     <button
-      type="button"
+      type={type}
       className="
         inline-flex items-center gap-2
         rounded-md

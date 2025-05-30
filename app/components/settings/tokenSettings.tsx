@@ -1,6 +1,7 @@
 import React from "react";
 import { Key, Plus, Copy, Trash2 } from "lucide-react";
 import ButtonSettings from "./buttonSettings";
+import { useTranslation } from "react-i18next";
 
 const tokens = [
   {
@@ -18,22 +19,24 @@ const tokens = [
 ];
 
 export function TokenSettings() {
+  const { t } = useTranslation();
+
   return (
     <section  className="space-y-6 rounded-lg" style={{ color: "var(--color-card-text)" }}>
       <header>
         <h2 className="flex items-center gap-2 text-xl font-semibold">
           <Key className="h-5 w-5 text-[var(--color-icon-default)]" />
-          Tokens and Secrets
+          {t("settings.tokenSettings.title")}
         </h2>
         <p className="text-sm text-[var(--color-card-subtext)]">
-          Manage your access tokens and secret keys.
+          {t("settings.tokenSettings.description")}
         </p>
       </header>
 
       <div>
         <div className="flex justify-between items-center mb-4">
-          <h3 className="text-lg font-medium">Active Tokens</h3>
-          <ButtonSettings text="New Token" icon={Plus} />
+          <h3 className="text-lg font-medium">{t("settings.tokenSettings.activeTokensTitle")}</h3>
+          <ButtonSettings text={t("settings.tokenSettings.buttons.newToken")} icon={Plus} />
         </div>
         <div className="space-y-3">
           {tokens.map((token) => (
@@ -44,14 +47,14 @@ export function TokenSettings() {
               <div>
                 <div className="font-medium">{token.name}</div>
                 <div className="text-sm text-[var(--color-muted)]">
-                  {token.value} • Created on {token.created}
+                  {token.value} • {t("settings.tokenSettings.token.createdOn")} {token.created}
                 </div>
               </div>
               <div className="flex gap-2">
                 <button
                   type="button"
                   className="rounded px-2 py-1 border border-[var(--color-border)] bg-[var(--color-button-bg)] hover:bg-[var(--color-button-hover)] transition"
-                  aria-label="Copy token"
+                  aria-label={t("settings.tokenSettings.buttons.copyTokenAriaLabel")}
                   onClick={() => navigator.clipboard.writeText(token.value)}
                 >
                   <Copy className="h-4 w-4 text-[var(--color-icon-default)]" />
@@ -59,7 +62,7 @@ export function TokenSettings() {
                 <button
                   type="button"
                   className="rounded px-2 py-1 border border-[var(--color-border)] bg-[var(--color-button-bg)] hover:bg-[var(--color-button-hover)] transition"
-                  aria-label="Delete token"
+                  aria-label={t("settings.tokenSettings.buttons.deleteTokenAriaLabel")}
                 >
                   <Trash2 className="h-4 w-4 text-[var(--color-icon-error)]" />
                 </button>

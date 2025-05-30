@@ -119,11 +119,15 @@ export default function Register() {
 `
             }}
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> valmir-branch
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
         >
             <span
                 className="pointer-events-none absolute top-0 left-0 w-full h-full"
+<<<<<<< HEAD
 =======
           />
           <div style={{ position: 'relative', zIndex: 1 }}>
@@ -170,6 +174,8 @@ export default function Register() {
             <div className="space-y-3">
               <button
                 className="w-full flex items-center justify-center gap-3 rounded-md px-4 py-2 font-medium transition"
+>>>>>>> valmir-branch
+=======
 >>>>>>> valmir-branch
                 style={{
                     opacity: mousePos ? 1 : 0,
@@ -229,8 +235,7 @@ export default function Register() {
                         </div>
                         {error && (
                             <div className="text-red-300 text-sm p-3 rounded text-center my-4">
-                                O endereço de e-mail informado já está vinculado a uma conta. Por favor, utilize outro e-mail ou realize o login com suas credenciais.
-                            </div>
+                                The email address you entered is already linked to an account. Please use a different email address or log in with your credentials.                            </div>
                         )}
                         <form onSubmit={RegisterAuth} className="space-y-4 mt-6">
                             <Input.Root status={nameError ? 'error' : undefined} message={nameError} typeLogin>

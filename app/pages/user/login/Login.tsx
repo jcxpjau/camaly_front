@@ -142,7 +142,7 @@ export default function Login() {
                             </p>
                         </div>
                         {error && (
-                        <div className="text-red-300 text-sm p-3 rounded text-center my-4">
+                         <div className="text-red-300 text-sm p-3 rounded text-center my-4">
                             Incorrect username or password. Please check your credentials and try again.
                         </div>
                         )}

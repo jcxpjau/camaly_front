@@ -106,5 +106,170 @@
     "access": "Controle de acesso",
     "ai": "Recursos de IA",
     "success": "Sucesso"
+  },
+  "settings": {
+    "title": "Configurações",
+    "description": "Gerencie suas preferências e configurações da conta",
+    "tabs": {
+      "personal": "Pessoal",
+      "api": "API",
+      "tokens": "Tokens",
+      "environments": "Ambientes",
+      "plans": "Planos",
+      "logs": "Logs"
+    },
+    "personalSettings": {
+      "sections": {
+        "personalInformation": {
+          "title": "Informações Pessoais",
+          "description": "Atualize suas informações pessoais e preferências da conta.",
+          "form": {
+            "fields": {
+              "firstName": {
+                "label": "Nome",
+                "placeholder": "Nome..."
+              },
+              "lastName": {
+                "label": "Sobrenome",
+                "placeholder": "Sobrenome..."
+              },
+              "email": {
+                "label": "Email",
+                "placeholder": "Email..."
+              },
+              "notificationsToggle": {
+                "label": "Receber notificações por email"
+              }
+            },
+            "errors": {
+              "emailRequired": "Email é obrigatório.",
+              "nameRequired": "Nome é obrigatório."
+            },
+            "statusMessages": {
+              "success": "Informações atualizadas com sucesso.",
+              "error": "Ocorreu um erro, por favor tente novamente!"
+            },
+            "buttons": {
+              "saveChanges": "Salvar Alterações"
+            }
+          }
+        },
+        "personalSecurity": {
+          "title": "Segurança Pessoal",
+          "description": "Atualize suas informações pessoais de segurança e preferências da conta.",
+          "form": {
+            "fields": {
+              "oldPassword": {
+                "label": "Senha Antiga",
+                "placeholder": "Senha Antiga..."
+              },
+              "newPassword": {
+                "label": "Nova Senha",
+                "placeholder": "Nova Senha..."
+              },
+              "confirmNewPassword": {
+                "label": "Confirme sua nova senha",
+                "placeholder": "Confirme sua nova senha"
+              },
+              "twoFactorAuthentication": {
+                "title": "Autenticação em duas etapas (2FA)",
+                "description": "A autenticação em duas etapas está desativada.",
+                "learnMore": "Saiba mais",
+                "enableButton": "Ativar 2FA"
+              }
+            },
+            "errors": {
+              "oldPasswordRequired": "Senha antiga é obrigatória.",
+              "oldPasswordIncorrect": "Senha antiga está incorreta.",
+              "newPasswordRequired": "Nova senha é obrigatória.",
+              "newPasswordSameAsOld": "Nova senha não pode ser igual à antiga.",
+              "confirmNewPasswordRequired": "Confirmação da nova senha é obrigatória.",
+              "passwordsDoNotMatch": "As senhas não coincidem."
+            },
+            "buttons": {
+              "saveChanges": "Salvar Alterações"
+            }
+          }
+        }
+      }
+    },
+    "apiSettings": {
+      "title": "Configurações da API",
+      "description": "Configure suas chaves e endpoints da API.",
+      "apiEndpoint": "Endpoint da API",
+      "apiKey": "Chave da API",
+      "copyApiKey": "Copiar chave da API",
+      "enabledLogs": "Logs habilitados",
+      "saveChanges": "Salvar Alterações"
+    },
+    "tokenSettings": {
+      "title": "Tokens e Segredos",
+      "description": "Gerencie seus tokens de acesso e chaves secretas.",
+      "activeTokensTitle": "Tokens Ativos",
+      "buttons": {
+        "newToken": "Novo Token",
+        "copyTokenAriaLabel": "Copiar token",
+        "deleteTokenAriaLabel": "Excluir token"
+      },
+      "token": {
+        "createdOn": "Criado em"
+      }
+    },
+    "environmentsSettings": {
+      "title": "Ambientes",
+      "description": "Gerencie seus ambientes de implantação.",
+      "configured": "Ambientes Configurados",
+      "add": "Adicionar Ambiente",
+      "status": {
+        "active": "Ativo",
+        "inactive": "Inativo",
+        "configuring": "Configurando"
+      },
+      "name": {
+        "production": "Em Produção",
+        "staging": "Em teste",
+        "buy": "Configurando"
+      }
+    },
+    "plansSettings": {
+      "title": "Planos de Assinatura",
+      "description": "Escolha o plano que atende às suas necessidades.",
+      "currentPlan": {
+        "label": "Plano Atual: Pro",
+        "status": "Ativo",
+        "priceAndBilling": "R$ 99,90/mês • Próxima cobrança: 15/02/2024"
+      },
+      "metrics": {
+        "requests": {
+          "label": "Requisições"
+        },
+        "storage": {
+          "label": "Armazenamento"
+        },
+        "users": {
+          "label": "Usuários"
+        }
+      },
+      "buttons": {
+        "upgradePlan": "Atualizar Plano",
+        "billingHistory": "Histórico de Cobrança"
+      }
+    },
+    "logsSettings": {
+      "title": "Logs de Atividade",
+      "description": "Revise as atividades recentes da conta.",
+      "levels": {
+        "info": "INFORMAÇÃO",
+        "error": "ERRO",
+        "warn": "AVISO"
+      },
+      "messages": {
+        "userLoggedIn": "Usuário logado com sucesso",
+        "apiAuthFailed": "Falha na autenticação da API",
+        "tokenRefreshed": "Token de acesso renovado",
+        "rateLimitNear": "Limite de requisições próximo",
+        "backupCompleted": "Backup automático concluído"
+      }
+    }
   }
 }
