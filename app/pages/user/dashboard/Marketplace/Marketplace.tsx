@@ -10,7 +10,6 @@ import { ICONS } from "~/components/filterBar/iconCategories";
 import ProductOverview from "~/components/productOverview/productOverview";
 import BuyBtn from "~/components/buyBtn/buyBtn";
 import api from "~/services/api";
-import { select } from "motion/react-client";
 
 interface IWorkflow {
   id: string;
@@ -19,7 +18,6 @@ interface IWorkflow {
   category: string;
   price: string;
 }
-
 
 const Marketplace = (): JSX.Element => {
   const { t } = useTranslation();
@@ -62,7 +60,6 @@ const Marketplace = (): JSX.Element => {
     }
   }, [searchTerm, selectedMaxPrice, selectedIcons]);
 
-  console.log(workflows);
   useEffect(() => {
     const fetchWorkflows = async () => {
       try {

@@ -16,118 +16,136 @@ import PopUpAction from "~/components/popUpAction/popUpAction";
 import { Trash } from "lucide-react";
 
 interface Purchase {
-    id: string;
-    name: string;
-    description: string;
-    price: number;
-    icon: JSX.Element;
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  category: string;
 }
 
 const Home = (): JSX.Element => {
-    const { user, token } = useAuth();
-    const { t } = useTranslation();
-    const [purchases, setPurchases] = useState<Purchase[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [currentPage, setCurrentPage] = useState(1);
+  const { user, token } = useAuth();
+  const { t } = useTranslation();
+  const [purchases, setPurchases] = useState<Purchase[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [selectedPurchase, setSelectedPurchase] = useState<Purchase>();
+  const [popUpOpen, setPopUpOpen] = useState(true);
+/* 
+  const onDelete = async (id:string) => {
 
-    const [popUpOpen, setPopUpOpen] = useState(true);
-
-
-    useEffect(() => {
-
-        if (!user) {
-            return;
+    if(selectedPurchase){
+        try {
+          await api.delete(`products/${id}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+    
+          console.log("Produto deletado com sucesso!");
+        } catch (error) {
+          console.error("Erro ao deletar o produto:", error);
         }
-        const fetchProducts = async () => {
-            try {
-                setLoading(true);
-                const res = await api.get(`purchases/user/${user._id}`);
-                const json = res.data;
-                
-                const mappedData: Purchase[] = json.filter((item: { productId: null; }) => item.productId !== null).map((item: any) => ({
-                    id: item.productId._id,
-                    name: item.productId.name,
-                    description: item.productId.description,
-                    price: item.productId.price,
-                    icon: ICONS[item.productId.iconName] ?? ICONS["bot"],
-                }));
-                console.log(mappedData)
-                setPurchases(mappedData);
-            } catch (err: any) {
-                // /console.log(err);
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchProducts();
-    }, [user]);
-
-    console.log(purchases)
-
-    if (loading || !user) {
-        return (
-            <div className="min-h-screen flex items-center justify-center bg-[var(--color-bg)] text-[var(--color-text)]">
-                <div className="flex flex-col items-center gap-4">
-                    <div className="w-8 h-8 border-4 border-[var(--color-accent)] border-t-transparent rounded-full animate-spin" />
-                    <p className="text-sm text-[var(--color-muted)]">{t("loading")}</p>
-                </div>
-            </div>
-        );
     }
+  }; */
 
+  useEffect(() => {
+    if (!user) {
+      return;
+    }
+    const fetchProducts = async () => {
+      try {
+        setLoading(true);
+        const res = await api.get(`purchases/user/${user._id}`);
+        const json = res.data;
+
+        const mappedData: Purchase[] = json
+          .filter((item: { productId: null }) => item.productId !== null)
+          .map((item: any) => ({
+            id: item.productId._id,
+            name: item.productId.name,
+            description: item.productId.description,
+            price: item.productId.price,
+            category: item.productId.category
+          }));
+        console.log(mappedData);
+        setPurchases(mappedData);
+      } catch (err: any) {
+        // /console.log(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProducts();
+  }, [user]);
+
+  console.log(purchases);
+
+  if (loading || !user) {
     return (
-        <div className="min-h-screen bg-[var(--color-bg)] text-[var(--color-text)] px-6 py-10 mb-10">
-            <div className="max-w-7xl mx-auto">
-                <motion.div
-                    className="mb-16 mx-1"
-                    initial={{ opacity: 0, y: 40 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8, ease: "easeOut" }}
-                >
-                    <h1 className="accent text-3xl bg-gradient-to-r text-transparent bg-clip-text mb-4 drop-shadow-lg">
-                        {t("home.greeting", { name: `${user.name}`  })}
-                    </h1>
-                    <p className="text-lg md:text-xl text-[color:var(--color-text)] font-light max-w-2xl leading-relaxed animate-fade-in">
-                        {t("home.subtitle")}
-                    </p>
-                </motion.div>
+      <div className="min-h-screen flex items-center justify-center bg-[var(--color-bg)] text-[var(--color-text)]">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-8 h-8 border-4 border-[var(--color-accent)] border-t-transparent rounded-full animate-spin" />
+          <p className="text-sm text-[var(--color-muted)]">{t("loading")}</p>
+        </div>
+      </div>
+    );
+  }
 
-                {purchases.length > 0 ? (
-                    <ProductPanel
-                        itemsPerPage={3}
-                        currentPage={currentPage}
-                        onPageChange={setCurrentPage}
-                    >
-                        {purchases.map((purchase) => (
-                            <ProductCard.Root key={purchase.id}>
-                                <ProductCard.Header
-                                    icon={purchase.icon}
-                                    price={purchase.price}
-                                />
-                                <ProductCard.Title>{purchase.name}</ProductCard.Title>
-                                <ProductCard.Description>
-                                    {purchase.description}
-                                </ProductCard.Description>
-                                <ProductCard.Footer>
-                                    <button className="text-[var(--color-text)] hover:cursor-pointer">
-                                        <Trash size={16} />
-                                    </button>
-                                </ProductCard.Footer>
-                            </ProductCard.Root>
-                        ))}
-                    </ProductPanel>
-                ) : (
-                    <div className="h-[300px] flex items-center justify-center">
-                        <p className="text-xl"> {t("home.noProducts")} </p>
-                    </div>
-                )}
-            </div>
-            {/*  {
+  return (
+    <div className="min-h-screen bg-[var(--color-bg)] text-[var(--color-text)] px-6 py-10 mb-10">
+      <div className="max-w-7xl mx-auto">
+        <motion.div
+          className="mb-16 mx-1"
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+        >
+          <h1 className="accent text-3xl bg-gradient-to-r text-transparent bg-clip-text mb-4 drop-shadow-lg">
+            {t("home.greeting", { name: `${user.name}` })}
+          </h1>
+          <p className="text-lg md:text-xl text-[color:var(--color-text)] font-light max-w-2xl leading-relaxed animate-fade-in">
+            {t("home.subtitle")}
+          </p>
+        </motion.div>
+
+        {purchases.length > 0 ? (
+          <ProductPanel
+            itemsPerPage={4}
+            currentPage={currentPage}
+            onPageChange={setCurrentPage}
+            paginate={true}
+          >
+            {purchases.map((purchase) => (
+              <ProductCard.Root key={purchase.id}>
+                <ProductCard.Header
+                  icon={ICONS[purchase.category]}
+                  price={purchase.price}
+                />
+                <ProductCard.Title>{purchase.name}</ProductCard.Title>
+                <ProductCard.Description>
+                  {purchase.description}
+                </ProductCard.Description>
+                <ProductCard.Footer>
+                  <button className="text-[var(--color-text)] hover:cursor-pointer">
+                    <Trash size={16} />
+                  </button>
+                </ProductCard.Footer>
+              </ProductCard.Root>
+            ))}
+          </ProductPanel>
+        ) : (
+          <div className="h-[300px] flex items-center justify-center">
+            <p className="text-xl"> {t("home.noProducts")} </p>
+          </div>
+        )}
+      </div>
+      {/*  {
         popUpOpen &&
         <PopUpAction/>
       } */}
-        </div>
-    );
+    </div>
+  );
 };
 
 export default Home;
