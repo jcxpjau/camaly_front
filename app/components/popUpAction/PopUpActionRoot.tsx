@@ -1,4 +1,3 @@
-// PopupRoot.tsx
 import type { ReactNode } from "react";
 import { X } from "lucide-react";
 import "./popUpAction.css";
@@ -10,9 +9,10 @@ type RootProps = {
 
 const PopupRoot = ({ children, onClose }: RootProps) => {
   return (
-    <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 pointer-events-auto">
-      <div className="relative bg-white/70 backdrop-blur-md rounded-2xl shadow-2xl px-8 py-10 w-[40vw] h-[30vh] flex flex-col">
-
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div
+        className="relative bg-white/70 backdrop-blur-md rounded-2xl shadow-2xl px-6 py-8 flex flex-col w-[90vw] h-[90vh] sm:w-[40vw] sm:h-[30vh]"
+      >
         {/* Botão de fechar */}
         <button
           onClick={onClose}
@@ -20,6 +20,7 @@ const PopupRoot = ({ children, onClose }: RootProps) => {
         >
           <X className="w-5 h-5" />
         </button>
+
         {children}
       </div>
     </div>

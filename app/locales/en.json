@@ -106,5 +106,11 @@
     "access": "Access control",
     "ai": "AI features",
     "success": "Success tracking"
+  },
+  "popUp": {
+    "deletetitle": "Are you sure you want to unsubscribe from this workflow? ",
+    "deletemsg": "You'll no longer have access to the workflow, and if you want to undo this, you'll have to contact the author, or purchase it again",
+    "purchaseSuccesstitle": "Purchase was successfull",
+    "purchaseDescription": "Now add your configurations and start automating!"
   }
 }

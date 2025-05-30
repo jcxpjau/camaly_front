@@ -11,6 +11,7 @@ import "./productOverview.css";
 
 type ProductOverviewProps = {
   onClick: () => void;
+  onPurchaseSuccess?: () => void;
   workflow: {
     name: string;
     description: string;
@@ -23,6 +24,7 @@ type ProductOverviewProps = {
 const ProductOverview = ({
   onClick,
   workflow,
+  onPurchaseSuccess
 }: ProductOverviewProps): JSX.Element => {
   const { t } = useTranslation();
   const { name, price, description, category, id } = workflow;
@@ -89,6 +91,7 @@ const ProductOverview = ({
               accentColor="var(--buy-btn-normal)"
               hoverColor="var(--buy-btn-hover)"
               productId={id}
+              onPurchaseSuccess={onPurchaseSuccess}
             />
           </div>
         </div>

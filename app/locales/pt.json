@@ -106,5 +106,11 @@
     "access": "Controle de acesso",
     "ai": "Recursos de IA",
     "success": "Sucesso"
+  },
+  "popUp": {
+    "deletetitle": "Você tem certeza que quer sair desse workflow? ",
+    "deletemsg": "Você deixará de ter acesso ao workflow, e se desejar desfazer esta ação, terá que contactar o autor, ou comprá-lo de novo",
+    "purchaseSuccesstitle": "Compra bem sucedida",
+    "purchaseDescription": "Agora adicione suas configurações e comece a automatizar!"
   }
 }

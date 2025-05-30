@@ -10,28 +10,25 @@ type BuyBtnProps = {
   accentColor: string;
   hoverColor: string;
   productId: string;
+  onPurchaseSuccess?: () => void;
 };
 
 const BuyBtn = ({
   accentColor,
   hoverColor,
   productId,
+  onPurchaseSuccess,
 }: BuyBtnProps): JSX.Element => {
   const { user, token } = useAuth();
   const handleClick = async () => {
     try {
-      await api.post(
-        `purchases`,
-        {
-          userId: user._id,
-          productId: productId,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      await api.post(`purchases`, {
+        userId: user._id,
+        productId: productId,
+      });
+      if (onPurchaseSuccess) {
+        onPurchaseSuccess();
+      }
     } catch (error) {
       console.error("Erro ao fazer a compra:", error);
     }
