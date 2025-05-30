@@ -1,0 +1,15 @@
+.popUp{
+    font-family: 'Gantari', sans-serif;
+    background-color:  var(--popUp-bg);
+}
+
+/* Light Mode */
+:root {
+  --popUp-bg: #bcacfc;
+ 
+}
+
+/* Dark Mode */
+.dark {
+  --popUp-bg:#977efc;
+}

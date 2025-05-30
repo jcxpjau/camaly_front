@@ -27,7 +27,8 @@
     "search-placeholder": "Search workflows...",
     "prices": "Price",
     "categoryChoice": "Select category",
-    "author": "Author"
+    "author": "Author",
+    "noProducts": "There are no workflows matching your filter(s)"
   },
   "reports": {
     "title": "Reports",

@@ -1,16 +1,21 @@
 import { ShoppingCart } from "lucide-react";
 import type { JSX } from "react";
 
-const BuyBtn = (): JSX.Element => {
+type BuyBtnProps = {
+  accentColor: string;
+  hoverColor: string;
+};
+
+const BuyBtn = ({ accentColor, hoverColor }: BuyBtnProps): JSX.Element => {
   return (
     <button
-      className="hover:cursor-pointer flex items-center gap-2 text-sm font-medium px-4 py-2 rounded-xl transition bg-[var(--color-accent)] text-white"
+      className="hover:cursor-pointer flex items-center gap-2 text-sm font-medium px-4 py-2 rounded-xl transition text-white"
+      style={{ backgroundColor: accentColor }}
       onMouseOver={(e) => {
-        (e.currentTarget as HTMLElement).style.backgroundColor = "#977efc";
+        (e.currentTarget as HTMLElement).style.backgroundColor = hoverColor;
       }}
       onMouseOut={(e) => {
-        (e.currentTarget as HTMLElement).style.backgroundColor =
-          "var(--color-accent)";
+        (e.currentTarget as HTMLElement).style.backgroundColor = accentColor;
       }}
     >
       <ShoppingCart size={16} />

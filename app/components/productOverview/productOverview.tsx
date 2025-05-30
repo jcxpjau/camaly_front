@@ -76,7 +76,7 @@ const ProductOverview = ({ onClick, workflow }: ProductOverviewProps): JSX.Eleme
 
         {/* Footer */}
         <div className="w-full flex justify-end mt-4">
-          <BuyBtn/>
+          <BuyBtn accentColor="var(--color-accent)" hoverColor="#977efc" />
         </div>
       </motion.div>
     </motion.div>

@@ -18,6 +18,7 @@ interface IWorkflow {
     icon: JSX.Element;
     price: string;
 }
+import { select } from "motion/react-client";
 
 const Marketplace = (): JSX.Element => {
     const { t } = useTranslation();
@@ -47,6 +48,83 @@ const Marketplace = (): JSX.Element => {
     const [selectedProduct, setSelectedProduct] = useState<
         null | (typeof workflows)[number]
     >(null);
+    console.log(selectedIcons);
+    // activate and deactivate pagination as a filter is applied
+    useEffect(() => {
+        if (searchTerm || selectedMaxPrice > 0 || selectedIcons.length) {
+            setPaginate(false);
+            setItemsPerPage(99);
+        } else {
+            setPaginate(true);
+            setCurrentPage(1);
+            setItemsPerPage(4);
+        }
+    }, [searchTerm, selectedMaxPrice, selectedIcons]);
+
+    useEffect(() => {
+        const fetchWorkflows = async () => {
+            try {
+                setLoading(true);
+                const baseUrl = `${import.meta.env.VITE_API_URL}products`;
+                let url = new URL(baseUrl);
+
+                if (paginate) {
+                    url.searchParams.append("limit", itemsPerPage.toString());
+                    url.searchParams.append("page", currentPage.toString());
+                } else {
+                    url.searchParams.append("limit", "99");
+                }
+
+                if (searchTerm) {
+                    url.searchParams.append("name", searchTerm);
+                }
+
+                if (selectedMaxPrice > 0) {
+                    url.searchParams.append("maxPrice", selectedMaxPrice.toString());
+                }
+
+                if (selectedIcons.length > 0) {
+                    url.searchParams.append("categories", selectedIcons.join(","));
+                }
+                const res = await fetch(url);
+                const json = await res.json();
+                console.log(url.toString());
+                console.log("API Response:", json);
+
+                if (!res.ok) {
+                    console.error("Error getting products:", json);
+                    return;
+                }
+
+                const mappedData = json.data.map((item: any) => ({
+                    id: item._id,
+                    name: item.name,
+                    description: item.description,
+                    price: item.price,
+                    icon: item.iconName ?? ICONS["bot"],
+                }));
+
+                setWorkflows(mappedData);
+
+                if (paginate && json.lastPage) {
+                    setLastPage(json.lastPage);
+                }
+            } catch (err) {
+                console.log(err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchWorkflows();
+    }, [
+        currentPage,
+        itemsPerPage,
+        paginate,
+        searchTerm,
+        selectedMaxPrice,
+        selectedIcons,
+    ]);
 
     // activate and deactivate pagination as a filter is applied
     useEffect(() => {
@@ -100,6 +178,8 @@ const Marketplace = (): JSX.Element => {
         fetchWorkflows();
     }, [currentPage, itemsPerPage, paginate, searchTerm, selectedMaxPrice]);
 
+
+
     return (
         <div className="min-h-screen bg-[var(--color-bg)] text-[var(--color-text)] px-6 py-10 mb-10">
             <div className="max-w-7xl mx-auto">
@@ -142,30 +222,60 @@ const Marketplace = (): JSX.Element => {
                 </div>
 
                 {/* Panel */}
-                <ProductPanel
-                    itemsPerPage={itemsPerPage}
-                    currentPage={currentPage}
-                    onPageChange={setCurrentPage}
-                    paginate={paginate}
-                    pageCount={lastPage}
-                    loading={loading}
-                >
-                    {workflows.map((workflow, idx) => (
-                        <ProductCard.Root key={idx}>
-                            <ProductCard.Header icon={workflow.icon} price={Number(workflow.price)} />
-                            <ProductCard.Title>{workflow.name}</ProductCard.Title>
-                            <ProductCard.Description>
-                                {workflow.description}
-                            </ProductCard.Description>
-                            <ProductCard.Footer>
-                                <BuyBtn />
-                                <ProductCard.MoreInfoButton
-                                    onClick={() => setSelectedProduct(workflow)}
+                {workflows.length > 0 ? (
+                    <>
+                        <ProductPanel
+                            itemsPerPage={itemsPerPage}
+                            currentPage={currentPage}
+                            onPageChange={setCurrentPage}
+                            paginate={paginate}
+                            pageCount={lastPage}
+                            loading={loading}
+                        >
+                            {workflows.map((workflow, idx) => (
+                                <ProductCard.Root key={idx}>
+                                    <ProductCard.Header
+                                        icon={workflow.icon}
+                                        price={Number(workflow.price)}
+                                    />
+                                    <ProductCard.Title>{workflow.name}</ProductCard.Title>
+                                    <ProductCard.Description>
+                                        {workflow.description}
+                                    </ProductCard.Description>
+                                    <ProductCard.Footer>
+                                        <BuyBtn accentColor="var(--color-accent)" hoverColor="#977efc" />
+                                        <ProductCard.MoreInfoButton
+                                            onClick={() => setSelectedProduct(workflow)}
+                                        />
+                                    </ProductCard.Footer>
+                                </ProductCard.Root>
+                            ))}
+                        </ProductPanel>
+                        <AnimatePresence>
+                            {selectedProduct && (
+                                <ProductOverview
+                                    onClick={() => setSelectedProduct(null)}
+                                    workflow={selectedProduct}
                                 />
-                            </ProductCard.Footer>
-                        </ProductCard.Root>
-                    ))}
-                </ProductPanel>
+                            )}
+                        </AnimatePresence>
+                    </>
+                ) : !loading ? (
+                    <div className="h-[300px] flex items-center justify-center">
+                        <p className="text-xl text-[var(--color-text)]">
+                            {t("marketplace.noProducts")}
+                        </p>
+                    </div>
+                ) : (
+                    <div className="h-[300px] flex items-center justify-center bg-[var(--color-bg)] text-[var(--color-text)]">
+                        <div className="flex flex-col items-center gap-4">
+                            <div className="w-8 h-8 border-4 border-[var(--color-accent)] border-t-transparent rounded-full animate-spin" />
+                            <p className="text-sm text-[var(--color-muted)]">
+                                {t("loading")}
+                            </p>
+                        </div>
+                    </div>
+                )}
             </div>
             <AnimatePresence>
                 {selectedProduct && (

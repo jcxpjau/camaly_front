@@ -1,7 +1,7 @@
 .productOverview{
     font-family: 'Gantari', sans-serif;
     background-image: linear-gradient(
-    to bottom,
+    to top,
     var(--card-bg-from),
     var(--card-bg-mid)
   );
