@@ -10,6 +10,7 @@ import { ICONS } from "~/components/filterBar/iconCategories";
 import ProductOverview from "~/components/productOverview/productOverview";
 import BuyBtn from "~/components/buyBtn/buyBtn";
 import api from "~/services/api";
+import { PopUpAction } from "~/components/popUpAction/";
 
 interface IWorkflow {
   id: string;
@@ -48,6 +49,8 @@ const Marketplace = (): JSX.Element => {
     null | (typeof workflows)[number]
   >(null);
 
+  const [popUpOpen, setPopUpOpen] = useState(false);
+
   // activate and deactivate pagination as a filter is applied
   useEffect(() => {
     if (searchTerm || selectedMaxPrice > 0 || selectedIcons.length > 0) {
@@ -84,7 +87,7 @@ const Marketplace = (): JSX.Element => {
           name: item.name,
           description: item.description,
           price: item.price,
-          category: item.category?? "insight"
+          category: item.category ?? "insight",
         }));
 
         setWorkflows(mappedData);
@@ -168,7 +171,12 @@ const Marketplace = (): JSX.Element => {
                     {workflow.description}
                   </ProductCard.Description>
                   <ProductCard.Footer>
-                    <BuyBtn accentColor="#977efc" hoverColor="#A4B7F4"  productId={workflow.id}/>
+                    <BuyBtn
+                      accentColor="#977efc"
+                      hoverColor="#A4B7F4"
+                      productId={workflow.id}
+                      onPurchaseSuccess={()=>setPopUpOpen(true)}
+                    />
                     <ProductCard.MoreInfoButton
                       onClick={() => setSelectedProduct(workflow)}
                     />
@@ -199,9 +207,19 @@ const Marketplace = (): JSX.Element => {
           <ProductOverview
             onClick={() => setSelectedProduct(null)}
             workflow={selectedProduct}
+            onPurchaseSuccess={()=>setPopUpOpen(true)}
           />
         )}
       </AnimatePresence>
+      {popUpOpen && (
+        <PopUpAction.Root onClose={()=>setPopUpOpen(false)}>
+          <PopUpAction.Title message={t("popUp.purchaseSuccesstitle")}/>
+          <PopUpAction.Description>
+           {t("popUp.purchaseDescription")}
+          </PopUpAction.Description>
+
+        </PopUpAction.Root>
+      )}
     </div>
   );
 };

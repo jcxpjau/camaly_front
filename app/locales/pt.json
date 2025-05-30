@@ -272,7 +272,7 @@
       }
     }
   },
-    "login": {
+  "login": {
     "title": "Bem-vindo de volta",
     "subtitle": "Faça login para continuar usando o Camaly",
     "form": {
@@ -293,7 +293,7 @@
       "invalidCredentials": "Nome de usuário ou senha incorretos. Verifique suas credenciais e tente novamente."
     }
   },
-    "register": {
+  "register": {
     "title": "Bem-vindo de volta",
     "subtitle": "Faça login para continuar usando o Camaly",
     "form": {
@@ -320,5 +320,11 @@
       "question": "Já tem uma conta?",
       "action": "Entrar"
     }
+  },
+  "popUp": {
+    "deletetitle": "Você tem certeza que quer sair desse workflow? ",
+    "deletemsg": "Você deixará de ter acesso ao workflow, e se desejar desfazer esta ação, terá que contactar o autor, ou comprá-lo de novo",
+    "purchaseSuccesstitle": "Compra bem sucedida",
+    "purchaseDescription": "Agora adicione suas configurações e comece a automatizar!"
   }
 }
