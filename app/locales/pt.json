@@ -291,5 +291,33 @@
       "passwordRequired": "A senha é obrigatória.",
       "invalidCredentials": "Nome de usuário ou senha incorretos. Verifique suas credenciais e tente novamente."
     }
+  },
+    "register": {
+    "title": "Bem-vindo de volta",
+    "subtitle": "Faça login para continuar usando o Camaly",
+    "form": {
+      "namePlaceholder": "Nome...",
+      "emailPlaceholder": "Email...",
+      "passwordPlaceholder": "Senha...",
+      "confirmPasswordPlaceholder": "Confirmar Senha...",
+      "submit": "Criar Conta"
+    },
+    "errors": {
+      "nameRequired": "Nome é obrigatório.",
+      "emailRequired": "Email é obrigatório.",
+      "passwordRequired": "Senha é obrigatória.",
+      "confirmRequired": "Confirmação é obrigatória.",
+      "passwordMismatch": "As senhas não coincidem.",
+      "emailInUse": "O email informado já está vinculado a uma conta. Use outro email ou faça login com suas credenciais."
+    },
+    "or": "OU",
+    "socialLogin": {
+      "google": "Cadastrar com Google",
+      "apple": "Cadastrar com Apple"
+    },
+    "footer": {
+      "question": "Já tem uma conta?",
+      "action": "Entrar"
+    }
   }
 }

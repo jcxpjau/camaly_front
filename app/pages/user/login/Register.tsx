@@ -7,8 +7,10 @@ import { Input } from '~/components/input/input';
 import { useCustomNavigate } from "~/hooks/useCustomNavigate";
 import { useTheme } from '~/context/theme/theme.hooks';
 import api from '~/services/api';
+import { useTranslation } from 'react-i18next';
 
 export default function Register() {
+    const {t} = useTranslation()
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -26,7 +28,7 @@ export default function Register() {
         let hasError = false;
 
         if (!name.trim()) {
-            setNameError("Name is required.");
+            setNameError(t("register.errors.nameRequired"));
             hasError = true;
         }
         else {
@@ -34,7 +36,7 @@ export default function Register() {
         }
 
         if (!email.trim()) {
-            setEmailError("Email is required.");
+            setEmailError(t("register.errors.emailRequired"));
             hasError = true;
 
         }
@@ -43,7 +45,7 @@ export default function Register() {
         }
 
         if (!password.trim()) {
-            setPasswordError("Password is required.");
+            setPasswordError(t("register.errors.passwordRequired"));
             hasError = true;
 
         }
@@ -52,12 +54,12 @@ export default function Register() {
         }
 
         if (!confirmPassword.trim()) {
-            setConfirmPasswordError("Confirmation is required.");
+            setConfirmPasswordError(t("register.errors.confirmRequired"));
             hasError = true;
 
         }
         else if (password !== confirmPassword) {
-            setConfirmPasswordError("Passwords do not match.");
+            setConfirmPasswordError(t("register.errors.passwordMismatch"));
             hasError = true;
 
         }
@@ -174,42 +176,43 @@ export default function Register() {
                     />
                     <div style={{ position: 'relative', zIndex: 1 }}>
                         <div className="text-center">
-                            <h2 className="text-3xl font-semibold mb-1">Welcome back</h2>
+                            <h2 className="text-3xl font-semibold mb-1">{t("register.title")}</h2>
                             <p className="text-sm" style={{ color: "rgba(255, 255, 255, 0.7)" /* --color-card-subtext */ }}>
-                                Login to continue using Camaly
+                                {t("register.subtitle")}
                             </p>
                         </div>
                         {error && (
                             <div className="text-red-300 text-sm p-3 rounded text-center my-4">
-                                The email address you entered is already linked to an account. Please use a different email address or log in with your credentials.                            </div>
+                                {t("register.errors.emailInUse")}
+                            </div>
                         )}
                         <form onSubmit={RegisterAuth} className="space-y-4 mt-6">
                             <Input.Root status={nameError ? 'error' : undefined} message={nameError} typeLogin>
                                 <Input.Icon icon={User} status={nameError ? 'error' : undefined} typeLogin />
-                                <Input.Content placeholder="Name..." type="text" value={name} onChange={setName} status={nameError ? 'error' : undefined} typeLogin />
+                                <Input.Content placeholder={t("register.form.namePlaceholder")} type="text" value={name} onChange={setName} status={nameError ? 'error' : undefined} typeLogin />
                             </Input.Root>
                             <Input.Root status={emailError ? 'error' : undefined} message={emailError} typeLogin>
                                 <Input.Icon icon={Mail} status={emailError ? 'error' : undefined} typeLogin />
-                                <Input.Content placeholder="Email..." type="email" value={email} onChange={setEmail} status={emailError ? 'error' : undefined} typeLogin />
+                                <Input.Content placeholder={t("register.form.emailPlaceholder")} type="email" value={email} onChange={setEmail} status={emailError ? 'error' : undefined} typeLogin />
                             </Input.Root>
                             <Input.Root status={passwordError ? 'error' : undefined} message={passwordError} typeLogin>
                                 <Input.Icon icon={KeyRound} status={passwordError ? 'error' : undefined} typeLogin />
-                                <Input.Content placeholder="Password..." type="password" value={password} onChange={setPassword} status={passwordError ? 'error' : undefined} typeLogin />
+                                <Input.Content placeholder={t("register.form.passwordPlaceholder")} type="password" value={password} onChange={setPassword} status={passwordError ? 'error' : undefined} typeLogin />
                             </Input.Root>
                             <Input.Root status={confirmPasswordError ? 'error' : undefined} message={confirmPasswordError} typeLogin>
                                 <Input.Icon icon={KeyRound} status={confirmPasswordError ? 'error' : undefined} typeLogin />
-                                <Input.Content placeholder="Confirm Password..." type="password" value={confirmPassword} onChange={setConfirmPassword} status={confirmPasswordError ? 'error' : undefined} typeLogin />
+                                <Input.Content placeholder={t("register.form.confirmPasswordPlaceholder")} type="password" value={confirmPassword} onChange={setConfirmPassword} status={confirmPasswordError ? 'error' : undefined} typeLogin />
                             </Input.Root>
                             <button
                                 type="submit"
                                 className="w-full bg-gradient-to-r from-[#a4b7f4] to-[#bcacfc] text-white rounded-md py-3 font-semibold shadow-md hover:opacity-90 transition"
                             >
-                                Create Account
+                                {t("register.form.submit")}
                             </button>
                         </form>
                         <div className="flex items-center my-6">
                             <hr className="flex-grow border-[rgba(255, 255, 255, 0.2)]" />
-                            <span className="px-3 text-sm" style={{ color: "#ffffff" }}>OR</span>
+                            <span className="px-3 text-sm" style={{ color: "#ffffff" }}>{t("register.or")}</span>
                             <hr className="flex-grow border-[rgba(255, 255, 255, 0.2)]" />
                         </div>
                         <div className="space-y-3">
@@ -222,7 +225,7 @@ export default function Register() {
                                 onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "rgba(255, 255, 255, 0.2)" /* --color-button-hover */)}
                                 onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "rgba(255, 255, 255, 0.1)" /* --color-button-bg */)}
                             >
-                                <FaGoogle className="w-5 h-5" /> Sign up with Google
+                                <FaGoogle className="w-5 h-5" />{t("register.socialLogin.google")}
                             </button>
                             <button
                                 className="w-full flex items-center justify-center gap-3 rounded-md px-4 py-2 font-medium transition"
@@ -233,16 +236,16 @@ export default function Register() {
                                 onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "rgba(255, 255, 255, 0.2)" /* --color-button-hover */)}
                                 onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "rgba(255, 255, 255, 0.1)" /* --color-button-bg */)}
                             >
-                                <FaApple className="w-5 h-5" /> Sign up with Apple
+                                <FaApple className="w-5 h-5" />{t("register.socialLogin.apple")}
                             </button>
                         </div>
                         <p className="text-sm text-center mt-6" style={{ color: "rgba(255, 255, 255, 0.7)" }}>
-                            Already have an account?
+                            {t("register.footer.question")}                            
                             <span
                                 onClick={(e) => navigate(e, "/login")}
                                 className="text-blue-400 ml-1 underline hover:opacity-80 cursor-pointer"
                             >
-                                Sign In
+                            {t("register.footer.action")}                            
                             </span>
                         </p>
                     </div>

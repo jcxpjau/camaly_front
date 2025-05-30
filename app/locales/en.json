@@ -291,5 +291,35 @@
       "passwordRequired": "Password is required.",
       "invalidCredentials": "Incorrect username or password. Please check your credentials and try again."
     }
+  },
+    "register": {
+    "title": "Welcome back",
+    "subtitle": "Login to continue using Camaly",
+    "form": {
+      "namePlaceholder": "Name...",
+      "emailPlaceholder": "Email...",
+      "passwordPlaceholder": "Password...",
+      "confirmPasswordPlaceholder": "Confirm Password...",
+      "submit": "Create Account"
+    },
+    "errors": {
+      "nameRequired": "Name is required.",
+      "emailRequired": "Email is required.",
+      "passwordRequired": "Password is required.",
+      "confirmRequired": "Confirmation is required.",
+      "passwordMismatch": "Passwords do not match.",
+      "emailInUse": "The email address you entered is already linked to an account. Please use a different email address or log in with your credentials."
+    },
+    "or": "OR",
+    "socialLogin": {
+      "google": "Sign up with Google",
+      "apple": "Sign up with Apple"
+    },
+    "footer": {
+      "question": "Already have an account?",
+      "action": "Sign In"
+    }
   }
 }
+
+
