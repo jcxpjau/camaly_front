@@ -7,8 +7,10 @@ import { Input } from '~/components/input/input';
 import { useCustomNavigate } from "~/hooks/useCustomNavigate";
 import { useAuth } from '~/context/auth/auth.hooks';
 import api from '~/services/api';
+import { useTranslation } from 'react-i18next';
 
 export default function Login() {
+    const {t} = useTranslation();
     const { login } = useAuth();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -24,13 +26,13 @@ export default function Login() {
         e.preventDefault();
         let hasError = false;
         if (!email.trim()) {
-            setEmailError("Email is required.");
+            setEmailError(t("login.errors.emailRequired"));
             hasError = true;
         } else {
             setEmailError('');
         }
         if (!password.trim()) {
-            setPasswordError("Password is required.");
+            setPasswordError(t("login.errors.passwordRequired"));
             hasError = true;
         } else {
             setPasswordError('');
@@ -136,21 +138,21 @@ export default function Login() {
                     />
                     <div style={{ position: 'relative', zIndex: 1 }}>
                         <div className="text-center">
-                            <h2 className="text-3xl font-semibold mb-1">Welcome back</h2>
+                            <h2 className="text-3xl font-semibold mb-1">{t("login.title")}</h2>
                             <p className="text-sm" style={{ color: 'rgba(255, 255, 255, 0.7)' /* var(--color-card-subtext) */ }}>
-                                Login to continue using Camaly
+                                {t("login.subtitle")}
                             </p>
                         </div>
                         {error && (
                          <div className="text-red-300 text-sm p-3 rounded text-center my-4">
-                            Incorrect username or password. Please check your credentials and try again.
+                            {t("login.errors.invalidCredentials")}
                         </div>
                         )}
                         <form onSubmit={LoginAuth} className="space-y-4 mt-6">
                             <Input.Root status={emailError ? "error" : undefined} message={emailError} typeLogin>
                                 <Input.Icon icon={Mail} status={emailError ? "error" : undefined} typeLogin />
                                 <Input.Content
-                                    placeholder="Email..."
+                                    placeholder={t("login.form.emailPlaceholder")}
                                     type="email"
                                     value={email}
                                     onChange={setEmail}
@@ -161,7 +163,7 @@ export default function Login() {
                             <Input.Root status={passwordError ? "error" : undefined} message={passwordError} typeLogin>
                                 <Input.Icon icon={KeyRound} status={passwordError ? "error" : undefined} typeLogin />
                                 <Input.Content
-                                    placeholder="Password..."
+                                    placeholder={t("login.form.passwordPlaceholder")}
                                     type="password"
                                     value={password}
                                     onChange={setPassword}
@@ -194,25 +196,25 @@ export default function Login() {
                                             )}
                                         </AnimatePresence>
                                     </motion.div>
-                                    <label>Stay signed in</label>
+                                    <label>{t("login.form.rememberMe")}</label>
                                 </div>
                                 <span
                                     //onClick={() => navigate(null, "/forgot-password")}
                                     className="text-blue-400 underline cursor-pointer hover:opacity-80"
                                 >
-                                    Forgot password?
+                                    {t("login.form.forgotPassword")}
                                 </span>
                             </div>
                             <button
                                 type="submit"
                                 className="w-full bg-gradient-to-r from-[#a4b7f4] to-[#bcacfc] text-white rounded-md py-3 font-semibold shadow-md hover:opacity-90 transition"
                             >
-                                Sign In
+                                    {t("login.form.submit")}
                             </button>
                         </form>
                         <div className="flex items-center my-6">
                             <hr className="flex-grow" style={{ borderColor: 'rgba(255, 255, 255, 0.2)' /* var(--color-divider) */ }} />
-                            <span className="px-3 text-sm" style={{ color: '#ffffff' /* var(--color-card-text) */ }}>OR</span>
+                            <span className="px-3 text-sm" style={{ color: '#ffffff' /* var(--color-card-text) */ }}>{t("login.form.divider")}</span>
                             <hr className="flex-grow" style={{ borderColor: 'rgba(255, 255, 255, 0.2)' /* var(--color-divider) */ }} />
                         </div>
                         <div className="space-y-3">
@@ -225,7 +227,7 @@ export default function Login() {
                                 onMouseOver={(e) => (e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.2)' /* var(--color-button-hover) */)}
                                 onMouseOut={(e) => (e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)' /* var(--color-button-bg) */)}
                             >
-                                <FaGoogle className="w-5 h-5" /> Sign in with Google
+                                <FaGoogle className="w-5 h-5" /> {t("login.form.google")}
                             </button>
                             <button
                                 className="w-full flex items-center justify-center gap-3 rounded-md px-4 py-2 font-medium transition"
@@ -236,16 +238,16 @@ export default function Login() {
                                 onMouseOver={(e) => (e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.2)' /* var(--color-button-hover) */)}
                                 onMouseOut={(e) => (e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)' /* var(--color-button-bg) */)}
                             >
-                                <FaApple className="w-5 h-5" /> Sign in with Apple
+                                <FaApple className="w-5 h-5" /> {t("login.form.apple")}
                             </button>
                         </div>
                         <p className="text-sm text-center mt-6" style={{ color: 'rgba(255, 255, 255, 0.7)' /* var(--color-card-subtext) */ }}>
-                            First time at Camaly?
+                            {t("login.form.firstTime")}
                             <span
                                 onClick={(e) => navigate(e, "/register")}
                                 className="text-blue-400 ml-1 underline hover:opacity-80 cursor-pointer"
                             >
-                                Create an account
+                            {t("login.form.createAccount")}
                             </span>
                         </p>
                     </div>

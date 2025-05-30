@@ -12,9 +12,13 @@ export function PersonalSettings() {
   const [notifications, setNotifications] = useState(false);
 
   const [email, setEmail] = useState('');
-  const [name, setName] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+
+  const [firstNameError, setFirstNameError] = useState("");
+  const [lastNameError, setLastNameError] = useState("");
+  const [nameError, setNameError] = useState(''); 
   const [emailError, setEmailError] = useState('');
-  const [nameError, setNameError] = useState('');
 
   const [oldpassword, setOldPassword] = useState('');
   const [newpassword, setNewPassword] = useState('');
@@ -35,47 +39,68 @@ export function PersonalSettings() {
     if (user?.email) {
       setEmail(user.email)};
     if (user?.name) {
-      setName(user.name)
-    };
+      //Split para pegar o primeiro e o resto do nome
+      const [first, ...rest] = user.name.trim().split(' ');
+      setFirstName(first);
+      setLastName(rest.join(' '));
+    }
   }, [user]);
+    async function PathInfoUser(e: React.FormEvent<HTMLFormElement>) {
+      e.preventDefault();
 
-  async function PathInfoUser(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
+      const fullName = `${firstName} ${lastName}`.trim();//Juntando o nome do user
+      const payload: Record<string, string> = {};//Payloado para mandar somente o que foi alterado dos dados
+      let hasError = false;
 
-    const payload: Record<string, string> = {};
-    let hasError = false;
-
-    if (!email.trim()) {
-      setEmailError(t("settings.personalSettings.sections.personalInformation.form.errors.emailRequired"));
-      hasError = true;
-    } else {
-      setEmailError('');
-      if (email !== user?.email) payload.email = email;
-    }
-
-    if (!name.trim()) {
-      setNameError(t("settings.personalSettings.sections.personalInformation.form.errors.nameRequired"));
-      hasError = true;
-    } else {
-      setNameError('');
-      if (name !== user?.name) payload.name = name;
-    }
-
-    if (hasError || Object.keys(payload).length === 0) return;
-
-    try {
-      const res = await api.patch("users/me", payload);
-      if (res.status === 200) {
-        setStatusResPatchInfo("success");
-        setTextResPatchInfo(t("settings.personalSettings.sections.personalInformation.form.statusMessages.success"));
+      if (!email.trim()) {
+        setEmailError(t("settings.personalSettings.sections.personalInformation.form.errors.emailRequired"));
+        hasError = true;
       } else {
+        setEmailError('');
+      }
+
+      if (!firstName.trim()) {
+        setFirstNameError(t("settings.personalSettings.sections.personalInformation.form.errors.nameRequired"));
+        hasError = true;
+      } else {
+        setFirstNameError('');
+      }
+      if (!lastName.trim()) {
+        setLastNameError(t("settings.personalSettings.sections.personalInformation.form.errors.nameRequired"));
+        hasError = true;
+      } else {
+        setLastNameError('');
+      }
+
+      //Se os valores não mudar, as const Changed serão falsas
+      const isEmailChanged = email !== user?.email;
+      const isNameChanged = fullName !== user?.name;
+
+      if (!isEmailChanged && !isNameChanged) {
+        return;
+      }
+
+      //Como os valores mudou, será true e irá vir pra cá dentro do payload
+      if (isEmailChanged) payload.email = email;
+      if (isNameChanged) payload.name = fullName;
+
+      if (hasError || Object.keys(payload).length === 0) return;
+
+      try {
+        const res = await api.patch("users/me", payload);
+        if (res.status === 200) {
+          setStatusResPatchInfo("success");
+          setTextResPatchInfo(t("settings.personalSettings.sections.personalInformation.form.statusMessages.success"));
+        } else {
+          setStatusResPatchInfo("error");
+          setTextResPatchInfo(t("settings.personalSettings.sections.personalInformation.form.statusMessages.error"));
+        }
+      } catch (err: any) {
+        console.log(err);
         setStatusResPatchInfo("error");
         setTextResPatchInfo(t("settings.personalSettings.sections.personalInformation.form.statusMessages.error"));
       }
-    } catch (err: any) {
-      console.log(err);
     }
-  }
 
   async function PathInfoUserSecurity(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -84,30 +109,27 @@ export function PersonalSettings() {
     if (!oldpassword.trim()) {
       setOldPasswordError(t("settings.personalSettings.sections.personalSecurity.form.errors.oldPasswordRequired"));
       hasError = true;
-    } else {
+    } 
+    else {
       setOldPasswordError('');
-      if (oldpassword !== user?.password) {
-        setTextResPatchInfoSecurity(t("settings.personalSettings.sections.personalSecurity.form.errors.oldPasswordIncorrect"));
-        hasError = true;
-      }
+
     }
 
     if (!newpassword.trim()) {
       setNewPasswordError(t("settings.personalSettings.sections.personalSecurity.form.errors.newPasswordRequired"));
       hasError = true;
-    } else {
+    } 
+    else {
       setNewPasswordError('');
-      if (newpassword === user?.password) {
-        setTextResPatchInfoSecurity(t("settings.personalSettings.sections.personalSecurity.form.errors.newPasswordSameAsOld"));
-        hasError = true;
-      }
     }
 
     if (!confirmnewpassword.trim()) {
       setConfirmNewPasswordError(t("settings.personalSettings.sections.personalSecurity.form.errors.confirmNewPasswordRequired"));
       hasError = true;
-    } else if (newpassword !== confirmnewpassword) {
+    } 
+    else if (newpassword !== confirmnewpassword) {
       setConfirmNewPasswordError('');
+      setStatusResPatchInfoSecurity('error')
       setTextResPatchInfoSecurity(t("settings.personalSettings.sections.personalSecurity.form.errors.passwordsDoNotMatch"));
       hasError = true;
     }
@@ -115,11 +137,18 @@ export function PersonalSettings() {
     if (hasError) return;
 
     try {
-      const res = await api.patch("users/me/password", { currentPassword: oldpassword, newPassword: newpassword });
-      console.log(res)
+      const res = await api.patch("users/me/password", 
+        { currentPassword: oldpassword, 
+          newPassword: newpassword 
+        });
+        if (res.status === 200) {
+        setStatusResPatchInfoSecurity("success");
+        setTextResPatchInfoSecurity(t("settings.personalSettings.sections.personalInformation.form.statusMessages.success"));
+      }
     } 
     catch (err: any) {
-      console.log(err);
+      setStatusResPatchInfoSecurity("error");
+      setTextResPatchInfoSecurity(t("settings.personalSettings.sections.personalInformation.form.statusMessages.error"));
     }
   }
 
@@ -142,22 +171,22 @@ export function PersonalSettings() {
             </div>
           )}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Input.Root label={t("settings.personalSettings.sections.personalInformation.form.fields.firstName.label")} status={nameError ? "error" : undefined} message={nameError}>
+            <Input.Root label={t("settings.personalSettings.sections.personalInformation.form.fields.firstName.label")} status={firstNameError ? "error" : undefined} message={firstNameError}>
               <Input.Content
                 placeholder={t("settings.personalSettings.sections.personalInformation.form.fields.firstName.placeholder")}
                 type="text"
-                value={name}
-                onChange={setName}
-                status={nameError ? "error" : undefined}
+                value={firstName}
+                onChange={setFirstName}
+                status={firstNameError ? "error" : undefined}
               />
             </Input.Root>
-            <Input.Root label={t("settings.personalSettings.sections.personalInformation.form.fields.lastName.label")} status={nameError ? "error" : undefined} message={nameError}>
+            <Input.Root label={t("settings.personalSettings.sections.personalInformation.form.fields.lastName.label")} status={lastNameError ? "error" : undefined} message={lastNameError}>
               <Input.Content
                 placeholder={t("settings.personalSettings.sections.personalInformation.form.fields.lastName.placeholder")}
                 type="text"
-                value={name}
-                onChange={setName}
-                status={nameError ? "error" : undefined}
+                value={lastName}
+                onChange={setLastName}
+                status={lastNameError ? "error" : undefined}
               />
             </Input.Root>
           </div>
