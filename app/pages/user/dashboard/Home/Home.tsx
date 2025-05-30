@@ -29,9 +29,7 @@ const Home = (): JSX.Element => {
     const [purchases, setPurchases] = useState<Purchase[]>([]);
     const [loading, setLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
-
     const [popUpOpen, setPopUpOpen] = useState(true);
-
 
     useEffect(() => {
 
@@ -43,7 +41,6 @@ const Home = (): JSX.Element => {
                 setLoading(true);
                 const res = await api.get(`purchases/user/${user._id}`);
                 const json = res.data;
-                
                 const mappedData: Purchase[] = json.filter((item: { productId: null; }) => item.productId !== null).map((item: any) => ({
                     id: item.productId._id,
                     name: item.productId.name,
@@ -51,7 +48,6 @@ const Home = (): JSX.Element => {
                     price: item.productId.price,
                     icon: ICONS[item.productId.iconName] ?? ICONS["bot"],
                 }));
-                console.log(mappedData)
                 setPurchases(mappedData);
             } catch (err: any) {
                 // /console.log(err);
@@ -61,8 +57,6 @@ const Home = (): JSX.Element => {
         };
         fetchProducts();
     }, [user]);
-
-    console.log(purchases)
 
     if (loading || !user) {
         return (

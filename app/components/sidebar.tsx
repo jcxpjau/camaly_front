@@ -177,7 +177,7 @@ export default function Sidebar() {
                                 <span>{t('Reports')}</span>
                             </a>
                             {isMobile &&
-                                <a href="#" onClick={(e) => navigate(e, "/user/marketplace")} className="flex items-center gap-2 hover:text-[var(--color-accent)] transition">
+                                <a href="#" onClick={(e) => navigate(e, "/user/settings")} className="flex items-center gap-2 hover:text-[var(--color-accent)] transition">
                                     <CircleUserRound className="w-6 h-6" />
                                     <span>{t('Profile')}</span>
                                 </a>
