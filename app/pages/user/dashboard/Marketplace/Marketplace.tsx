@@ -62,7 +62,6 @@ const Marketplace = (): JSX.Element => {
         }
     }, [searchTerm, selectedMaxPrice, selectedIcons]);
 
-    console.log(workflows);
     useEffect(() => {
         const fetchWorkflows = async () => {
             try {
