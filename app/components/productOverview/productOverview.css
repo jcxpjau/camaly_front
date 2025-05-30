@@ -12,12 +12,14 @@
 :root {
   --card-bg-from: #a4b7f4;
   --card-bg-mid: #bcacfc;
-  --card-bg-to: #f9fafb; 
+  --buy-btn-normal: #4f46e5;
+  --buy-btn-hover: #977efc;
 }
 
 /* Dark Mode */
 .dark {
-  --card-bg-from: #5b5773;
+  --card-bg-from: #6366F1;
   --card-bg-mid:#977efc;
-  --card-bg-to: #2b2b2b;
+  --buy-btn-normal: #4f46e5;
+  --buy-btn-hover: #977efc;
 }
