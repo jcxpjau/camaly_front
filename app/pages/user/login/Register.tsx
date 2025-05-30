@@ -120,65 +120,11 @@ export default function Register() {
           radial-gradient(90% 10% at 50% 0%, rgba(164, 183, 244, 0.05), transparent 90%)
 `
             }}
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> valmir-branch
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
         >
             <span
                 className="pointer-events-none absolute top-0 left-0 w-full h-full"
-<<<<<<< HEAD
-=======
-          />
-          <div style={{ position: 'relative', zIndex: 1 }}>
-            <div className="text-center">
-              <h2 className="text-3xl font-semibold mb-1">Welcome back</h2>
-              <p className="text-sm" style={{ color: "rgba(255, 255, 255, 0.7)" /* --color-card-subtext */ }}>
-                Login to continue using Camaly
-              </p>
-            </div>
-            {error && (
-              <div className="text-red-300 text-sm p-3 rounded text-center my-4">
-                The email address you entered is already linked to an account. Please use a different email address or log in with your credentials.
-              </div>
-            )}
-            <form onSubmit={RegisterAuth} className="space-y-4 mt-6">
-              <Input.Root status={nameError ? 'error' : undefined} message={nameError} typeLogin>
-                <Input.Icon icon={User} status={nameError ? 'error' : undefined} typeLogin/>
-                <Input.Content placeholder="Name..." type="text" value={name} onChange={setName} status={nameError ? 'error' : undefined} typeLogin/>
-              </Input.Root>
-              <Input.Root status={emailError ? 'error' : undefined} message={emailError} typeLogin>
-                <Input.Icon icon={Mail} status={emailError ? 'error' : undefined} typeLogin/>
-                <Input.Content placeholder="Email..." type="email" value={email} onChange={setEmail} status={emailError ? 'error' : undefined} typeLogin/>
-              </Input.Root>
-              <Input.Root status={passwordError ? 'error' : undefined} message={passwordError} typeLogin>
-                <Input.Icon icon={KeyRound} status={passwordError ? 'error' : undefined} typeLogin/>
-                <Input.Content placeholder="Password..." type="password" value={password} onChange={setPassword} status={passwordError ? 'error' : undefined} typeLogin/>
-              </Input.Root>
-              <Input.Root status={confirmPasswordError ? 'error' : undefined} message={confirmPasswordError} typeLogin>
-                <Input.Icon icon={KeyRound} status={confirmPasswordError ? 'error' : undefined} typeLogin/>
-                <Input.Content placeholder="Confirm Password..." type="password" value={confirmPassword} onChange={setConfirmPassword} status={confirmPasswordError ? 'error' : undefined} typeLogin/>
-              </Input.Root>
-              <button
-                type="submit"
-                className="w-full bg-gradient-to-r from-[#a4b7f4] to-[#bcacfc] text-white rounded-md py-3 font-semibold shadow-md hover:opacity-90 transition"
-              >
-                Create Account
-              </button>
-            </form>
-            <div className="flex items-center my-6">
-              <hr className="flex-grow border-[rgba(255, 255, 255, 0.2)]" />
-              <span className="px-3 text-sm" style={{ color: "#ffffff" }}>OR</span>
-              <hr className="flex-grow border-[rgba(255, 255, 255, 0.2)]" />
-            </div>
-            <div className="space-y-3">
-              <button
-                className="w-full flex items-center justify-center gap-3 rounded-md px-4 py-2 font-medium transition"
->>>>>>> valmir-branch
-=======
->>>>>>> valmir-branch
                 style={{
                     opacity: mousePos ? 1 : 0,
                     transition: 'opacity 0.3s ease',
