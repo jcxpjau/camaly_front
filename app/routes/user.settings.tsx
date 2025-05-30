@@ -3,8 +3,8 @@ import Settings from "~/pages/user/settings/Settings";
 
 export function meta({ }: Route.MetaArgs) {
     return [
-        { title: "Camaly | Home" },
-        { name: "description", content: "Welcome to Camaly!" },
+        { title: "Camaly | Settings" },
+        { name: "description", content: "Settings for Camaly!" },
     ];
 }
 

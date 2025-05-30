@@ -3,8 +3,8 @@ import NewAgents from "~/pages/user/dashboard/NewAgents/NewAgents";
 
 export function meta({ }: Route.MetaArgs) {
     return [
-        { title: "Camaly | Home" },
-        { name: "description", content: "Welcome to Camaly!" },
+        { title: "Camaly | New agent" },
+        { name: "description", content: "New agent on Camaly!" },
     ];
 }
 
