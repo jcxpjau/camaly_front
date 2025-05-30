@@ -270,5 +270,26 @@
         "backupCompleted": "Automatic backup completed"
       }
     }
+  },
+   "login": {
+    "title": "Welcome back",
+    "subtitle": "Login to continue using Camaly",
+    "form": {
+      "emailPlaceholder": "Email...",
+      "passwordPlaceholder": "Password...",
+      "rememberMe": "Stay signed in",
+      "forgotPassword": "Forgot password?",
+      "submit": "Sign In",
+      "divider": "OR",
+      "google": "Sign in with Google",
+      "apple": "Sign in with Apple",
+      "firstTime": "First time at Camaly?",
+      "createAccount": "Create an account"
+    },
+    "errors": {
+      "emailRequired": "Email is required.",
+      "passwordRequired": "Password is required.",
+      "invalidCredentials": "Incorrect username or password. Please check your credentials and try again."
+    }
   }
 }

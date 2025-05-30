@@ -270,5 +270,26 @@
         "backupCompleted": "Backup automático concluído"
       }
     }
+  },
+    "login": {
+    "title": "Bem-vindo de volta",
+    "subtitle": "Faça login para continuar usando o Camaly",
+    "form": {
+      "emailPlaceholder": "Email...",
+      "passwordPlaceholder": "Senha...",
+      "rememberMe": "Manter conectado",
+      "forgotPassword": "Esqueceu a senha?",
+      "submit": "Entrar",
+      "divider": "OU",
+      "google": "Entrar com Google",
+      "apple": "Entrar com Apple",
+      "firstTime": "Primeira vez no Camaly?",
+      "createAccount": "Criar uma conta"
+    },
+    "errors": {
+      "emailRequired": "O email é obrigatório.",
+      "passwordRequired": "A senha é obrigatória.",
+      "invalidCredentials": "Nome de usuário ou senha incorretos. Verifique suas credenciais e tente novamente."
+    }
   }
 }
