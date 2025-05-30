@@ -16,7 +16,8 @@ import PopUpAction from "~/components/popUpAction/popUpAction";
 import { Trash } from "lucide-react";
 
 interface Purchase {
-  id: string;
+  _id: string;
+  productId: string;
   name: string;
   description: string;
   price: number;
@@ -31,23 +32,16 @@ const Home = (): JSX.Element => {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedPurchase, setSelectedPurchase] = useState<Purchase>();
   const [popUpOpen, setPopUpOpen] = useState(true);
-/* 
-  const onDelete = async (id:string) => {
 
-    if(selectedPurchase){
-        try {
-          await api.delete(`products/${id}`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-    
-          console.log("Produto deletado com sucesso!");
+  const onDelete = async (id:string) => {
+     try {
+        console.log(`id da purchase p deletar`, id)
+          const {data} = await api.delete(`purchases/${id}`);
+          setPurchases(prevItems => prevItems.filter(item => item._id !== id));
         } catch (error) {
           console.error("Erro ao deletar o produto:", error);
         }
-    }
-  }; */
+  };
 
   useEffect(() => {
     if (!user) {
@@ -58,17 +52,18 @@ const Home = (): JSX.Element => {
         setLoading(true);
         const res = await api.get(`purchases/user/${user._id}`);
         const json = res.data;
-
+        console.log(`este eh o purchase`, json)
         const mappedData: Purchase[] = json
           .filter((item: { productId: null }) => item.productId !== null)
           .map((item: any) => ({
-            id: item.productId._id,
+            _id: item._id,
+            productId: item.productId._id,
             name: item.productId.name,
             description: item.productId.description,
             price: item.productId.price,
             category: item.productId.category
           }));
-        console.log(mappedData);
+        
         setPurchases(mappedData);
       } catch (err: any) {
         // /console.log(err);
@@ -78,8 +73,6 @@ const Home = (): JSX.Element => {
     };
     fetchProducts();
   }, [user]);
-
-  console.log(purchases);
 
   if (loading || !user) {
     return (
@@ -117,7 +110,7 @@ const Home = (): JSX.Element => {
             paginate={true}
           >
             {purchases.map((purchase) => (
-              <ProductCard.Root key={purchase.id}>
+              <ProductCard.Root key={purchase._id}>
                 <ProductCard.Header
                   icon={ICONS[purchase.category]}
                   price={purchase.price}
@@ -127,7 +120,7 @@ const Home = (): JSX.Element => {
                   {purchase.description}
                 </ProductCard.Description>
                 <ProductCard.Footer>
-                  <button className="text-[var(--color-text)] hover:cursor-pointer">
+                  <button className="text-[var(--color-text)] hover:cursor-pointer" onClick={()=>onDelete(purchase._id)}>
                     <Trash size={16} />
                   </button>
                 </ProductCard.Footer>
