@@ -105,5 +105,170 @@
     "access": "Access control",
     "ai": "AI features",
     "success": "Success tracking"
+  },
+  "settings": {
+    "title": "Settings",
+    "description": "Manage your account preferences and settings",
+    "tabs": {
+      "personal": "Personal",
+      "api": "API",
+      "tokens": "Tokens",
+      "environments": "Environments",
+      "plans": "Plans",
+      "logs": "Logs"
+    },
+    "personalSettings": {
+      "sections": {
+      "personalInformation": {
+        "title": "Personal Information",
+        "description": "Update your personal information and account preferences.",
+        "form": {
+          "fields": {
+            "firstName": {
+              "label": "First Name",
+              "placeholder": "First Name..."
+            },
+            "lastName": {
+              "label": "Last Name",
+              "placeholder": "Last Name..."
+            },
+            "email": {
+              "label": "Email",
+              "placeholder": "Email..."
+            },
+            "notificationsToggle": {
+              "label": "Receive email notifications"
+            }
+          },
+          "errors": {
+            "emailRequired": "Email is required.",
+            "nameRequired": "Name is required."
+          },
+          "statusMessages": {
+            "success": "Information updated successfully.",
+            "error": "An error has occurred, please try again!"
+          },
+          "buttons": {
+            "saveChanges": "Save Changes"
+          }
+        }
+      },
+      "personalSecurity": {
+        "title": "Personal Security",
+        "description": "Update your personal security information and account preferences.",
+        "form": {
+          "fields": {
+            "oldPassword": {
+              "label": "Old Password",
+              "placeholder": "Old Password..."
+            },
+            "newPassword": {
+              "label": "New Password",
+              "placeholder": "New Password..."
+            },
+            "confirmNewPassword": {
+              "label": "Confirm your new password",
+              "placeholder": "Confirm your new password"
+            },
+            "twoFactorAuthentication": {
+              "title": "Two-factor authentication (2FA)",
+              "description": "Two-factor authentication is currently disabled.",
+              "learnMore": "Learn more",
+              "enableButton": "Enable 2FA"
+            }
+          },
+          "errors": {
+            "oldPasswordRequired": "Old password is required.",
+            "oldPasswordIncorrect": "Old password is incorrect.",
+            "newPasswordRequired": "New password is required.",
+            "newPasswordSameAsOld": "New password cannot be the same as the old one.",
+            "confirmNewPasswordRequired": "Confirmation of new password is required.",
+            "passwordsDoNotMatch": "Passwords do not match."
+          },
+          "buttons": {
+            "saveChanges": "Save Changes"
+          }
+        }
+      }
+    }
+    },
+    "apiSettings": {
+      "title": "API Settings",
+      "description": "Configure your API keys and endpoints.",
+      "apiEndpoint": "API Endpoint",
+      "apiKey": "API Key",
+      "copyApiKey": "Copy API key",
+      "enabledLogs": "Enabled Logs",
+      "saveChanges": "Save Changes"
+    },
+    "tokenSettings": {
+      "title": "Tokens and Secrets",
+      "description": "Manage your access tokens and secret keys.",
+      "activeTokensTitle": "Active Tokens",
+      "buttons": {
+        "newToken": "New Token",
+        "copyTokenAriaLabel": "Copy token",
+        "deleteTokenAriaLabel": "Delete token"
+      },
+      "token": {
+        "createdOn": "Created on"
+      }
+    },
+    "environmentsSettings": {
+      "title": "Environments",
+      "description": "Manage your deployment environments.",
+      "configured": "Configured Environments",
+      "add": "Add Environment",
+      "status": {
+        "active": "Active",
+        "inactive": "Inactive",
+        "configuring": "Configuring"
+      },
+      "name": {
+        "production": "Production",
+        "staging": "Staging",
+        "buy": "Buy"
+      }
+    },
+    "plansSettings": {
+       "title": "Subscription Plans",
+    "description": "Choose the plan that fits your needs.",
+    "currentPlan": {
+      "label": "Current Plan: Pro",
+      "status": "Active",
+      "priceAndBilling": "$99.90/month • Next billing: 02/15/2024"
+    },
+    "metrics": {
+      "requests": {
+        "label": "Requests"
+      },
+      "storage": {
+        "label": "Storage"
+      },
+      "users": {
+        "label": "Users"
+      }
+    },
+    "buttons": {
+      "upgradePlan": "Upgrade Plan",
+      "billingHistory": "Billing History"
+    }
+    },
+    "logsSettings": {
+      "title": "Activity Logs",
+      "description": "Review recent account activity.",
+      "levels": {
+        "info": "INFO",
+        "error": "ERROR",
+        "warn": "WARN"
+      },
+      "messages": {
+        "userLoggedIn": "User logged in successfully",
+        "apiAuthFailed": "API authentication failed",
+        "tokenRefreshed": "Access token refreshed",
+        "rateLimitNear": "Request limit approaching",
+        "backupCompleted": "Automatic backup completed"
+      }
+    }
   }
 }

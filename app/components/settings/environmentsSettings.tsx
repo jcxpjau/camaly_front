@@ -1,12 +1,15 @@
 import React from "react";
 import { Globe, Plus } from "lucide-react";
 import ButtonSettings from "./buttonSettings";
+import { useTranslation } from "react-i18next";
 
 export function EnvironmentsSettings() {
+  const {t} = useTranslation();
+
   const environments = [
-    { name: "Production", url: "https://app.example.com", status: "Active" },
-    { name: "Staging", url: "https://staging.example.com", status: "Inactive" },
-    { name: "Buy", url: "https://staging.example.com", status: "Configuring" },
+    { name: t("settings.environmentsSettings.name.production"), url: "https://app.example.com",  status: t("settings.environmentsSettings.status.active"), },
+    { name: t("settings.environmentsSettings.name.staging"), url: "https://staging.example.com", status: t("settings.environmentsSettings.status.inactive") },
+    { name: t("settings.environmentsSettings.name.buy"), url: "https://staging.example.com", status: t("settings.environmentsSettings.status.configuring") },
   ];
 
   return (
@@ -14,17 +17,17 @@ export function EnvironmentsSettings() {
       <div>
         <h2 className="flex items-center gap-2 text-xl font-semibold">
           <Globe className="h-5 w-5 text-[var(--color-icon-default)]" />
-          Environments
+          {t("settings.environmentsSettings.title")}
         </h2>
         <p className="text-sm" style={{ color: "var(--color-card-subtext)" }}>
-          Manage your deployment environments.
+          {t("settings.environmentsSettings.description")}
         </p>
       </div>
 
       <div>
         <div className="flex justify-between items-center mb-4">
-          <h3 className="text-lg font-medium">Configured Environments</h3>
-          <ButtonSettings text="Add Environment" icon={Plus}/>
+          <h3 className="text-lg font-medium">{t("settings.environmentsSettings.configured")}</h3>
+          <ButtonSettings text={t("settings.environmentsSettings.add")} icon={Plus}/>
         </div>
 
         <div className="space-y-3">
@@ -49,9 +52,9 @@ export function EnvironmentsSettings() {
             <div
               className={`px-3 py-1.5 rounded-full text-xs whitespace-nowrap
                 ${
-                  environment.status === "Active"
+                  environment.status === "Active" || environment.status === "Ativo"
                     ? "border border-[var(--color-success)] text-[var(--color-text-success)]"
-                    : environment.status === "Inactive"
+                    : environment.status === "Inactive" || environment.status === "Inativo"
                     ? "border border-[var(--color-error)] text-[var(--color-text-error)]"
                     : "border border-[var(--color-warning)] text-[var(--color-text-warning)]"
                 }

@@ -6,6 +6,7 @@ import Logo from "../../../assets/imgs/Logo_Camaly.png";
 import { Input } from '~/components/input/input';
 import { useCustomNavigate } from "~/hooks/useCustomNavigate";
 import { useAuth } from '~/context/auth/auth.hooks';
+import api from '~/services/api';
 
 export default function Login() {
     const { login } = useAuth();
@@ -13,7 +14,7 @@ export default function Login() {
     const [password, setPassword] = useState('');
     const [emailError, setEmailError] = useState('');
     const [passwordError, setPasswordError] = useState('');
-    const [rememberMe, setRememberMe ] = useState(false);
+    const [rememberMe, setRememberMe] = useState(false);
     const [error, setError] = useState(false)
     const navigate = useCustomNavigate();
     const [mousePos, setMousePos] = useState<{ x: number; y: number } | null>(null);
@@ -37,28 +38,14 @@ export default function Login() {
         if (hasError) return;
 
         try {
-            const res = await fetch(import.meta.env.VITE_API_URL + "auth/login", {
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    email,
-                    password
-                })
-            });
-            const json = await res.json();
-            if (!res.ok) {
-                console.error("Erro de login:", json);
-                setError(true)
-                return;
-            }
-            if (json.access_token) {
-                login( json.access_token , rememberMe );
+            const res = await api.post("auth/login", { email, password });
+            if (res.data.access_token) {
+                login(res.data.access_token, rememberMe);
                 navigate(null, "/");
             }
         } catch (err: any) {
-            console.log(err);
+            //console.log(err);
+            setError(true);
         }
     }
 
@@ -82,8 +69,8 @@ export default function Login() {
             className="min-h-screen flex items-center justify-center px-4 login-bg relative overflow-hidden"
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
-            style={{ 
-                position: 'relative', 
+            style={{
+                position: 'relative',
                 backgroundColor: '#2A2A2A',     // var(--color-bg)
                 color: '#ffffff',               // var(--color-text)
                 backgroundImage: `
@@ -155,13 +142,13 @@ export default function Login() {
                             </p>
                         </div>
                         {error && (
-                        <div className="text-red-300 text-sm p-3 rounded text-center my-4">
+                         <div className="text-red-300 text-sm p-3 rounded text-center my-4">
                             Incorrect username or password. Please check your credentials and try again.
                         </div>
                         )}
                         <form onSubmit={LoginAuth} className="space-y-4 mt-6">
                             <Input.Root status={emailError ? "error" : undefined} message={emailError} typeLogin>
-                                <Input.Icon icon={Mail} status={emailError ? "error" : undefined} typeLogin/>
+                                <Input.Icon icon={Mail} status={emailError ? "error" : undefined} typeLogin />
                                 <Input.Content
                                     placeholder="Email..."
                                     type="email"
@@ -172,7 +159,7 @@ export default function Login() {
                                 />
                             </Input.Root>
                             <Input.Root status={passwordError ? "error" : undefined} message={passwordError} typeLogin>
-                                <Input.Icon icon={KeyRound} status={passwordError ? "error" : undefined} typeLogin/>
+                                <Input.Icon icon={KeyRound} status={passwordError ? "error" : undefined} typeLogin />
                                 <Input.Content
                                     placeholder="Password..."
                                     type="password"
@@ -185,27 +172,27 @@ export default function Login() {
                             <div className="flex items-center justify-between w-full text-sm select-none mt-1" style={{ color: '#ffffff' /* var(--color-card-text) */ }}>
                                 <div className="flex items-center gap-2 cursor-pointer" onClick={() => setRememberMe(!rememberMe)}>
                                     <motion.div
-                                    className="w-5 h-5 rounded-[4px] border flex items-center justify-center"
-                                    initial={false}
-                                    animate={{
-                                        backgroundColor: rememberMe ? "#bcacfc" : "transparent", // var(--color-accent)
-                                        borderColor: rememberMe ? "#bcacfc" : "#bcacfc"       // var(--color-accent)
-                                    }}
-                                    transition={{ duration: 0.2 }}
+                                        className="w-5 h-5 rounded-[4px] border flex items-center justify-center"
+                                        initial={false}
+                                        animate={{
+                                            backgroundColor: rememberMe ? "#bcacfc" : "transparent", // var(--color-accent)
+                                            borderColor: rememberMe ? "#bcacfc" : "#bcacfc"       // var(--color-accent)
+                                        }}
+                                        transition={{ duration: 0.2 }}
                                     >
-                                    <AnimatePresence>
-                                        {rememberMe && (
-                                        <motion.div
-                                            key="check"
-                                            initial={{ scale: 0 }}
-                                            animate={{ scale: 1 }}
-                                            exit={{ scale: 0 }}
-                                            transition={{ duration: 0.2 }}
-                                        >
-                                            <Check className="w-3 h-3 text-white" strokeWidth={3} />
-                                        </motion.div>
-                                        )}
-                                    </AnimatePresence>
+                                        <AnimatePresence>
+                                            {rememberMe && (
+                                                <motion.div
+                                                    key="check"
+                                                    initial={{ scale: 0 }}
+                                                    animate={{ scale: 1 }}
+                                                    exit={{ scale: 0 }}
+                                                    transition={{ duration: 0.2 }}
+                                                >
+                                                    <Check className="w-3 h-3 text-white" strokeWidth={3} />
+                                                </motion.div>
+                                            )}
+                                        </AnimatePresence>
                                     </motion.div>
                                     <label>Stay signed in</label>
                                 </div>
