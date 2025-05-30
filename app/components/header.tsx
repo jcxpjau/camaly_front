@@ -107,12 +107,9 @@ export default function Header() {
                         style={{ zIndex: 5 }}
                     />
                 </div>
-
                 <button className="rounded-full p-2 hover:bg-[var(--color-bg-alt)] hidden sm:block">
                     <CircleHelp className="w-6 h-6 text-[var(--color-muted)]" />
                 </button>
-
-                {/* Profile + Submenu */}
                 <div className="relative hidden sm:block" ref={profileRef}>
                     <button
                         onClick={() => setShowProfileMenu((prev) => !prev)}
@@ -132,7 +129,7 @@ export default function Header() {
                                 <ul className="py-1 text-sm text-[var(--color-text)]">
                                     <li>
                                         <a  
-                                            onClick={(e) => navigate( e , "/user/settings" )} 
+                                            onClick={(e) => { setShowProfileMenu( false ); navigate( e , "/user/settings" ) }} 
                                             className="flex items-center gap-2 px-4 py-2 hover:bg-[var(--color-bg)] cursor-pointer"
                                         >
                                             <User className="w-4 h-4" /> My Profile
@@ -140,7 +137,7 @@ export default function Header() {
                                     </li>
                                     <li>
                                         <a 
-                                            onClick={(e) => navigate( e , "/user/settings" )} 
+                                            onClick={(e) => { setShowProfileMenu( false ) ; navigate( e , "/user/settings" )}} 
                                             className="flex items-center gap-2 px-4 py-2 hover:bg-[var(--color-bg)] cursor-pointer"
                                         >
                                             <Settings className="w-4 h-4" /> Settings

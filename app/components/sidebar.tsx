@@ -151,7 +151,7 @@ export default function Sidebar() {
                         </a>
                         <a
                             href="#"
-                            onClick={(e) => navigate(e, "/user/concierge")}
+                            onClick={(e) => navigate(e, "/user/reports")}
                             className="flex items-center justify-center hover:text-[var(--color-accent)] hover:scale-110 transition-transform rounded-lg"
                         >
                             <ChartPie className="w-6 h-6" />
