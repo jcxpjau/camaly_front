@@ -142,9 +142,9 @@ export default function Login() {
                             </p>
                         </div>
                         {error && (
-                            <div className="text-red-300 text-sm p-3 rounded text-center my-4">
-                                Usuário ou senha incorretos. Por favor, verifique suas credenciais e tente novamente.
-                            </div>
+                        <div className="text-red-300 text-sm p-3 rounded text-center my-4">
+                            Incorrect username or password. Please check your credentials and try again.
+                        </div>
                         )}
                         <form onSubmit={LoginAuth} className="space-y-4 mt-6">
                             <Input.Root status={emailError ? "error" : undefined} message={emailError} typeLogin>

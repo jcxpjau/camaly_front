@@ -9,11 +9,11 @@ import "./Home.css";
 import { ProductCard } from "~/components/productCard";
 import ProductPanel from "~/components/productPanel/ProductPanel";
 import { ICONS } from "~/components/filterBar/iconCategories";
+import { useAuth } from "~/context/auth/auth.hooks";
+import api from "~/services/api";
 import PopUpAction from "~/components/popUpAction/popUpAction";
 //import icons
 import { Trash } from "lucide-react";
-import { useAuth } from "~/context/auth/auth.hooks";
-import api from "~/services/api";
 
 interface Purchase {
     id: string;
@@ -29,6 +29,8 @@ const Home = (): JSX.Element => {
     const [purchases, setPurchases] = useState<Purchase[]>([]);
     const [loading, setLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
+
+    const [popUpOpen, setPopUpOpen] = useState(true);
 
 
     useEffect(() => {
@@ -80,12 +82,13 @@ const Home = (): JSX.Element => {
                     transition={{ duration: 0.8, ease: "easeOut" }}
                 >
                     <h1 className="accent text-3xl bg-gradient-to-r text-transparent bg-clip-text mb-4 drop-shadow-lg">
-                        {t("home.greeting", { name: user?.name })}
+                        {t("home.greeting", { name: "Nanni" })}
                     </h1>
                     <p className="text-lg md:text-xl text-[color:var(--color-text)] font-light max-w-2xl leading-relaxed animate-fade-in">
                         {t("home.subtitle")}
                     </p>
                 </motion.div>
+
                 {purchases.length > 0 ? (
                     <ProductPanel
                         itemsPerPage={3}
@@ -102,6 +105,11 @@ const Home = (): JSX.Element => {
                                 <ProductCard.Description>
                                     {purchase.description}
                                 </ProductCard.Description>
+                                <ProductCard.Footer>
+                                    <button className="text-[var(--color-text)] hover:cursor-pointer">
+                                        <Trash size={16} />
+                                    </button>
+                                </ProductCard.Footer>
                             </ProductCard.Root>
                         ))}
                     </ProductPanel>
@@ -111,6 +119,10 @@ const Home = (): JSX.Element => {
                     </div>
                 )}
             </div>
+            {/*  {
+        popUpOpen &&
+        <PopUpAction/>
+      } */}
         </div>
     );
 };
