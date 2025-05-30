@@ -3,7 +3,7 @@ import type { JSX } from "react";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 // import component
-import BuyBtn from "../buyBtn/butBtn";
+import BuyBtn from "../buyBtn/buyBtn";
 // import icons
 import { CircleUser, X } from "lucide-react";
 // import styling
@@ -14,8 +14,9 @@ type ProductOverviewProps = {
   workflow: {
     name: string;
     description: string;
-    icon: JSX.Element;
+    category: string;
     price: string;
+    id: string;
   };
 };
 
@@ -24,7 +25,7 @@ const ProductOverview = ({
   workflow,
 }: ProductOverviewProps): JSX.Element => {
   const { t } = useTranslation();
-  const { name, price, description, icon } = workflow;
+  const { name, price, description, category, id } = workflow;
 
   return (
     <motion.div
@@ -77,14 +78,18 @@ const ProductOverview = ({
               Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur
               vel sem nec sapien tincidunt varius. Quisque vel efficitur nisi.
               Donec vehicula convallis elit, vel gravida orci bibendum vitae.
-              Pellentesque habitant morbi tristique senectus et netus et malesuada
-              fames ac turpis egestas.
+              Pellentesque habitant morbi tristique senectus et netus et
+              malesuada fames ac turpis egestas.
             </p>
           </div>
 
           {/* Footer */}
           <div className="w-full flex justify-end mt-4 shrink-0">
-            <BuyBtn accentColor="var(--buy-btn-normal)" hoverColor="var(--buy-btn-hover)" />
+            <BuyBtn
+              accentColor="var(--buy-btn-normal)"
+              hoverColor="var(--buy-btn-hover)"
+              productId={id}
+            />
           </div>
         </div>
       </motion.div>
