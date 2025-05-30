@@ -8,14 +8,14 @@ import { ProductCard } from "~/components/productCard";
 import { FilterControls } from "~/components/filterBar";
 import { ICONS } from "~/components/filterBar/iconCategories";
 import ProductOverview from "~/components/productOverview/productOverview";
-import BuyBtn from "~/components/buyBtn/butBtn";
+import BuyBtn from "~/components/buyBtn/buyBtn";
 import api from "~/services/api";
 
 interface IWorkflow {
   id: string;
   name: string;
   description: string;
-  icon: JSX.Element;
+  category: string;
   price: string;
 }
 
@@ -50,7 +50,7 @@ const Marketplace = (): JSX.Element => {
 
   // activate and deactivate pagination as a filter is applied
   useEffect(() => {
-    if (searchTerm || selectedMaxPrice > 0) {
+    if (searchTerm || selectedMaxPrice > 0 || selectedIcons.length > 0) {
       setPaginate(false);
       setItemsPerPage(99);
     } else {
@@ -58,9 +58,9 @@ const Marketplace = (): JSX.Element => {
       setCurrentPage(1);
       setItemsPerPage(4);
     }
-  }, [searchTerm, selectedMaxPrice]);
+  }, [searchTerm, selectedMaxPrice, selectedIcons]);
 
-  console.log(selectedIcons);
+  console.log(workflows);
   useEffect(() => {
     const fetchWorkflows = async () => {
       try {
@@ -85,7 +85,7 @@ const Marketplace = (): JSX.Element => {
           name: item.name,
           description: item.description,
           price: item.price,
-          icon: item.iconName ?? ICONS["bot"],
+          category: item.category?? "insight"
         }));
 
         setWorkflows(mappedData);
@@ -161,7 +161,7 @@ const Marketplace = (): JSX.Element => {
               {workflows.map((workflow, idx) => (
                 <ProductCard.Root key={idx}>
                   <ProductCard.Header
-                    icon={workflow.icon}
+                    icon={ICONS[workflow.category]}
                     price={Number(workflow.price)}
                   />
                   <ProductCard.Title>{workflow.name}</ProductCard.Title>
@@ -169,7 +169,7 @@ const Marketplace = (): JSX.Element => {
                     {workflow.description}
                   </ProductCard.Description>
                   <ProductCard.Footer>
-                    <BuyBtn accentColor="#977efc" hoverColor="#A4B7F4" />
+                    <BuyBtn accentColor="#977efc" hoverColor="#A4B7F4"  productId={workflow.id}/>
                     <ProductCard.MoreInfoButton
                       onClick={() => setSelectedProduct(workflow)}
                     />
