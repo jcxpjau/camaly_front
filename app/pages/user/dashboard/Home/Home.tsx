@@ -82,7 +82,7 @@ const Home = (): JSX.Element => {
                     transition={{ duration: 0.8, ease: "easeOut" }}
                 >
                     <h1 className="accent text-3xl bg-gradient-to-r text-transparent bg-clip-text mb-4 drop-shadow-lg">
-                        {t("home.greeting", { name: "Nanni" })}
+                        {t("home.greeting", { name: `${user.name}`  })}
                     </h1>
                     <p className="text-lg md:text-xl text-[color:var(--color-text)] font-light max-w-2xl leading-relaxed animate-fade-in">
                         {t("home.subtitle")}
