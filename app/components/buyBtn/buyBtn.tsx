@@ -1,5 +1,8 @@
-import { ShoppingCart } from "lucide-react";
+//import libraries
 import type { JSX } from "react";
+//import icons
+import { ShoppingCart } from "lucide-react";
+//others
 import api from "~/services/api";
 import { useAuth } from "~/context/auth/auth.hooks";
 
@@ -29,8 +32,6 @@ const BuyBtn = ({
           },
         }
       );
-      // opcional: feedback ou navegação
-      console.log("Compra realizada com sucesso!");
     } catch (error) {
       console.error("Erro ao fazer a compra:", error);
     }

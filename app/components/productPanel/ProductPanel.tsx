@@ -37,7 +37,7 @@ const ProductPanel = ({
   onPageChange,
   paginate = true,
   pageCount,
-  loading
+  loading,
 }: Props): JSX.Element => {
   const { t } = useTranslation();
   const [direction, setDirection] = useState(1);
@@ -46,12 +46,13 @@ const ProductPanel = ({
     ? pageCount ?? Math.ceil(allChildren.length / itemsPerPage)
     : 1;
 
-  const currentItems = paginate
-    ? allChildren
-    : allChildren.slice(
-        (currentPage - 1) * itemsPerPage,
-        currentPage * itemsPerPage
-      );
+  const currentItems =
+    paginate && pageCount === undefined
+      ? allChildren.slice(
+          (currentPage - 1) * itemsPerPage,
+          currentPage * itemsPerPage
+        )
+      : allChildren;
 
   const handlePageChange = (page: number) => {
     if (page >= 1 && page <= totalPages) {

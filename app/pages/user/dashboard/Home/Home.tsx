@@ -16,11 +16,12 @@ import PopUpAction from "~/components/popUpAction/popUpAction";
 import { Trash } from "lucide-react";
 
 interface Purchase {
-    id: string;
+    _id: string;
+    productId: string;
     name: string;
     description: string;
     price: number;
-    icon: JSX.Element;
+    category: string;
 }
 
 const Home = (): JSX.Element => {
@@ -29,10 +30,20 @@ const Home = (): JSX.Element => {
     const [purchases, setPurchases] = useState<Purchase[]>([]);
     const [loading, setLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
+    const [selectedPurchase, setSelectedPurchase] = useState<Purchase>();
     const [popUpOpen, setPopUpOpen] = useState(true);
 
-    useEffect(() => {
+    const onDelete = async (id: string) => {
+        try {
+            console.log(`id da purchase p deletar`, id)
+            const { data } = await api.delete(`purchases/${id}`);
+            setPurchases(prevItems => prevItems.filter(item => item._id !== id));
+        } catch (error) {
+            console.error("Erro ao deletar o produto:", error);
+        }
+    };
 
+    useEffect(() => {
         if (!user) {
             return;
         }
@@ -41,13 +52,18 @@ const Home = (): JSX.Element => {
                 setLoading(true);
                 const res = await api.get(`purchases/user/${user._id}`);
                 const json = res.data;
-                const mappedData: Purchase[] = json.filter((item: { productId: null; }) => item.productId !== null).map((item: any) => ({
-                    id: item.productId._id,
-                    name: item.productId.name,
-                    description: item.productId.description,
-                    price: item.productId.price,
-                    icon: ICONS[item.productId.iconName] ?? ICONS["bot"],
-                }));
+                console.log(`este eh o purchase`, json)
+                const mappedData: Purchase[] = json
+                    .filter((item: { productId: null }) => item.productId !== null)
+                    .map((item: any) => ({
+                        _id: item._id,
+                        productId: item.productId._id,
+                        name: item.productId.name,
+                        description: item.productId.description,
+                        price: item.productId.price,
+                        category: item.productId.category
+                    }));
+
                 setPurchases(mappedData);
             } catch (err: any) {
                 // /console.log(err);
@@ -79,7 +95,7 @@ const Home = (): JSX.Element => {
                     transition={{ duration: 0.8, ease: "easeOut" }}
                 >
                     <h1 className="accent text-3xl bg-gradient-to-r text-transparent bg-clip-text mb-4 drop-shadow-lg">
-                        {t("home.greeting", { name: `${user.name}`  })}
+                        {t("home.greeting", { name: `${user.name}` })}
                     </h1>
                     <p className="text-lg md:text-xl text-[color:var(--color-text)] font-light max-w-2xl leading-relaxed animate-fade-in">
                         {t("home.subtitle")}
@@ -88,14 +104,15 @@ const Home = (): JSX.Element => {
 
                 {purchases.length > 0 ? (
                     <ProductPanel
-                        itemsPerPage={3}
+                        itemsPerPage={4}
                         currentPage={currentPage}
                         onPageChange={setCurrentPage}
+                        paginate={true}
                     >
                         {purchases.map((purchase) => (
-                            <ProductCard.Root key={purchase.id}>
+                            <ProductCard.Root key={purchase._id}>
                                 <ProductCard.Header
-                                    icon={purchase.icon}
+                                    icon={ICONS[purchase.category]}
                                     price={purchase.price}
                                 />
                                 <ProductCard.Title>{purchase.name}</ProductCard.Title>
@@ -103,7 +120,7 @@ const Home = (): JSX.Element => {
                                     {purchase.description}
                                 </ProductCard.Description>
                                 <ProductCard.Footer>
-                                    <button className="text-[var(--color-text)] hover:cursor-pointer">
+                                    <button className="text-[var(--color-text)] hover:cursor-pointer" onClick={() => onDelete(purchase._id)}>
                                         <Trash size={16} />
                                     </button>
                                 </ProductCard.Footer>
