@@ -324,6 +324,7 @@
     "popUp": {
         "purchaseDeleteTitle": "Are you sure you want to unsubscribe from this workflow? ",
         "purchaseDeleteDescription": "You'll no longer have access to its functionalities",
+        "purchaseDeleteConfirmation": "Confirm",
         "purchaseSuccesstitle": "Purchase was successfull",
         "purchaseDescription": "Now add your configurations and start automating!"
     }

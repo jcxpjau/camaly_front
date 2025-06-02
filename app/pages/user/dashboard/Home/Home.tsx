@@ -154,7 +154,7 @@ const Home = (): JSX.Element => {
               className="flex items-center justify-center gap-3 px-8 py-2 rounded-lg confirmBtn text-black text-lg shadow-md ease-out duration-200 transform hover:scale-102"
               onClick={() => onDelete()}
             >
-              <p>Confirm unsubscription</p>
+              <p> {t("popUp.purchaseDeleteConfirmation")}</p>
               <Check size={20} />
             </button>
           </PopUpAction.Footer>

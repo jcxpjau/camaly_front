@@ -12,9 +12,9 @@ type RootProps = {
 
 const PopupRoot = ({ children, onClose }: RootProps) => {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div
-        className="relative popUp backdrop-blur-md rounded-2xl shadow-2xl px-8 py-8 flex flex-col w-[90vw] h-[90vh] sm:w-[40vw] sm:h-[30vh] pointer-events-auto"
+        className="relative popUp backdrop-blur-md rounded-2xl shadow-2xl px-8 py-8 flex flex-col w-[90vw] h-[70vh] sm:w-[40vw] sm:h-[30vh]"
       >
 
         <button
