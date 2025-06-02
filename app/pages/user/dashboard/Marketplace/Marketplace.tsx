@@ -50,6 +50,7 @@ const Marketplace = (): JSX.Element => {
   >(null);
 
   const [popUpOpen, setPopUpOpen] = useState(false);
+  const [overviewOpen, setOverviewOpen] = useState(false);
 
   // activate and deactivate pagination as a filter is applied
   useEffect(() => {
@@ -63,6 +64,7 @@ const Marketplace = (): JSX.Element => {
     }
   }, [searchTerm, selectedMaxPrice, selectedIcons]);
 
+  console.log(selectedProduct)
   useEffect(() => {
     const fetchWorkflows = async () => {
       try {
@@ -175,10 +177,10 @@ const Marketplace = (): JSX.Element => {
                       accentColor="#977efc"
                       hoverColor="#A4B7F4"
                       productId={workflow.id}
-                      onPurchaseSuccess={()=>setPopUpOpen(true)}
+                      onPurchaseSuccess={()=>{setPopUpOpen(true), setSelectedProduct(workflow)}}
                     />
                     <ProductCard.MoreInfoButton
-                      onClick={() => setSelectedProduct(workflow)}
+                      onClick={() => {setSelectedProduct(workflow), setOverviewOpen(true)}}
                     />
                   </ProductCard.Footer>
                 </ProductCard.Root>
@@ -203,19 +205,19 @@ const Marketplace = (): JSX.Element => {
         )}
       </div>
       <AnimatePresence>
-        {selectedProduct && (
+        {(overviewOpen && selectedProduct) && (
           <ProductOverview
-            onClick={() => setSelectedProduct(null)}
+            onClick={() => {setSelectedProduct(null), setOverviewOpen(false)}}
             workflow={selectedProduct}
             onPurchaseSuccess={()=>setPopUpOpen(true)}
           />
         )}
       </AnimatePresence>
       {popUpOpen && (
-        <PopUpAction.Root onClose={()=>setPopUpOpen(false)}>
+        <PopUpAction.Root onClose={()=>{setPopUpOpen(false), setSelectedProduct(null)}}>
           <PopUpAction.Title message={t("popUp.purchaseSuccesstitle")}/>
           <PopUpAction.Description>
-           {t("popUp.purchaseDescription")}
+           {t("popUp.purchaseDescription", { name: `${selectedProduct?.name}` })}
           </PopUpAction.Description>
 
         </PopUpAction.Root>

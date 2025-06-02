@@ -44,7 +44,7 @@ const Home = (): JSX.Element => {
           setSelectedPurchase(undefined);
       }
     } catch (error) {
-      console.error("Erro ao deletar o produto:", error);
+     //console.error("Erro ao deletar o produto:", error);
     }
   };
 
@@ -57,7 +57,7 @@ const Home = (): JSX.Element => {
         setLoading(true);
         const res = await api.get(`purchases/user/${user._id}`);
         const json = res.data;
-        console.log(`este eh o purchase`, json);
+
         const mappedData: Purchase[] = json
           .filter((item: { productId: null }) => item.productId !== null)
           .map((item: any) => ({
@@ -143,9 +143,9 @@ const Home = (): JSX.Element => {
           </div>
         )}
       </div>
-      {popUpOpen && (
+      {(popUpOpen && selectedPurchase)  && (
         <PopUpAction.Root onClose={() => setPopUpOpen(false)}>
-          <PopUpAction.Title message={t("popUp.purchaseDeleteTitle")} />
+          <PopUpAction.Title message={t("popUp.purchaseDeleteTitle", { name: `${selectedPurchase.name}` })} />
           <PopUpAction.Description>
             {t("popUp.purchaseDeleteDescription")}
           </PopUpAction.Description>

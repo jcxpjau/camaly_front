@@ -322,10 +322,10 @@
         }
     },
     "popUp": {
-        "purchaseDeleteTitle": "Are you sure you want to unsubscribe from this workflow? ",
-        "purchaseDeleteDescription": "You'll no longer have access to its functionalities",
+        "purchaseDeleteTitle": "Are you sure you want to unsubscribe from {{name}}? ",
+        "purchaseDeleteDescription": "You'll no longer have access to this workflow",
         "purchaseDeleteConfirmation": "Confirm",
         "purchaseSuccesstitle": "Purchase was successfull",
-        "purchaseDescription": "Now add your configurations and start automating!"
+        "purchaseDescription": "You've bought {{name}}. Now add your configurations and start automating!"
     }
 }

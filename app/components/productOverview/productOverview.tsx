@@ -31,13 +31,13 @@ const ProductOverview = ({
 
   return (
     <motion.div
-      className="fixed inset-0 z-50 flex items-center justify-end pointer-events-none"
+      className="fixed inset-0 z-50 flex items-center justify-end"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
     >
       <motion.div
-        className="productOverview lg:w-1/3 w-full h-screen bg-white dark:bg-[var(--color-bg)] rounded-lg flex flex-col pointer-events-auto border border-[var(--color-border)] shadow-lg"
+        className="productOverview lg:w-1/3 w-full h-screen bg-white dark:bg-[var(--color-bg)] rounded-lg flex flex-col border-[var(--color-border)] shadow-lg"
         initial={{ x: "100%" }}
         animate={{ x: 0 }}
         exit={{ x: "100%" }}
