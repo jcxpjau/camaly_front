@@ -1,4 +1,6 @@
+// import types
 import type { JSX } from "react";
+// import styling
 import './popUpAction.css'
 
 type PopUpTextProps= {
@@ -7,7 +9,7 @@ type PopUpTextProps= {
 
 const Title =  ({ message }: PopUpTextProps): JSX.Element  => {
   return (
-    <p className="text-2xl text-gray-800 mb-4">
+    <p className="text-2xl text-black mb-4">
         {message}
     </p>
   );

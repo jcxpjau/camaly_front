@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+//import types
 import type { JSX } from "react";
 
 type PopupFooterProps = {
@@ -6,7 +6,7 @@ type PopupFooterProps = {
 };
 
 const Footer = ({ children }: PopupFooterProps): JSX.Element => (
-  <div className="mt-auto flex justify-center items-center gap-4 pt-6">
+  <div className="flex justify-center items-center gap-5 mt-10">
     {children}
   </div>
 );

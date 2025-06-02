@@ -1,11 +1,13 @@
+//import libraries
 import { useEffect, useState } from "react";
-import { Filter } from "lucide-react";
 import { useTranslation } from "react-i18next";
+//import icons
+import { Filter } from "lucide-react";
 
 type FilterProps = {
-  selected: number; // Now only a single number for max price
-  onSelect: (value: number) => void; // Emits a single number
-  maxRange?: number; // Optional prop to define the max value of the slider
+  selected: number; 
+  onSelect: (value: number) => void; 
+  maxRange?: number; 
 };
 
 const FilterPrice = ({ selected, onSelect, maxRange = 100 }: FilterProps) => {
@@ -13,12 +15,11 @@ const FilterPrice = ({ selected, onSelect, maxRange = 100 }: FilterProps) => {
   const [open, setOpen] = useState(false);
   const [currentMaxValue, setCurrentMaxValue] = useState(selected);
 
-  // Sincroniza valor interno quando 'selected' muda no pai
   useEffect(() => {
     setCurrentMaxValue(selected);
   }, [selected]);
 
-  // Aplica o valor ao pai quando o slider muda ou o popover fecha
+ 
   const applyCurrentValue = () => {
     onSelect(currentMaxValue);
   };
@@ -55,7 +56,7 @@ const FilterPrice = ({ selected, onSelect, maxRange = 100 }: FilterProps) => {
               value={currentMaxValue}
               onChange={(e) => setCurrentMaxValue(parseInt(e.target.value))}
               onMouseUp={applyCurrentValue}
-              onTouchEnd={applyCurrentValue} // For touch devices
+              onTouchEnd={applyCurrentValue}
               className="w-full h-2 bg-[var(--color-border)] rounded-lg appearance-none cursor-pointer accent-[var(--color-accent)]"
             />
           </label>

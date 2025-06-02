@@ -7,6 +7,10 @@
   );
 }
 
+.confirmBtn{
+  background-color: rgba(176, 177, 248, 0.9)
+}
+
 /* Light Mode */
 :root {
   --accent-from: #977efc;       

@@ -1,5 +1,7 @@
-import { X } from "lucide-react";
+// import types
 import type { JSX } from "react";
+//import icons
+import { X } from "lucide-react";
 
 type CancelButtonProps = {
   onClick: () => void;

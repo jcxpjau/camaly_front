@@ -1,5 +1,7 @@
-import { Check } from "lucide-react";
+//import types
 import type { JSX } from "react";
+//import icons
+import { Check } from "lucide-react";
 
 type ConfirmButtonProps = {
   onClick: () => void;

@@ -322,8 +322,8 @@
     }
   },
   "popUp": {
-    "deletetitle": "Você tem certeza que quer sair desse workflow? ",
-    "deletemsg": "Você deixará de ter acesso ao workflow, e se desejar desfazer esta ação, terá que contactar o autor, ou comprá-lo de novo",
+    "purchaseDeleteTitle": "Você tem certeza que quer remover este workflow? ",
+    "purchaseDeleteDescription": "Você deixará de ter acesso às suas funcionalidades",
     "purchaseSuccesstitle": "Compra bem sucedida",
     "purchaseDescription": "Agora adicione suas configurações e comece a automatizar!"
   }

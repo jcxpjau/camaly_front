@@ -1,15 +1,16 @@
-.popUp{
-    font-family: 'Gantari', sans-serif;
-    background-color:  var(--popUp-bg);
+.popUp {
+  font-family: "Gantari", sans-serif;
+  background-image: linear-gradient(to top, var(--popUp-from), var(--popUp-to));
 }
 
 /* Light Mode */
 :root {
-  --popUp-bg: #bcacfc;
- 
+  --popUp-from: rgba(243, 244, 246, 0.5);
+  --popUp-to: rgba(226, 220, 251, 0.9);
 }
 
 /* Dark Mode */
 .dark {
-  --popUp-bg:#977efc;
+  --popUp-from: rgba(74, 67, 106, 0.5);
+  --popUp-to: rgba(176, 177, 248, 0.9);
 }

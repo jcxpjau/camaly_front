@@ -1,3 +1,4 @@
+// import types
 import type { JSX, ReactNode } from "react";
 
 type PopupDescriptionProps = {
@@ -5,7 +6,7 @@ type PopupDescriptionProps = {
 };
 
 const Description = ({ children }: PopupDescriptionProps): JSX.Element => (
-  <p className="text-base text-gray-600 leading-relaxed mb-4">
+  <p className="text-xl text-black leading-relaxed mb-4">
     {children}
   </p>
 );

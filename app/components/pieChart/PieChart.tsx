@@ -1,5 +1,5 @@
 // import libraries
-import React, { useMemo, type JSX } from "react";
+import{ useMemo, type JSX } from "react";
 import {
   PieChart,
   Pie,

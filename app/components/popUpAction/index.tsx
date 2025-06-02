@@ -1,4 +1,3 @@
-// PopUpAction.ts
 import Root from "./PopUpActionRoot";
 import Title from "./PopUpActionTitle";
 import ConfirmButton from "./PopUpActionConfirm";
