@@ -11,9 +11,10 @@ import ProductPanel from "~/components/productPanel/ProductPanel";
 import { ICONS } from "~/components/filterBar/iconCategories";
 import { useAuth } from "~/context/auth/auth.hooks";
 import api from "~/services/api";
+import { PopUpSettings } from "~/components/settings/popUpSettings";
 import PopUpAction from "~/components/popUpAction/popUpAction";
 //import icons
-import { Trash } from "lucide-react";
+import { Settings, Trash } from "lucide-react";
 
 interface Purchase {
     _id: string;
@@ -32,6 +33,7 @@ const Home = (): JSX.Element => {
     const [currentPage, setCurrentPage] = useState(1);
     const [selectedPurchase, setSelectedPurchase] = useState<Purchase>();
     const [popUpOpen, setPopUpOpen] = useState(true);
+    const [settingsOpen, setSettingsOpen] = useState(false);
 
     const onDelete = async (id: string) => {
         try {
@@ -120,12 +122,28 @@ const Home = (): JSX.Element => {
                                     {purchase.description}
                                 </ProductCard.Description>
                                 <ProductCard.Footer>
+                                    <button
+                                    className="text-[var(--color-text)] hover:cursor-pointer"
+                                    onClick={() => {
+                                        setSelectedPurchase(purchase);
+                                        setSettingsOpen(true);
+                                    }}
+                                    >
+                                    <Settings size={16} />
+                                    </button>
                                     <button className="text-[var(--color-text)] hover:cursor-pointer" onClick={() => onDelete(purchase._id)}>
                                         <Trash size={16} />
                                     </button>
                                 </ProductCard.Footer>
                             </ProductCard.Root>
                         ))}
+                        {settingsOpen && selectedPurchase && (
+                        <PopUpSettings
+                            purchase={selectedPurchase}
+                            onClose={() => setSettingsOpen(false)}
+                        />
+                        )}
+
                     </ProductPanel>
                 ) : (
                     <div className="h-[300px] flex items-center justify-center">
