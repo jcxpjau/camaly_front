@@ -15,6 +15,7 @@ import { PopUpSettings } from "~/components/settings/popUpSettings";
 import PopUpAction from "~/components/popUpAction/popUpAction";
 //import icons
 import { Settings, Trash } from "lucide-react";
+import { useCustomNavigate } from "~/hooks/useCustomNavigate";
 
 interface Purchase {
     _id: string;
@@ -34,6 +35,7 @@ const Home = (): JSX.Element => {
     const [selectedPurchase, setSelectedPurchase] = useState<Purchase>();
     const [popUpOpen, setPopUpOpen] = useState(true);
     const [settingsOpen, setSettingsOpen] = useState(false);
+    const navigate = useCustomNavigate();
 
     const onDelete = async (id: string) => {
         try {
@@ -124,9 +126,9 @@ const Home = (): JSX.Element => {
                                 <ProductCard.Footer>
                                     <button
                                     className="text-[var(--color-text)] hover:cursor-pointer"
-                                    onClick={() => {
-                                        setSelectedPurchase(purchase);
-                                        setSettingsOpen(true);
+                                    onClick={(e) => {
+                                        const queryData = encodeURIComponent(JSON.stringify(purchase));
+                                        navigate(e, `/user/settingsagents?data=${queryData}`);
                                     }}
                                     >
                                     <Settings size={16} />
