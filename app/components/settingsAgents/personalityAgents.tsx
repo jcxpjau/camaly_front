@@ -1,6 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
+import ButtonSettings from "../settings/buttonSettings";
 
 export function PersonalityAgents() {
+  const [formal, setFormal] = useState(false);
+
   return (
     <section  className="space-y-6 rounded-lg" style={{ color: "var(--color-card-text)" }}>
       <header className="mb-4">
@@ -47,27 +50,27 @@ export function PersonalityAgents() {
             Estilo de Linguagem
           </label>
           <div className="grid grid-cols-2 gap-4">
-            {/* Usar Emojis */}
-            <div className="flex items-center justify-between px-3 py-2 bg-[var(--color-bg-muted)] rounded-md">
-              <span className="text-sm font-medium text-[var(--color-text-default)]">Usar Emojis</span>
-              <input
-                type="checkbox"
-                className="appearance-none h-5 w-9 rounded-full bg-[var(--color-border)] checked:bg-[var(--color-accent)] relative transition-colors cursor-pointer"
-                style={{
-                  WebkitAppearance: "none",
-                  position: "relative",
-                }}
-              />
-            </div>
-
-            {/* Linguagem Técnica */}
-            <div className="flex items-center justify-between px-3 py-2 bg-[var(--color-bg-muted)] rounded-md">
-              <span className="text-sm font-medium text-[var(--color-text-default)]">Linguagem Técnica</span>
-              <input
-                type="checkbox"
-                className="appearance-none h-5 w-9 rounded-full bg-[var(--color-border)] checked:bg-[var(--color-accent)] relative transition-colors cursor-pointer"
-              />
-            </div>
+                    <div className="flex justify-between items-center">
+                        <div className="flex items-center gap-3">
+                            <button
+                                id="formal"
+                                type="button"
+                                role="switch"
+                                aria-checked={formal}
+                                onClick={() => setFormal(!formal)}
+                                className={`relative inline-flex h-6 w-12 items-center rounded-full transition-colors duration-300 ${formal ? 'bg-[var(--color-accent)]' : 'bg-[var(--color-muted)]'
+                                    }`}
+                            >
+                                <span
+                                    className={`inline-block w-5 h-5 rounded-full bg-white shadow-md transition-transform duration-300 transform ${formal ? 'translate-x-6' : 'translate-x-0.5'
+                                        }`}
+                                />
+                            </button>
+                            <label htmlFor="formal" className="text-sm select-none" style={{ color: "var(--color-card-text)" }}>
+                                Linguagem Formal
+                            </label>
+                        </div>
+                    </div>  
           </div>
         </div>
       </div>

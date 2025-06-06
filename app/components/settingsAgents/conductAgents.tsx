@@ -1,6 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Check } from "lucide-react";
 
 export function ConductAgents() {
+    const [checked, setChecked] = useState(false);
+    const [checked2, setChecked2] = useState(false);
+
   return (
     <section  className="space-y-6 rounded-lg" style={{ color: "var(--color-card-text)" }}>
       <header className="mb-4">
@@ -59,11 +64,37 @@ export function ConductAgents() {
                 Exibe informações detalhadas durante execução
               </p>
             </div>
-            <input
-              type="checkbox"
-              className="h-5 w-9 rounded-full bg-[var(--color-button-bg)] checked:bg-[var(--color-accent)] focus:outline-none cursor-pointer transition-colors"
-              aria-checked="false"
-            />
+  <div
+    className="flex items-center gap-2 cursor-pointer select-none"
+    onClick={() => setChecked(!checked)}
+    role="checkbox"
+    aria-checked={checked}
+    tabIndex={0}
+  >
+    <motion.div
+      className="w-5 h-5 rounded-[4px] border flex items-center justify-center"
+      initial={false}
+      animate={{
+        backgroundColor: checked ? "#bcacfc" : "transparent", // var(--color-accent)
+        borderColor: "#bcacfc", // sempre mesma cor da borda para consistência
+      }}
+      transition={{ duration: 0.2 }}
+    >
+      <AnimatePresence>
+        {checked && (
+          <motion.div
+            key="check"
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            exit={{ scale: 0 }}
+            transition={{ duration: 0.2 }}
+          >
+            <Check className="w-3 h-3 text-white" strokeWidth={3} />
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
+  </div>
           </div>
 
           <div className="flex items-center justify-between">
@@ -73,12 +104,37 @@ export function ConductAgents() {
                 Permite que o agente aprenda com interações
               </p>
             </div>
-            <input
-              type="checkbox"
-              defaultChecked
-              className="h-5 w-9 rounded-full bg-[var(--color-button-bg)] checked:bg-[var(--color-accent)] focus:outline-none cursor-pointer transition-colors"
-              aria-checked="true"
-            />
+  <div
+    className="flex items-center gap-2 cursor-pointer select-none"
+    onClick={() => setChecked2(!checked2)}
+    role="checkbox"
+    aria-checked={checked2}
+    tabIndex={0}
+  >
+    <motion.div
+      className="w-5 h-5 rounded-[4px] border flex items-center justify-center"
+      initial={false}
+      animate={{
+        backgroundColor: checked2 ? "#bcacfc" : "transparent", // var(--color-accent)
+        borderColor: "#bcacfc", // sempre mesma cor da borda para consistência
+      }}
+      transition={{ duration: 0.2 }}
+    >
+      <AnimatePresence>
+        {checked2 && (
+          <motion.div
+            key="check"
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            exit={{ scale: 0 }}
+            transition={{ duration: 0.2 }}
+          >
+            <Check className="w-3 h-3 text-white" strokeWidth={3} />
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
+  </div>
           </div>
         </div>
       </div>
