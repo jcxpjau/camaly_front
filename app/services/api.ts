@@ -22,9 +22,9 @@ api.interceptors.response.use(
     error => {
         if (error.response && error.response.status === 401) {
             //store.dispatch(logout());
+            //refresh
             //window.location.href = '/login';
         }
-
         return Promise.reject(error);
     }
 );
