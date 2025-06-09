@@ -73,6 +73,8 @@ html, body {
   --color-placeholder-info: #60a5fa;
   --color-placeholder-default: rgba(17, 24, 39, 0.6);
   --color-label-text: rgba(0, 0, 0, 0.7);
+  --select-bg: #ffffff;
+  --select-text: #111111; 
 }
 
 .dark {
@@ -112,4 +114,6 @@ html, body {
   --color-placeholder-info: #3b82f6;
   --color-placeholder-default: rgba(255, 255, 255, 0.6);
   --color-label-text: rgba(255, 255, 255, 0.8);
+  --select-bg: #1a1a1b;
+  --select-text: #f0f0f0;  
 }

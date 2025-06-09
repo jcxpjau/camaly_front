@@ -39,7 +39,6 @@ const Home = (): JSX.Element => {
 
     const onDelete = async (id: string) => {
         try {
-            console.log(`id da purchase p deletar`, id)
             const { data } = await api.delete(`purchases/${id}`);
             setPurchases(prevItems => prevItems.filter(item => item._id !== id));
         } catch (error) {
@@ -56,7 +55,6 @@ const Home = (): JSX.Element => {
                 setLoading(true);
                 const res = await api.get(`purchases/user/${user._id}`);
                 const json = res.data;
-                console.log(`este eh o purchase`, json)
                 const mappedData: Purchase[] = json
                     .filter((item: { productId: null }) => item.productId !== null)
                     .map((item: any) => ({
@@ -88,7 +86,6 @@ const Home = (): JSX.Element => {
             </div>
         );
     }
-
     return (
         <div className="min-h-screen bg-[var(--color-bg)] text-[var(--color-text)] px-6 py-10 mb-10">
             <div className="max-w-7xl mx-auto">
