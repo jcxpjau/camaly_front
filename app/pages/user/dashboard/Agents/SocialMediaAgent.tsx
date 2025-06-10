@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Instagram, Facebook, Send, Image, Video, CheckCircle, Bot } from 'lucide-react';
 import { useAuth } from '~/context/auth/auth.hooks';
+import { store } from '~/store';
 
 export function SocialMediaAgent() {
   const [caption, setCaption] = useState('');
@@ -45,6 +46,8 @@ export function SocialMediaAgent() {
 
 
   async function MadePosty(e: React.FormEvent) {
+            const token = store.getState().auth.token;
+
     e.preventDefault();
     try {
       const response = await fetch("https://avent7.app.n8n.cloud/webhook/camaly/socialmediapost", {
@@ -54,7 +57,8 @@ export function SocialMediaAgent() {
           userId: user?._id,
           imageUrl: mediaUrl,
           description: caption,
-          socialMedia: selectedPlatform
+          socialMedia: selectedPlatform,
+          token        
         }),
       });
 
@@ -82,13 +86,14 @@ export function SocialMediaAgent() {
 
   useEffect(() => {
     if (!user) return;
+        const token = store.getState().auth.token;
 
     async function getUserPages() {
       try {
         const response = await fetch("https://avent7.app.n8n.cloud/webhook/camaly/pagesuser", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ userId: user._id }),
+          body: JSON.stringify({ token}),
         });
         if (!response.ok) throw new Error(`Request error: ${response.statusText}`);
         const data = await response.json();
