@@ -12,31 +12,26 @@ export function PersonalityAgents() {
           Define the tone of voice and personality traits
         </p>
       </header>
-
       <div className="space-y-4">
-        {/* Tone of Voice */}
         <div>
           <label htmlFor="tone" className="block text-sm font-medium text-[var(--color-label-text)]">
             Tone of Voice
           </label>
-<select
-  id="tone"
-  className="mt-2 w-full appearance-none rounded-md border border-[var(--color-border)] bg-[var(--select-bg)] text-[var(--select-text)] py-2 px-3 pr-8 text-sm shadow-sm focus:outline-none focus:ring-1 focus:ring-[var(--color-accent)] focus:border-[var(--color-accent)] bg-no-repeat bg-[right_0.75rem_center] bg-[length:1rem_1rem]"
-  style={{
-    backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 20 20' fill='var(--select-text)' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill-rule='evenodd' d='M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.25a.75.75 0 01-1.06 0L5.21 8.27a.75.75 0 01.02-1.06z' clip-rule='evenodd'/%3E%3C/svg%3E")`,
-  }}
-  defaultValue=""
->
-  <option value="" disabled>Select tone</option>
-  <option value="friendly">Friendly</option>
-  <option value="professional">Professional</option>
-  <option value="casual">Casual</option>
-  <option value="formal">Formal</option>
-</select>
-
+          <select
+            id="tone"
+            className="mt-2 w-full appearance-none rounded-md border border-[var(--color-border)] bg-[var(--select-bg)] text-[var(--select-text)] py-2 px-3 pr-8 text-sm shadow-sm focus:outline-none focus:ring-1 focus:ring-[var(--color-accent)] focus:border-[var(--color-accent)] bg-no-repeat bg-[right_0.75rem_center] bg-[length:1rem_1rem]"
+            style={{
+              backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 20 20' fill='var(--select-text)' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill-rule='evenodd' d='M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.25a.75.75 0 01-1.06 0L5.21 8.27a.75.75 0 01.02-1.06z' clip-rule='evenodd'/%3E%3C/svg%3E")`,
+            }}
+            defaultValue=""
+          >
+            <option value="" disabled>Select tone</option>
+            <option value="friendly">Friendly</option>
+            <option value="professional">Professional</option>
+            <option value="casual">Casual</option>
+            <option value="formal">Formal</option>
+          </select>
         </div>
-
-        {/* Personality Traits */}
         <div>
           <label htmlFor="personality" className="block text-sm font-medium text-[var(--color-label-text)]">
             Personality Traits
@@ -47,8 +42,6 @@ export function PersonalityAgents() {
             className="mt-2 w-full min-h-[150px] rounded-md border border-[var(--color-border)] bg-[var(--color-bg-input)] px-3 py-2 text-sm shadow-sm text-[var(--color-text-default)] placeholder:text-[var(--color-muted)] focus:outline-none focus:ring-1 focus:ring-[var(--color-accent)] focus:border-[var(--color-accent)]"
           />
         </div>
-
-        {/* Language Style */}
         <div>
           <label htmlFor="language-style" className="block text-sm font-medium text-[var(--color-label-text)] mb-2">
             Language Style

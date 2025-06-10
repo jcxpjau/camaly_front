@@ -11,7 +11,6 @@ export function InstructionsAgents() {
           Define the main behavior and instructions for your AI agent
         </p>
       </header>
-
       <div className="space-y-4">
         <div>
           <label
@@ -26,7 +25,6 @@ export function InstructionsAgents() {
             className="min-h-[200px] mt-2 w-full rounded-md border p-2 text-sm shadow-sm outline-none bg-[var(--color-bg-input)] border-[var(--color-border-input)] text-[var(--color-text-default)] placeholder-[var(--color-placeholder-default)] focus:ring-1 focus:ring-[var(--color-accent)] focus:border-[var(--color-accent)]"
           />
         </div>
-
         <div>
           <label
             htmlFor="context"

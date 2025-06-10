@@ -13,9 +13,7 @@ export function FinallyAgents() {
           Review and finalize your agent's configuration
         </p>
       </header>
-
       <div className="space-y-6">
-        {/* Summary */}
         <div className="bg-[var(--color-bg-muted)] p-4 rounded-lg space-y-2">
           <h4 className="font-medium text-[var(--color-text-default)]">Configuration Summary</h4>
           <p className="text-sm text-[var(--color-muted)] leading-relaxed">

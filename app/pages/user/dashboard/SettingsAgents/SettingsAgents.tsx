@@ -8,7 +8,7 @@ import { FinallyAgents } from "~/components/settingsAgents/finallyAgents";
 import { ConductAgents } from "~/components/settingsAgents/conductAgents";
 import { useLocation } from "react-router";
 
-interface AgentConfigHeaderProps {
+interface AgentConfigHeaderProps {//Props que são necessárias para renderizar esse componente
   name: string;
   id: string;
   category: string;
@@ -16,14 +16,14 @@ interface AgentConfigHeaderProps {
   messageCount: number;
 }
 
-export function SettingsAgents(props?: Partial<AgentConfigHeaderProps>) {
+export function SettingsAgents(props: AgentConfigHeaderProps) {
   const location = useLocation();
   const [agentData, setAgentData] = useState<AgentConfigHeaderProps | null>(null);
   const [selectedTab, setSelectedTab] = useState("settings");
 
   useEffect(() => {
-    // Prioritize direct props, then try reading from query string
-    // This is because the backend will return here passing data via URL
+    //Primeiro ele verifica as props passadas na chamada do componente
+    //Se não tiver ele verifica pela URL
     if (
       props?.name &&
       props?.id &&
@@ -37,14 +37,14 @@ export function SettingsAgents(props?: Partial<AgentConfigHeaderProps>) {
         avatar: props.avatar,
         messageCount: props.messageCount,
       });
-    } else {
-      // try to extract from URL
+    } 
+    else {
+      //Tenta pegar pela url
       const params = new URLSearchParams(location.search);
       const dataParam = params.get("data");
       if (dataParam) {
         try {
           const parsed = JSON.parse(decodeURIComponent(dataParam));
-          // Validate required props
           if (
             parsed.name &&
             parsed.id &&
@@ -65,12 +65,12 @@ export function SettingsAgents(props?: Partial<AgentConfigHeaderProps>) {
     }
   }, [location.search, props]);
 
-  // If no data, you can display a loading or message
+
   if (!agentData) {
     return <div>Loading agent data...</div>;
   }
 
-  // Components map
+  // Components map, para as abas das etapas de configuração
   const componentsMap = {
     settings: (
       <SettingsAgentsTokens
@@ -87,7 +87,7 @@ export function SettingsAgents(props?: Partial<AgentConfigHeaderProps>) {
     finally: <FinallyAgents />,
   };
 
-  // Tabs map with fixed icons and labels
+  //Mapeando cada tab para ter um icon
   const tabs = [
     { key: "settings", icon: SettingsIcon, label: "Settings" },
     { key: "instructions", icon: Info, label: "Instructions" },
@@ -136,14 +136,12 @@ export function SettingsAgents(props?: Partial<AgentConfigHeaderProps>) {
             </div>
           </div>
         </div>
-        {/* Tab Bar */}
         <div className="bg-card p-6 mb-6">
           <div className="max-w-4xl mx-auto">
             <div className="flex flex-wrap md:flex-nowrap justify-center md:justify-between gap-4">
               {tabs.map(({ key, icon: Icon, label }, index) => {
                 const isActive = selectedTab === key;
                 const isCompleted = index < currentIndex;
-
                 return (
                   <div key={key} className="flex items-center">
                     <button
@@ -199,7 +197,6 @@ export function SettingsAgents(props?: Partial<AgentConfigHeaderProps>) {
             </div>
           </div>
         </div>
-
         <main className="p-6 rounded-lg shadow-sm relative min-h-[300px]">
           <AnimatePresence mode="wait">
             {Object.entries(componentsMap).map(
@@ -218,7 +215,6 @@ export function SettingsAgents(props?: Partial<AgentConfigHeaderProps>) {
             )}
           </AnimatePresence>
         </main>
-
         <div className="flex justify-between gap-4 mt-6">
           <button
             onClick={() => setSelectedTab(tabs[Math.max(currentIndex - 1, 0)].key)}

@@ -38,9 +38,7 @@ export function SettingsAgentsTokens({
   messageCount,
 }: SettingsAgentsTokensProps) {
   
-  const [enabledLogins, setEnabledLogins] = useState<string[]>(["google", "email"]);
-  const [successProvider, setSuccessProvider] = useState<string | null>(null);
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [enabledLogins, setEnabledLogins] = useState<string[]>(["google", "meta"]);
   
   const { user } = useAuth();
   
@@ -67,38 +65,14 @@ export function SettingsAgentsTokens({
       const encodedState = encodeURIComponent(JSON.stringify(stateObj));
 
       const res = await api.get(`/oauth/start?state=${encodedState}`);
-      window.location.href = res.data.url;
+      window.location.href = res.data.url;//Redirecionando para o login oAuth
     } catch (err) {
       console.error("Error starting OAuth:", err);
     }
   }
-
-  useEffect(() => {
-    const success = searchParams.get("success");
-    if (success) {
-      setSuccessProvider(success.charAt(0).toUpperCase() + success.slice(1));
-      // remove da URL após 3s (opcional)
-      setTimeout(() => {
-        searchParams.delete("success");
-        setSearchParams(searchParams);
-      }, 3000);
-    }
-  }, [searchParams, setSearchParams]);
   
   return (
     <section className="space-y-6 rounded-lg" style={{ color: "var(--color-card-text)" }}>
-      {successProvider && (
-      <motion.div
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -10 }}
-        transition={{ duration: 0.3 }}
-        className="mb-4 flex items-center gap-2 rounded-md bg-green-100 px-4 py-2 text-sm text-green-800 dark:bg-green-800 dark:text-green-100"
-      >
-        <Check className="w-4 h-4" />
-        <span>Connection with {successProvider} was successful!</span>
-      </motion.div>
-    )}
       <header className="mb-4">
         <h2 className="text-lg font-semibold text-[var(--color-text-default)]">
           Integration Settings
@@ -117,7 +91,6 @@ export function SettingsAgentsTokens({
         <div className="grid grid-cols-2 gap-4">
           {loginOptions.map(({ id, label, icon }) => {
             const checked = enabledLogins.includes(id);
-
             return (
               <label
                 key={id}
@@ -165,7 +138,6 @@ export function SettingsAgentsTokens({
           })}
         </div>
       </div>
-
       {enabledLogins.length > 0 && (
         <div className="space-y-2">
           <p className="text-sm font-medium text-[var(--color-text-default)]">
@@ -208,7 +180,6 @@ export function SettingsAgentsTokens({
           </div>
         </div>
       )}
-
       <div>
         <label
           htmlFor="webhook-url"

@@ -2,38 +2,40 @@ import React, { useEffect, useState } from 'react';
 import { Instagram, Facebook, Send, Image, Video, CheckCircle, Bot } from 'lucide-react';
 import { useAuth } from '~/context/auth/auth.hooks';
 
-type ApiResponse = {
-  pageName: string;
-  instagramName: string;
-};
-
 export function SocialMediaAgent() {
   const [caption, setCaption] = useState('');
   const [mediaUrl, setMediaUrl] = useState('');
   const [mediaType, setMediaType] = useState<'image' | 'video'>('image');
+
   const [selectedPlatform, setSelectedPlatform] = useState('');
   const [selectedAccount, setSelectedAccount] = useState('');
+
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
   const [toastVariant, setToastVariant] = useState<'success' | 'error'>('success');
   const { user } = useAuth();
   const [loading, setLoading] = useState(true);
-  const [accountsFromApi, setAccountsFromApi] = useState<ApiResponse | null>(null);
 
+  //Resposta do n8n, que irá vir com o nome da página do Facebook e do Insta
+  const [accountsFromApi, setAccountsFromApi] = useState<{ pageName?: string; instagramName?: string }>({});
+
+  //Plataformas para postar, por enquanto será insta e facebook
   const platforms = [
     { id: 'instagram', name: 'Instagram', icon: Instagram, color: 'from-pink-500 to-orange-500' },
     { id: 'facebook', name: 'Facebook', icon: Facebook, color: 'from-blue-600 to-blue-700' }
   ];
 
+  //Contas para postar que irá vir da API, implementar o followers futuramente
   const accounts = {
-    instagram: accountsFromApi ? [
-      { id: 'instagramName', name: accountsFromApi.instagramName, followers: '-' }
-    ] : [],
-    facebook: accountsFromApi ? [
-      { id: 'pageName', name: accountsFromApi.pageName, followers: '-' }
-    ] : [],
+    instagram: accountsFromApi.instagramName
+      ? [{ id: 'instagramName', name: accountsFromApi.instagramName, followers: '-' }]
+      : [],
+    facebook: accountsFromApi.pageName
+      ? [{ id: 'pageName', name: accountsFromApi.pageName, followers: '-' }]
+      : [],
   };
 
+  //Mensagem de sucesso ou erro quando for postar (provisória)
   const showToastMessage = (message: string, variant: 'success' | 'error' = 'success') => {
     setToastMessage(message);
     setToastVariant(variant);
@@ -41,45 +43,42 @@ export function SocialMediaAgent() {
     setTimeout(() => setShowToast(false), 3000);
   };
 
-  async function MadePosty (e: React.FormEvent) {
+
+  async function MadePosty(e: React.FormEvent) {
     e.preventDefault();
-  try {
-    const response = await fetch("https://avent7.app.n8n.cloud/webhook/camaly/socialmediapost", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        userId: user._id,
-        imageUrl: mediaUrl,
-        description: caption,
-        socialMedia: selectedPlatform
-      }),
-    });
+    try {
+      const response = await fetch("https://avent7.app.n8n.cloud/webhook/camaly/socialmediapost", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId: user?._id,
+          imageUrl: mediaUrl,
+          description: caption,
+          socialMedia: selectedPlatform
+        }),
+      });
 
-    const data = await response.json();
-    console.log(data)
-    if (data.status === "Post made successfully") {
-  const link = data.accountLink;
-  showToastMessage(
-    `Post made successfully. <a href="${link}" target="_blank" class="underline font-semibold ml-1">View Post</a>`,
-    "success"
-  );
-
-  setCaption('');
-  setMediaUrl('');
-  setSelectedPlatform('');
-  setSelectedAccount('');
-}
-else {
-      // Se veio uma resposta diferente
-      showToastMessage("Erro inesperado ao publicar o post.", "error");
-    }
-  } catch (error) {
+      const data = await response.json();
+      if (data.status === "Post made successfully") {
+        const link = data.accountLink;
+        showToastMessage(
+          `Post made successfully. <a href="${link}" target="_blank" class="underline font-semibold ml-1">View Post</a>`,
+          "success"
+        );
+        setCaption('');
+        setMediaUrl('');
+        setSelectedPlatform('');
+        setSelectedAccount('');
+      } 
+      else {
+        showToastMessage("Erro inesperado ao publicar o post.", "error");
+      }
+    } 
+  catch (error) {
     console.error("Erro ao publicar:", error);
+    showToastMessage("Erro ao publicar o post.", "error");
+    }
   }
-};
-
 
   useEffect(() => {
     if (!user) return;
@@ -88,13 +87,11 @@ else {
       try {
         const response = await fetch("https://avent7.app.n8n.cloud/webhook/camaly/pagesuser", {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ userId: user._id }),
         });
         if (!response.ok) throw new Error(`Request error: ${response.statusText}`);
-        const data: ApiResponse = await response.json();
+        const data = await response.json();
         setAccountsFromApi(data);
       } catch (error) {
         console.error("Error fetching account data:", error);
@@ -125,10 +122,9 @@ else {
             ? 'bg-[var(--color-error)] text-white'
             : 'bg-[var(--color-success)] text-black'
         }`}>
-<span dangerouslySetInnerHTML={{ __html: toastMessage }} />
+          <span dangerouslySetInnerHTML={{ __html: toastMessage }} />
         </div>
       )}
-
       <div className="max-w-4xl mx-auto space-y-6">
         <div className="flex items-center gap-4 mb-8">
           <div className="w-12 h-12 bg-gradient-to-r from-[var(--color-accent)] to-[var(--color-progress)] rounded-xl flex items-center justify-center shadow-lg">
@@ -143,7 +139,6 @@ else {
             Active
           </div>
         </div>
-
         <div className="grid lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2">
             <div className="bg-[var(--color-card-bg)] border border-[var(--color-border)] rounded-lg">
@@ -182,7 +177,6 @@ else {
                       ))}
                     </div>
                   </div>
-
                   {selectedPlatform && (
                     <div className="space-y-2">
                       <label className="text-[var(--color-card-text)] font-medium">Account/Page *</label>
@@ -200,7 +194,6 @@ else {
                       </select>
                     </div>
                   )}
-
                   <div className="space-y-2">
                     <label className="text-[var(--color-card-text)] font-medium">Caption *</label>
                     <textarea
@@ -214,7 +207,6 @@ else {
                       <span>{caption.length}/2200</span>
                     </div>
                   </div>
-
                   <div className="space-y-2">
                     <label className="text-[var(--color-card-text)] font-medium">Media Type</label>
                     <div className="flex gap-2">
@@ -227,7 +219,7 @@ else {
                             : 'border border-[var(--color-border)] text-[var(--color-card-text)] hover:bg-[var(--color-border)]'
                         }`}
                       >
-                        <Image className="w-4 h-4" />
+                      <Image className="w-4 h-4" />
                         Image
                       </button>
                       <button
@@ -244,7 +236,6 @@ else {
                       </button>
                     </div>
                   </div>
-
                   <div className="space-y-2">
                     <label className="text-[var(--color-card-text)] font-medium">Media URL</label>
                     <input
@@ -255,7 +246,6 @@ else {
                       className="w-full bg-[var(--color-card-bg)] border border-[var(--color-border)] text-[var(--color-card-text)] rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] focus:border-transparent"
                     />
                   </div>
-
                   <div>
                     <button
                       type="submit"

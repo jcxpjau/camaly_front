@@ -16,7 +16,6 @@ export function ConductAgents() {
           Configure the technical and behavioral parameters of the agent
         </p>
       </header>
-
       <div className="space-y-6">
         <div className="grid grid-cols-2 gap-4">
           <div>
@@ -24,46 +23,42 @@ export function ConductAgents() {
               Creativity (Temperature)
             </label>
             <select
-  id="temperature"
-  className="mt-2 w-full appearance-none rounded-md border border-[var(--color-border)] bg-[var(--select-bg)] text-[var(--select-text)] py-2 px-3 pr-8 text-sm shadow-sm focus:outline-none focus:ring-1 focus:ring-[var(--color-accent)] focus:border-[var(--color-accent)] bg-no-repeat bg-[right_0.75rem_center] bg-[length:1rem_1rem]"
-  style={{
-    backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 20 20' fill='var(--select-text)' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill-rule='evenodd' d='M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.25a.75.75 0 01-1.06 0L5.21 8.27a.75.75 0 01.02-1.06z' clip-rule='evenodd'/%3E%3C/svg%3E")`,
-  }}
-  defaultValue=""
->
-  <option value="" disabled>
-    Select level
-  </option>
-  <option value="low">Low (0.2)</option>
-  <option value="medium">Medium (0.7)</option>
-  <option value="high">High (1.0)</option>
-</select>
-
+              id="temperature"
+              className="mt-2 w-full appearance-none rounded-md border border-[var(--color-border)] bg-[var(--select-bg)] text-[var(--select-text)] py-2 px-3 pr-8 text-sm shadow-sm focus:outline-none focus:ring-1 focus:ring-[var(--color-accent)] focus:border-[var(--color-accent)] bg-no-repeat bg-[right_0.75rem_center] bg-[length:1rem_1rem]"
+              style={{
+                backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 20 20' fill='var(--select-text)' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill-rule='evenodd' d='M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.25a.75.75 0 01-1.06 0L5.21 8.27a.75.75 0 01.02-1.06z' clip-rule='evenodd'/%3E%3C/svg%3E")`,
+              }}
+              defaultValue=""
+            >
+              <option value="" disabled>
+                Select level
+              </option>
+              <option value="low">Low (0.2)</option>
+              <option value="medium">Medium (0.7)</option>
+              <option value="high">High (1.0)</option>
+            </select>
           </div>
-
           <div>
             <label htmlFor="model" className="block text-sm font-medium text-[var(--color-label-text)]">
               AI Model
             </label>
-<select
-  id="model"
-  className="mt-2 w-full appearance-none rounded-md border border-[var(--color-border)] bg-[var(--select-bg)] text-[var(--select-text)] py-2 px-3 pr-8 text-sm shadow-sm focus:outline-none focus:ring-1 focus:ring-[var(--color-accent)] focus:border-[var(--color-accent)] bg-no-repeat bg-[right_0.75rem_center] bg-[length:1rem_1rem]"
-  style={{
-    backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 20 20' fill='var(--select-text)' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill-rule='evenodd' d='M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.25a.75.75 0 01-1.06 0L5.21 8.27a.75.75 0 01.02-1.06z' clip-rule='evenodd'/%3E%3C/svg%3E")`,
-  }}
-  defaultValue=""
->
-  <option value="" disabled>
-    Select model
-  </option>
-  <option value="gpt4">GPT-4</option>
-  <option value="gpt3.5">GPT-3.5 Turbo</option>
-  <option value="claude">Claude 3</option>
-</select>
-
+            <select
+              id="model"
+              className="mt-2 w-full appearance-none rounded-md border border-[var(--color-border)] bg-[var(--select-bg)] text-[var(--select-text)] py-2 px-3 pr-8 text-sm shadow-sm focus:outline-none focus:ring-1 focus:ring-[var(--color-accent)] focus:border-[var(--color-accent)] bg-no-repeat bg-[right_0.75rem_center] bg-[length:1rem_1rem]"
+              style={{
+                backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 20 20' fill='var(--select-text)' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill-rule='evenodd' d='M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.25a.75.75 0 01-1.06 0L5.21 8.27a.75.75 0 01.02-1.06z' clip-rule='evenodd'/%3E%3C/svg%3E")`,
+              }}
+              defaultValue=""
+            >
+            <option value="" disabled>
+              Select model
+            </option>
+            <option value="gpt4">GPT-4</option>
+            <option value="gpt3.5">GPT-3.5 Turbo</option>
+            <option value="claude">Claude 3</option>
+          </select>
           </div>
         </div>
-
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
@@ -104,7 +99,6 @@ export function ConductAgents() {
               </motion.div>
             </div>
           </div>
-
           <div className="flex items-center justify-between">
             <div>
               <label className="block text-sm font-medium text-[var(--color-label-text)]">Continuous Learning</label>
