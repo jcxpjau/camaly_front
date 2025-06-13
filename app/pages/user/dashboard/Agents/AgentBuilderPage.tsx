@@ -1,84 +1,89 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import FlowSelector from '../../../../components/agentBuilder/FlowSelector';
 import FlowCard from '../../../../components/agentBuilder/FlowCard';
 import { Bot, Plus, Sparkles } from 'lucide-react';
 import { Input } from '~/components/input/input';
+import api from '~/services/api';
 
-const mockFlows = [
-  {
-    id: 'flow1',
-    name: 'Sintetizador de email por palavra chave',
-    description: 'Gera emails a partir de palavras-chave.',
-    category: 'Comunicação',
-    inputs: [
-      { id: 'keyword', label: 'Palavra-chave', type: 'text', required: true, placeholder: 'Ex: vendas' },
-      { id: 'emailCount', label: 'Quantidade de emails', type: 'number', required: true, placeholder: 'Ex: 5' },
-    ],
-  },
-  {
-    id: 'flow2',
-    name: 'Postador automático de redes sociais',
-    description: 'Posta automaticamente em redes sociais.',
-    category: 'Marketing',
-    inputs: [
-      { id: 'platform', label: 'Plataforma', type: 'select', required: true, options: ['Facebook', 'Instagram', 'LinkedIn'], placeholder: '' },
-      { id: 'postText', label: 'Texto do post', type: 'textarea', required: true, placeholder: 'Digite o texto para o post' },
-    ],
-  },
-    {
-    id: 'flow3',
-    name: 'Postador automático de red',
-    description: 'Posta automaticamente em redes sociais.',
-    category: 'Marketing',
-    inputs: [
-      { id: 'platform', label: 'Plataforma', type: 'select', required: true, options: ['Facebook', 'Instagram', 'LinkedIn'], placeholder: '' },
-      { id: 'postText', label: 'Texto do post', type: 'textarea', required: true, placeholder: 'Digite o texto para o post' },
-    ],
-  },
-];
+//Modelo do Flow que vem da API
+export type Flow = {
+  _id: string;
+  workflowId: string;
+  name: string;
+  description: string;
+  category: string;
+  inputsSchema: string[];
+};
 
-//Lista dos fluxos que o usuário escolheu
+//Fluxo selecionado pelo usuário
+//Irá conter o Fluxo em si, dados da configuração (informações necessárias para configurar o fluxo) e true ou falso para saber se ta configurado
 export type SelectedFlow = {
-  flow: typeof mockFlows[0];
+  flow: Flow;
   data: Record<string, any>;
   isConfigured: boolean;
 };
 
 export function AgentBuilder() {
+  //Lista dos fluxos que o usuário selecionou para configurar
   const [selectedFlows, setSelectedFlows] = useState<SelectedFlow[]>([]);
-  const [agentName, setAgentName] = useState('');
 
-  const addFlow = (flowId: string) => {
-    const flow = mockFlows.find(f => f.id === flowId);
+  //Fluxos disponiveis para selecionar (API)
+  const [availableFlows, setAvailableFlows] = useState<Flow[]>([]);
+
+  const [agentName, setAgentName] = useState('');
+  
+  //Função para adicionar fluxo na lista de fluxos selecionados
+  function addFlow(flowId: string){
+    const flow = availableFlows.find(f => f._id === flowId);
     if (flow) {
       setSelectedFlows(prev => [
         ...prev,
-        { flow, data: {}, isConfigured: false },
+        { flow, data: {}, isConfigured: false }//Irá adicionar como configurado falso inicialmente
       ]);
     }
   };
 
-  const updateFlowData = (index: number, data: Record<string, any>) => {
+  //Função para atualizar dados/configuração de um fluxo selecionado
+  //Verifica se todos os dados foram preenchidos
+  function updateFlowData(index: number, data: Record<string, any>){
     setSelectedFlows(prev => {
-      const newFlows = [...prev];
-      const isConfigured = Object.values(data).every(val => val !== '' && val !== undefined && val !== null);
+      const newFlows = [...prev];//Cria uma cópia do array atual de fluxos selecionados
+      //Verificando se todos os valores foram preenhcidos corretamente
+      const flow = newFlows[index].flow;
+      const isConfigured = flow.inputsSchema.every(key => data[key] !== '' && data[key] !== undefined && data[key] !== null);
       newFlows[index] = { ...newFlows[index], data, isConfigured };
       return newFlows;
     });
   };
 
-  const removeFlow = (index: number) => {
+  //Função para remover fluxo selecionado
+  function removeFlow(index: number){
     setSelectedFlows(prev => prev.filter((_, i) => i !== index));
   };
 
-  const canAddMoreFlows =
-    selectedFlows.length === 0 || selectedFlows[selectedFlows.length - 1].isConfigured;
+  //Lógica para add novo workflow
+  //Só poderá adicionar se a lista de fluxos for igual a 0 ou o ultimo add ja estiver configurado
+  const canAddMoreFlows = selectedFlows.length === 0 || selectedFlows[selectedFlows.length - 1].isConfigured;
 
+  //Função para Salvar agente no banco (A FAZER)
   const handleSaveAgent = () => {
     if (!agentName.trim() || selectedFlows.some(sf => !sf.isConfigured)) return;
     console.log('Salvando agente:', { name: agentName, flows: selectedFlows });
     alert('Agente salvo com sucesso!');
   };
+
+  useEffect(() => {
+    const getWorkflows = async () => {
+      try {
+        const { data } = await api.get("workflows");
+        setAvailableFlows(data)
+      } 
+      catch (error) {
+        
+      }
+    }
+      getWorkflows();
+  }, [])
 
   return (
     <div className="min-h-screen bg-[var(--color-bg)] text-[var(--color-text)] px-6 py-10 mb-10">
@@ -125,14 +130,17 @@ export function AgentBuilder() {
                 <Plus className="w-7 h-7 text-[#754FD2]" />
                 <span className="text-[var(--color-card-text)]">Adicionar Novo Fluxo</span>
             </h2>
-          <FlowSelector onSelectFlow={addFlow} selectedFlowIds={selectedFlows.map(sf => sf.flow.id)} flows={mockFlows} />
+          <FlowSelector onSelectFlow={addFlow} 
+          selectedFlowIds={selectedFlows.map(sf => sf.flow._id)} 
+          flows={availableFlows} 
+          />
         </section>
       )}
       {/*Mostrando Fluxos Selecionados*/}
       <section className="space-y-8">
         {selectedFlows.map((sf, i) => (
           <FlowCard
-            key={`${sf.flow.id}-${i}`}
+            key={`${sf.flow._id}-${i}`}
             selectedFlow={sf}
             onUpdateData={data => updateFlowData(i, data)}
             onRemove={() => removeFlow(i)}
@@ -140,7 +148,6 @@ export function AgentBuilder() {
           />
         ))}
       </section>
-      {/* Botão salvar */}
       {selectedFlows.length > 0 && (
         <div className="mt-10 text-center">
           <button

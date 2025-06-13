@@ -20,6 +20,7 @@ import { useCustomNavigate } from "~/hooks/useCustomNavigate";
 interface Purchase {
     _id: string;
     productId: string;
+    workflowId: string;
     name: string;
     description: string;
     price: number;
@@ -40,6 +41,7 @@ const Home = (): JSX.Element => {
     const onDelete = async (id: string) => {
         try {
             const { data } = await api.delete(`purchases/${id}`);
+            console.log(data)
             setPurchases(prevItems => prevItems.filter(item => item._id !== id));
         } catch (error) {
             console.error("Erro ao deletar o produto:", error);
@@ -63,7 +65,8 @@ const Home = (): JSX.Element => {
                         name: item.productId.name,
                         description: item.productId.description,
                         price: item.productId.price,
-                        category: item.productId.category
+                        category: item.productId.category,
+                        workflowId: item.productId.workflowId
                     }));
 
                 setPurchases(mappedData);
@@ -124,8 +127,7 @@ const Home = (): JSX.Element => {
                                     <button
                                     className="text-[var(--color-text)] hover:cursor-pointer"
                                     onClick={(e) => {
-                                        const queryData = encodeURIComponent(JSON.stringify(purchase));
-                                        navigate(e, `/user/settingsagents?data=${queryData}`);
+                                        navigate(e, `/user/settingsagents/${purchase.productId}`);
                                     }}
                                     >
                                     <Settings size={16} />

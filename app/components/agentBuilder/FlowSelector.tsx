@@ -8,33 +8,28 @@ import {
   SelectItem,
 } from "../ui/select"
 
-interface InputType {
-  id: string
-  label: string
-  type: string
-  required?: boolean
-  placeholder?: string
-  options?: string[]
-}
-
-interface FlowType {
-  id: string
-  name: string
-  description: string
-  category: string
-  inputs: InputType[]
+export type Flow = {
+  _id: string;
+  workflowId: string;
+  name: string;
+  description: string;
+  category: string;
+  inputsSchema: string[];
 }
 
 interface FlowSelectorProps {
-  onSelectFlow: (flowId: string) => void
-  selectedFlowIds: string[]
-  flows: FlowType[]
+  onSelectFlow: (flowId: string) => void;
+  selectedFlowIds: string[];
+  flows: Flow[];
 }
 
-const FlowSelector = ({ onSelectFlow, selectedFlowIds, flows }: FlowSelectorProps) => {
-  const availableFlows = flows.filter((f) => !selectedFlowIds.includes(f.id))
+export default function FlowSelector({ onSelectFlow, selectedFlowIds, flows }: FlowSelectorProps) {
 
-  const categorizedFlows = availableFlows.reduce<Record<string, FlowType[]>>((acc, flow) => {
+  //Tirando fluxos da lista que ja foram selecionados
+  const availableFlows = flows.filter((f) => !selectedFlowIds.includes(f._id))
+
+  //Agrupa os fluxos por categoria
+  const categorizedFlows = availableFlows.reduce<Record<string, Flow[]>>((acc, flow) => {
     if (!acc[flow.category]) acc[flow.category] = []
     acc[flow.category].push(flow)
     return acc
@@ -50,7 +45,7 @@ const FlowSelector = ({ onSelectFlow, selectedFlowIds, flows }: FlowSelectorProp
       </div>
 
       {availableFlows.length > 0 ? (
-        <Select onValueChange={onSelectFlow}>
+        <Select onValueChange={onSelectFlow} /*Propriedade nativa do ShadCN que quando seleciona um SelectItem do Select deles dispara essa função passando o Id */>
           <SelectTrigger className="w-full h-12 text-left border-2 border-[#754FD2]/30 hover:border-[#754FD2]/50 transition-colors rounded-lg bg-card text-foreground">
             <SelectValue placeholder="Escolha um fluxo disponível..." />
           </SelectTrigger>
@@ -61,7 +56,7 @@ const FlowSelector = ({ onSelectFlow, selectedFlowIds, flows }: FlowSelectorProp
                   {category}
                 </div>
                 {flows.map((flow) => (
-                  <SelectItem key={flow.id} value={flow.id} className="py-3">
+                  <SelectItem key={flow._id} value={flow._id} className="py-3">
                     <div className="flex flex-col">
                       <span className="font-medium text-foreground">{flow.name}</span>
                       <span className="text-sm text-muted-foreground">
@@ -82,5 +77,3 @@ const FlowSelector = ({ onSelectFlow, selectedFlowIds, flows }: FlowSelectorProp
     </div>
   )
 }
-
-export default FlowSelector

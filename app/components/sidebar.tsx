@@ -20,6 +20,13 @@ import useIsMobile from "~/hooks/useIsMobile";
 import { useTranslation } from "react-i18next";
 import { useCustomNavigate } from "~/hooks/useCustomNavigate";
 import { useAuth } from "~/context/auth/auth.hooks";
+import api from "~/services/api";
+
+interface Purchase {
+    _id: string;
+    productId: string;
+    name: string;
+}
 
 export default function Sidebar() {
     const {user} = useAuth();
@@ -28,6 +35,7 @@ export default function Sidebar() {
     const isMobile = useIsMobile();
     const { isOpen, toggleSidebar, changeSidebar } = useSideBar();
     const { t } = useTranslation();
+    const [purchases, setPurchases] = useState<any[]>([]);
     const navigate = useCustomNavigate();
 
     const isCollapsed = !isMobile && !isOpen;
@@ -50,6 +58,31 @@ export default function Sidebar() {
             setShowContent(false);
         }
     }, [isCollapsed]);
+
+
+    useEffect(() => {
+        if (!user) {
+            return;
+        }
+        const fetchProducts = async () => {
+            try {
+                const res = await api.get(`purchases/user/${user._id}`);
+                const json = res.data;
+                const mappedData: Purchase[] = json
+                    .filter((item: { productId: null }) => item.productId !== null)
+                    .map((item: any) => ({
+                        _id: item._id,
+                        productId: item.productId._id,
+                        name: item.productId.name,
+                    }));
+
+                setPurchases(mappedData);
+            } catch (err: any) {
+                // /console.log(err);
+            }
+        };
+        fetchProducts();
+    }, [user]);
 
 
     return (
@@ -99,14 +132,16 @@ export default function Sidebar() {
                         <CirclePlus className="w-5 h-5" />
                     </button>
                     <nav className="flex flex-col gap-3 mt-8 font-normal text-sm">
-                        <a href="#" onClick={(e) => navigate(e, "/user/marketplace")} className="flex items-center gap-2 hover:text-[var(--color-accent)] transition">
-                            <MessageCircleMore className="w-6 h-6" />
-                            <span>{t("creator")}</span>
-                        </a>
-                        <a href="#" onClick={(e) => navigate(e, "/user/home")} className="flex items-center gap-2 hover:text-[var(--color-accent)] transition">
-                            <Bot className="w-6 h-6" />
-                            <span>{t('concierge')}</span>
-                        </a>
+                       {purchases.map((purchase) => (
+                            <a
+                                key={purchase._id}
+                                href="#"
+                                className="flex items-center gap-2 hover:text-[var(--color-accent)] transition"
+                            >
+                                <Bot className="w-6 h-6" />
+                                <span>{purchase.name}</span>
+                            </a>
+                            ))}
                     </nav>
                 </section>
                 {isCollapsed && (
@@ -122,20 +157,15 @@ export default function Sidebar() {
                         >
                             <CirclePlus className="w-6 h-6" />
                         </a>
-                        <a
-                            href="#"
-                            onClick={(e) => navigate(e, "/user/marketplace")}
+                        {purchases.map((purchase) => (
+                            <a
+                                key={purchase._id}
+                                href="#"
                             className="flex items-center justify-center hover:text-[var(--color-accent)] hover:scale-110 transition-transform rounded-lg"
-                        >
-                            <MessageCircleMore className="w-6 h-6" />
-                        </a>
-                        <a
-                            href="#"
-                            onClick={(e) => navigate(e, "/user/home")}
-                            className="flex items-center justify-center hover:text-[var(--color-accent)] hover:scale-110 transition-transform rounded-lg"
-                        >
-                            <Bot className="w-6 h-6" />
-                        </a>
+                            >
+                                <Bot className="w-6 h-6" />
+                            </a>
+                            ))}
                     </nav>
                 )}
             </div>
