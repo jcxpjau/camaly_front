@@ -7,6 +7,7 @@ import { FaMicrosoft, FaGithub } from 'react-icons/fa'
 import { useAuth } from '~/context/auth/auth.hooks';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaMeta } from 'react-icons/fa6';
+import { useTranslation } from 'react-i18next';
 
 export type Flow = {
   _id: string;
@@ -35,6 +36,7 @@ const providers = [
 ];
 
 export function SettingsAgents({ id }: Props) {
+  const { t } = useTranslation();
   const [selectedFlow, setSelectedFlow] = useState<SelectedFlow | null>(null);
   
   const [isExpanded, setIsExpanded] = useState(true);
@@ -93,7 +95,6 @@ export function SettingsAgents({ id }: Props) {
             }
           }
           catch (error) {
-          console.log(error)
       } 
         } 
       loadIntegrations()
@@ -158,7 +159,7 @@ async function UpdatePurchase(params: { productId: string; inputsSchemas: Record
             <div className="min-h-screen flex items-center justify-center bg-[var(--color-bg)] text-[var(--color-text)]">
                 <div className="flex flex-col items-center gap-4">
                     <div className="w-8 h-8 border-4 border-[var(--color-accent)] border-t-transparent rounded-full animate-spin" />
-                    <p className="text-sm text-[var(--color-muted)]">Loading</p>
+                    <p className="text-sm text-[var(--color-muted)]">{t('loading')}</p>
                 </div>
             </div>
         );
@@ -176,31 +177,24 @@ async function UpdatePurchase(params: { productId: string; inputsSchemas: Record
               exit={{ opacity: 0, y: 20 }}
               transition={{ duration: 0.4 }}
             >
-<div className="rounded-xl text-[var(--color-card-text)] backdrop-blur-sm p-6 mb-10">
-  <div className="flex flex-col md:flex-row md:items-center md:gap-4 relative">
-    
-    {/* Ícone */}
-    <div className="p-3 bg-[var(--color-accent)] rounded-xl flex items-center justify-center text-white w-fit mb-2 md:mb-0 md:mr-4">
-      <Bot className="w-6 h-6" />
-    </div>
-
-    {/* Nome + Descrição */}
-    <div className="flex flex-col flex-1 min-w-0">
-      <div className="flex items-center gap-2">
-        <h2 className="text-2xl font-bold">{selectedFlow.flow.name}</h2>
-      </div>
-      <p className="text-[var(--color-card-subtext)] leading-relaxed break-words">
-        {selectedFlow.flow.description}
-      </p>
-    </div>
-
-    {/* Categoria */}
-    <span className="text-sm px-2 py-0.5 rounded-md bg-[var(--color-secondary)] text-[var(--color-secondary-text)] mt-4 md:mt-0 md:absolute md:right-0 md:top-0">
-      {selectedFlow.flow.category}
-    </span>
-  </div>
-</div>
-
+            <div className="rounded-xl text-[var(--color-card-text)] backdrop-blur-sm p-6 mb-10">
+              <div className="flex flex-col md:flex-row md:items-center md:gap-4 relative">
+                <div className="p-3 bg-[var(--color-accent)] rounded-xl flex items-center justify-center text-white w-fit mb-2 md:mb-0 md:mr-4">
+                  <Bot className="w-6 h-6" />
+                </div>
+                <div className="flex flex-col flex-1 min-w-0">
+                  <div className="flex items-center gap-2">
+                    <h2 className="text-2xl font-bold">{selectedFlow.flow.name}</h2>
+                  </div>
+                  <p className="text-[var(--color-card-subtext)] leading-relaxed break-words">
+                    {selectedFlow.flow.description}
+                  </p>
+                </div>
+                <span className="text-sm px-2 py-0.5 rounded-md bg-[var(--color-secondary)] text-[var(--color-secondary-text)] mt-4 md:mt-0 md:absolute md:right-0 md:top-0">
+                  {selectedFlow.flow.category}
+                </span>
+              </div>
+            </div>
               <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-card-bg)] text-[var(--color-card-text)] backdrop-blur-sm p-6 space-y-6 shadow">
                 <header className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                   <div className="flex items-center gap-3">
@@ -215,7 +209,7 @@ async function UpdatePurchase(params: { productId: string; inputsSchemas: Record
                         <Circle className="w-5 h-5 text-[var(--color-warning)]" />
                       )}
                     </div>
-                    <h3 className="text-lg font-semibold">Configuração do Fluxo</h3>
+                    <h3 className="text-lg font-semibold">{t('settingsAgents.flowSettings.title')}</h3>
                   </div>
                   <button
                     onClick={() => setIsExpanded(!isExpanded)}
@@ -263,14 +257,14 @@ async function UpdatePurchase(params: { productId: string; inputsSchemas: Record
                       </div>
                       <div className="p-4 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-input)]">
                         <div className="flex items-center justify-between">
-                          <span className="text-sm font-medium">Status da Configuração:</span>
+                          <span className="text-sm font-medium">{t('settingsAgents.flowSettings.statusLabel')}</span>
                           <div
                             className={`flex items-center gap-2 ${
                               isFormValid ? 'text-[var(--color-success)]' : 'text-[var(--color-warning)]'
                             }`}
                           >
                             {isFormValid ? <CheckCircle className="w-4 h-4" /> : <Circle className="w-4 h-4" />}
-                            <span className="text-sm">{isFormValid ? 'Configurado' : 'Pendente'}</span>
+                            <span className="text-sm">{isFormValid ? t('settingsAgents.flowSettings.configured') : t('settingsAgents.flowSettings.pending')}</span>
                           </div>
                         </div>
                       </div>
@@ -292,7 +286,7 @@ async function UpdatePurchase(params: { productId: string; inputsSchemas: Record
                                         <span className="text-white font-medium">{provider.label}</span>
                                         <CheckCircle className="w-4 h-4 text-green-400" />
                                       </div>
-                                      <p className="text-slate-300 text-sm">Conta conectada</p>
+                                      <p className="text-slate-300 text-sm">{t('settingsAgents.flowSettings.connectAccountCheck')}</p>
                                     </div>
                                   </div>
                                 </div>
@@ -300,7 +294,7 @@ async function UpdatePurchase(params: { productId: string; inputsSchemas: Record
                           </div>
                         ) : (
                           <div>
-                            <h4 className="text-sm font-medium text-[var(--color-muted)] mb-3">Conecte uma conta</h4>
+                            <h4 className="text-sm font-medium text-[var(--color-muted)] mb-3">{t('settingsAgents.flowSettings.connectAccount')}</h4>
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                               {providers
                                 .filter((provider) => selectedFlow.flow.providerConnection.includes(provider.key))
@@ -344,7 +338,7 @@ async function UpdatePurchase(params: { productId: string; inputsSchemas: Record
                   whileTap={isFormValid ? { scale: 0.95 } : {}}
                   aria-disabled={!isFormValid}
                 >
-                  Salvar Configuração do Fluxo
+                  {t('settingsAgents.flowSettings.save')}
                 </motion.button>
               </div>
             </motion.div>

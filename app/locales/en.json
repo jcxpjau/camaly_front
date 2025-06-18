@@ -326,5 +326,16 @@
         "deletemsg": "You'll no longer have access to the workflow, and if you want to undo this, you'll have to contact the author, or purchase it again",
         "purchaseSuccesstitle": "Purchase was successfull",
         "purchaseDescription": "Now add your configurations and start automating!"
+    },
+    "settingsAgents": {
+    "flowSettings": {
+    "title": "Flow Configuration",
+    "statusLabel": "Configuration Status:",
+    "configured": "Configured",
+    "pending": "Pending",
+    "connectAccount": "Connect an account",
+    "connectAccountCheck": "Account already connected",
+    "save": "Save Flow Configuration"
     }
+  }
 }
