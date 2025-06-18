@@ -1,247 +1,355 @@
-import { useState, useEffect } from "react";
-import { AnimatePresence, motion } from "framer-motion";
-import { Bot, User, Settings as SettingsIcon, Info, Brain, ClipboardCheck, ChevronLeft, ChevronRight } from "lucide-react";
-import { SettingsAgentsTokens } from "~/components/settingsAgents/settingsAgents";
-import { InstructionsAgents } from "~/components/settingsAgents/instructionsAgents";
-import { PersonalityAgents } from "~/components/settingsAgents/personalityAgents";
-import { FinallyAgents } from "~/components/settingsAgents/finallyAgents";
-import { ConductAgents } from "~/components/settingsAgents/conductAgents";
-import { useLocation } from "react-router";
+import React, { useEffect, useState } from 'react';
+import { Bot, CheckCircle, Circle, Settings, Trash2 } from 'lucide-react';
+import { Input } from '~/components/input/input';
+import api from '~/services/api';
+import { FcGoogle } from 'react-icons/fc'
+import { FaMicrosoft, FaGithub } from 'react-icons/fa'
+import { useAuth } from '~/context/auth/auth.hooks';
+import { motion, AnimatePresence } from 'framer-motion';
+import { FaMeta } from 'react-icons/fa6';
 
-interface AgentConfigHeaderProps {//Props que são necessárias para renderizar esse componente
+export type Flow = {
+  _id: string;
+  workflowId: string;
   name: string;
-  id: string;
+  description: string;
   category: string;
-  avatar?: string;
-  messageCount: number;
-}
+  providerConnection: string;
+  inputsSchema: string[];
+};
 
-export function SettingsAgents(props: AgentConfigHeaderProps) {
-  const location = useLocation();
-  const [agentData, setAgentData] = useState<AgentConfigHeaderProps | null>(null);
-  const [selectedTab, setSelectedTab] = useState("settings");
+export type SelectedFlow = {
+  flow: Flow;
+  data: Record<string, any>;//Valores que o usuário vai preencher
+  isConfigured: boolean;
+};
+
+type Props = {
+  id?: string;
+};
+const providers = [
+  { key: 'google', icon: <FcGoogle className="w-5 h-5" />, label: 'Google' },
+  { key: 'meta', icon: <FaMeta className="w-5 h-5 text-[#1877F2]" />, label: 'Meta' },
+  { key: 'microsoft', icon: <FaMicrosoft className="w-5 h-5" />, label: 'Microsoft' },
+  { key: 'github', icon: <FaGithub className="w-5 h-5" />, label: 'GitHub' },
+];
+
+export function SettingsAgents({ id }: Props) {
+  const [selectedFlow, setSelectedFlow] = useState<SelectedFlow | null>(null);
+  
+  const [isExpanded, setIsExpanded] = useState(true);
+
+  const { user } = useAuth();
+
+  const [existsIntegration, setExistsIntegration] = useState(false)
+
+  const [loading, setLoading] = useState(true);
+
+  //Função para atualizar o selectedFlow de acordo com o que o usuário digita
+  function updateFlowData(data: Record<string, any>) {
+    if (!selectedFlow) return;
+
+    // Verifica se todos os campos esperados foram preenchidos
+    //Para cada chave do inputsSchema do selectedFlow verifico se sua correspondencia no data ta preenchido
+    const isConfigured = selectedFlow.flow.inputsSchema.every(
+      key => data[key] !== '' && data[key] !== undefined && data[key] !== null
+    );
+    //Atualizo o selectedFlow com os dados preenchdios e isconfigured tru
+    setSelectedFlow({ ...selectedFlow, data, isConfigured });
+  }
+
+  //Pegando dados do flow
+  useEffect(() => {
+    if (!id) return;
+    const loadFlow = async () => {
+      try {
+        const { data } = await api.get(`products/${id}`);
+        const selectedFlow: SelectedFlow = {
+          flow: data,
+          data: {},
+          isConfigured: false,
+        };
+        setSelectedFlow(selectedFlow);
+        setLoading(false)
+      } catch (error) {
+        console.error('Erro ao carregar fluxo:', error);
+      }
+    };
+    loadFlow();
+  }, [id]);
 
   useEffect(() => {
-    //Primeiro ele verifica as props passadas na chamada do componente
-    //Se não tiver ele verifica pela URL
-    if (
-      props?.name &&
-      props?.id &&
-      props?.category &&
-      props.messageCount !== undefined
-    ) {
-      setAgentData({
-        name: props.name,
-        id: props.id,
-        category: props.category,
-        avatar: props.avatar,
-        messageCount: props.messageCount,
-      });
-    } 
-    else {
-      //Tenta pegar pela url
-      const params = new URLSearchParams(location.search);
-      const dataParam = params.get("data");
-      if (dataParam) {
-        try {
-          const parsed = JSON.parse(decodeURIComponent(dataParam));
-          if (
-            parsed.name &&
-            parsed.id &&
-            parsed.category &&
-            parsed.messageCount !== undefined
-          ) {
-            setAgentData(parsed);
-          } else {
-            setAgentData(null);
-          }
-        } catch (error) {
-          console.error("Error parsing data from URL", error);
-          setAgentData(null);
+      if (!user || !selectedFlow) {
+            return;
         }
-      } else {
-        setAgentData(null);
-      }
+        const loadIntegrations = async () => {
+          try {
+            const data = await api.get(`user-integrations/${selectedFlow.flow.providerConnection}`)
+            if (data.status === 200) {
+                setExistsIntegration(true)
+            } 
+            else {
+              setExistsIntegration(false)
+            }
+          }
+          catch (error) {
+          console.log(error)
+      } 
+        } 
+      loadIntegrations()
+  }, [selectedFlow, user])
+
+  //Função para atualizar a purchase no banco com os dados que o usuário configurou
+async function UpdatePurchase(params: { productId: string; inputsSchemas: Record<string, any> }) {
+  try {
+    // transforma inputsSchemas (objeto) em array com 1 objeto
+    const inputsSchemasArray = [params.inputsSchemas];
+
+    const { data } = await api.put('/purchases/update', {
+      productId: params.productId,
+      inputsSchemas: inputsSchemasArray,
+    });
+    console.log(data)
+    return data;
+  } catch (error: any) {
+    console.error('Erro ao atualizar compra:', error.response?.data || error.message);
+    throw error;
+  }
+}
+
+    async function LoginOauth(provider: string) {
+    try {
+      const stateObj = {
+        provider,
+        appUserId: user._id,
+      };
+
+      const encodedState = encodeURIComponent(JSON.stringify(stateObj));
+
+      const res = await api.get(`/oauth/start?state=${encodedState}`);
+      window.location.href = res.data.url;//Redirecionando para o login oAuth
+    } catch (err) {
+      console.error("Error starting OAuth:", err);
     }
-  }, [location.search, props]);
-
-
-  if (!agentData) {
-    return <div>Loading agent data...</div>;
   }
 
-  // Components map, para as abas das etapas de configuração
-  const componentsMap = {
-    settings: (
-      <SettingsAgentsTokens
-        name={agentData.name}
-        id={agentData.id}
-        category={agentData.category}
-        avatar={agentData.avatar}
-        messageCount={agentData.messageCount}
-      />
-    ),
-    instructions: <InstructionsAgents />,
-    conduct: <ConductAgents />,
-    personality: <PersonalityAgents />,
-    finally: <FinallyAgents />,
-  };
 
-  //Mapeando cada tab para ter um icon
-  const tabs = [
-    { key: "settings", icon: SettingsIcon, label: "Settings" },
-    { key: "instructions", icon: Info, label: "Instructions" },
-    { key: "conduct", icon: Brain, label: "Conduct" },
-    { key: "personality", icon: Bot, label: "Personality" },
-    { key: "finally", icon: ClipboardCheck, label: "Completion" },
-  ];
+  //Utilitários visuais
+  const capitalizeFirstLetter = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
+  const generatePlaceholder = (inputId: string) => `Digite sua(seu) ${capitalizeFirstLetter(inputId)}`;
 
-  const currentIndex = tabs.findIndex((tab) => tab.key === selectedTab);
-  function goToNextStep() {
-    const nextIndex = currentIndex + 1;
-    if (nextIndex < tabs.length) {
-      setSelectedTab(tabs[nextIndex].key);
-    }
+  //Função para alterar o valor dos dados que o usuário esta digitando
+  function handleChange(inputId: string, value: any) {
+    if (!selectedFlow) return;
+    const newData = { ...selectedFlow.data, [inputId]: value };
+    updateFlowData(newData);
   }
+
+  //Verificando se o usuário preencheu tudo certo para mudar o visual
+  const isFormValid = selectedFlow?.flow.inputsSchema.every((inputObj) => {
+    return Object.keys(inputObj).every((key) => {
+      const value = selectedFlow.data[key];
+      return value !== undefined && value !== null && value.toString().trim() !== '';
+    });
+  });
+
+    if (loading || !user) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-[var(--color-bg)] text-[var(--color-text)]">
+                <div className="flex flex-col items-center gap-4">
+                    <div className="w-8 h-8 border-4 border-[var(--color-accent)] border-t-transparent rounded-full animate-spin" />
+                    <p className="text-sm text-[var(--color-muted)]">Loading</p>
+                </div>
+            </div>
+        );
+    }
 
   return (
     <div className="min-h-screen bg-[var(--color-bg)] text-[var(--color-text)] px-6 py-10 mb-10">
       <div className="max-w-7xl mx-auto">
-        <div className="bg-card p-6">
-          <div className="flex items-center gap-4">
-            <div className="relative h-16 w-16 rounded-full overflow-hidden bg-gradient-to-br from-purple-500 to-blue-600 flex items-center justify-center text-white">
-              {agentData.avatar ? (
-                <img
-                  src={agentData.avatar}
-                  alt={agentData.name}
-                  className="h-full w-full object-cover"
-                  onError={(e) => {
-                    (e.currentTarget.style.display = "none");
-                    const fallback = e.currentTarget.nextSibling as HTMLElement;
-                    if (fallback) fallback.style.display = "flex";
-                  }}
-                />
-              ) : null}
-              <div className="absolute inset-0 flex items-center justify-center">
-                <Bot className="h-8 w-8" />
-              </div>
-            </div>
-            <div className="flex-1">
-              <div className="flex items-center gap-3 mb-2">
-                <h1 className="text-2xl font-bold text-foreground">{agentData.name}</h1>
-                <span className="bg-muted text-muted-foreground text-xs px-2 py-0.5 rounded">
-                  {agentData.category}
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="bg-card p-6 mb-6">
-          <div className="max-w-4xl mx-auto">
-            <div className="flex flex-wrap md:flex-nowrap justify-center md:justify-between gap-4">
-              {tabs.map(({ key, icon: Icon, label }, index) => {
-                const isActive = selectedTab === key;
-                const isCompleted = index < currentIndex;
-                return (
-                  <div key={key} className="flex items-center">
-                    <button
-                      onClick={() => setSelectedTab(key)}
-                      className={`flex flex-col items-center gap-2 p-3 rounded-lg transition-all duration-200 hover:bg-muted/50
-                        ${isActive ? "bg-primary/10 text-primary" : ""}
-                        ${isCompleted ? "text-green-600" : ""}
-                      `}
+        <AnimatePresence>
+          {selectedFlow && (
+            <motion.div
+              key={selectedFlow.flow._id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+              transition={{ duration: 0.4 }}
+            >
+<div className="rounded-xl text-[var(--color-card-text)] backdrop-blur-sm p-6 mb-10">
+  <div className="flex flex-col md:flex-row md:items-center md:gap-4 relative">
+    
+    {/* Ícone */}
+    <div className="p-3 bg-[var(--color-accent)] rounded-xl flex items-center justify-center text-white w-fit mb-2 md:mb-0 md:mr-4">
+      <Bot className="w-6 h-6" />
+    </div>
+
+    {/* Nome + Descrição */}
+    <div className="flex flex-col flex-1 min-w-0">
+      <div className="flex items-center gap-2">
+        <h2 className="text-2xl font-bold">{selectedFlow.flow.name}</h2>
+      </div>
+      <p className="text-[var(--color-card-subtext)] leading-relaxed break-words">
+        {selectedFlow.flow.description}
+      </p>
+    </div>
+
+    {/* Categoria */}
+    <span className="text-sm px-2 py-0.5 rounded-md bg-[var(--color-secondary)] text-[var(--color-secondary-text)] mt-4 md:mt-0 md:absolute md:right-0 md:top-0">
+      {selectedFlow.flow.category}
+    </span>
+  </div>
+</div>
+
+              <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-card-bg)] text-[var(--color-card-text)] backdrop-blur-sm p-6 space-y-6 shadow">
+                <header className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                  <div className="flex items-center gap-3">
+                    <div
+                      className={`p-2 rounded-lg ${
+                        isFormValid ? 'bg-[var(--color-success)]/20' : 'bg-[var(--color-warning)]/20'
+                      }`}
                     >
-                      <div
-                        className={`flex items-center justify-center w-10 h-10 rounded-full border-2 transition-all duration-200
-                          ${isActive ? "border-primary bg-primary text-primary-foreground" : ""}
-                          ${isCompleted ? "border-green-600 bg-green-600 text-white" : ""}
-                          ${!isActive && !isCompleted ? "border-muted-foreground/30 text-muted-foreground" : ""}
-                        `}
-                      >
-                        {isCompleted ? (
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            strokeWidth={2}
-                            stroke="currentColor"
-                            className="h-5 w-5"
-                          >
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                          </svg>
-                        ) : (
-                          <Icon className="h-5 w-5" />
-                        )}
-                      </div>
-                      <span
-                        className={`text-xs font-medium transition-colors text-center
-                          ${isActive ? "text-primary" : ""}
-                          ${isCompleted ? "text-green-600" : ""}
-                          ${!isActive && !isCompleted ? "text-muted-foreground" : ""}
-                        `}
-                      >
-                        {label}
-                      </span>
-                    </button>
-
-                    {index < tabs.length - 1 && (
-                      <div
-                        className={`hidden md:block h-0.5 w-12 md:w-16 mx-1 md:mx-2 transition-colors duration-200
-                          ${isCompleted ? "bg-green-600" : "bg-muted-foreground/20"}
-                        `}
-                      />
-                    )}
+                      {isFormValid ? (
+                        <CheckCircle className="w-5 h-5 text-[var(--color-success)]" />
+                      ) : (
+                        <Circle className="w-5 h-5 text-[var(--color-warning)]" />
+                      )}
+                    </div>
+                    <h3 className="text-lg font-semibold">Configuração do Fluxo</h3>
                   </div>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-        <main className="p-6 rounded-lg shadow-sm relative min-h-[300px]">
-          <AnimatePresence mode="wait">
-            {Object.entries(componentsMap).map(
-              ([key, Component]) =>
-                key === selectedTab ? (
-                  <motion.div
-                    key={key}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                    transition={{ duration: 0.3 }}
+                  <button
+                    onClick={() => setIsExpanded(!isExpanded)}
+                    className="p-2 rounded hover:bg-[var(--color-button-hover)] transition-colors"
+                    aria-expanded={isExpanded}
                   >
-                    {Component}
-                  </motion.div>
-                ) : null
-            )}
-          </AnimatePresence>
-        </main>
-        <div className="flex justify-between gap-4 mt-6">
-          <button
-            onClick={() => setSelectedTab(tabs[Math.max(currentIndex - 1, 0)].key)}
-            disabled={currentIndex === 0}
-            className={`flex items-center gap-2 px-4 py-2 rounded-md border
-              ${currentIndex === 0
-                ? "border-gray-300 text-gray-400 cursor-not-allowed"
-                : "border-primary text-primary hover:bg-primary hover:text-white transition-colors"
-              }`}
-          >
-            <ChevronLeft className="w-4 h-4" />
-            Previous
-          </button>
-
-          <button
-            onClick={() => setSelectedTab(tabs[Math.min(currentIndex + 1, tabs.length - 1)].key)}
-            disabled={currentIndex === tabs.length - 1}
-            className={`flex items-center gap-2 px-4 py-2 rounded-md border
-              ${currentIndex === tabs.length - 1
-                ? "border-gray-300 text-gray-400 cursor-not-allowed"
-                : "border-primary text-primary hover:bg-primary hover:text-white transition-colors"
-              }`}
-          >
-            Next
-            <ChevronRight className="w-4 h-4" />
-          </button>
-        </div>
+                    <Settings className="w-5 h-5 text-[var(--color-muted)]" />
+                  </button>
+                </header>
+                <AnimatePresence initial={false}>
+                  {isExpanded && (
+                    <motion.form
+                      onSubmit={(e) => e.preventDefault()}
+                      className="space-y-6"
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: 'auto', opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.4 }}
+                    >
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {
+                          //Para cada objeto dentro do array inputsSchema do fluxo selecionado, vai passar item por item e criar inputs para cada chave dentro desses objetos.
+                            selectedFlow.flow.inputsSchema.flatMap((inputObj, i) =>
+                            Object.keys(inputObj).map((key) => {//Pega todas as chaves (nomes dos inputs) do objeto inputObj
+                              //Pega o valor atual do input com a chave 'key' do estado data,
+                              //se não existir, usa string vazia para evitar undefined
+                              const value = selectedFlow.data[key] ?? '';
+                              //Retorna o JSX do input para essa chave
+                              return (
+                                //Usamos a chave 'key' como key do React para performance e controle
+                                <div key={key}>
+                                  <Input.Root label={key}>
+                                    <Input.Content
+                                      placeholder={generatePlaceholder(key)}
+                                      type="text"
+                                      value={value}
+                                      onChange={(value) => handleChange(key, value)}
+                                    />
+                                  </Input.Root>
+                                </div>
+                              );
+                            })
+                          )
+                        }
+                      </div>
+                      <div className="p-4 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-input)]">
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm font-medium">Status da Configuração:</span>
+                          <div
+                            className={`flex items-center gap-2 ${
+                              isFormValid ? 'text-[var(--color-success)]' : 'text-[var(--color-warning)]'
+                            }`}
+                          >
+                            {isFormValid ? <CheckCircle className="w-4 h-4" /> : <Circle className="w-4 h-4" />}
+                            <span className="text-sm">{isFormValid ? 'Configurado' : 'Pendente'}</span>
+                          </div>
+                        </div>
+                      </div>
+                        {existsIntegration ? (
+                          <div className="space-y-3 mb-6">
+                            {providers
+                              .filter((provider) => selectedFlow.flow.providerConnection.includes(provider.key))
+                              .map((provider) => (
+                                <div
+                                  key={provider.key}
+                                  className="flex items-center justify-between p-4 bg-green-500/10 border border-green-500/30 rounded-lg"
+                                >
+                                  <div className="flex items-center gap-3">
+                                    <div className="p-2 bg-green-500/20 rounded-lg">
+                                      {provider.icon}
+                                    </div>
+                                    <div>
+                                      <div className="flex items-center gap-2">
+                                        <span className="text-white font-medium">{provider.label}</span>
+                                        <CheckCircle className="w-4 h-4 text-green-400" />
+                                      </div>
+                                      <p className="text-slate-300 text-sm">Conta conectada</p>
+                                    </div>
+                                  </div>
+                                </div>
+                              ))}
+                          </div>
+                        ) : (
+                          <div>
+                            <h4 className="text-sm font-medium text-[var(--color-muted)] mb-3">Conecte uma conta</h4>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                              {providers
+                                .filter((provider) => selectedFlow.flow.providerConnection.includes(provider.key))
+                                .map((provider, i) => (
+                                  <button
+                                    key={i}
+                                    type="button"
+                                    onClick={() => LoginOauth(provider.key)}
+                                    className="bg-[var(--color-button-bg)] border border-[var(--color-border)] text-[var(--color-text)] hover:bg-[var(--color-button-hover)] transition-colors flex items-center gap-2 p-3 rounded-md"
+                                  >
+                                    {provider.icon}
+                                    {provider.label}
+                                  </button>
+                                ))}
+                            </div>
+                          </div>
+                        )}
+                    </motion.form>
+                  )}
+                </AnimatePresence>
+              </div>
+              <div className="text-center">
+                <motion.button
+                  type="button"
+                  disabled={!isFormValid}
+                  onClick={() =>
+                    selectedFlow &&
+                    UpdatePurchase({
+                      productId: selectedFlow.flow._id,
+                      inputsSchemas: selectedFlow.data,
+                    })
+                  }
+                  className={`mt-6 px-8 py-3 rounded-lg text-lg shadow transition
+                  ${
+                    isFormValid
+                      ? 'bg-[var(--color-accent)] text-white cursor-pointer'
+                      : 'bg-[var(--color-accent)] text-[var(--color-card-subtext)] cursor-not-allowed brightness-75'
+                  }
+                `}
+                  whileHover={isFormValid ? { scale: 1.05, opacity: 0.9 } : {}}
+                  whileTap={isFormValid ? { scale: 0.95 } : {}}
+                  aria-disabled={!isFormValid}
+                >
+                  Salvar Configuração do Fluxo
+                </motion.button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );
