@@ -326,5 +326,16 @@
     "deletemsg": "Você deixará de ter acesso ao workflow, e se desejar desfazer esta ação, terá que contactar o autor, ou comprá-lo de novo",
     "purchaseSuccesstitle": "Compra bem sucedida",
     "purchaseDescription": "Agora adicione suas configurações e comece a automatizar!"
+  },
+  "settingsAgents": {
+    "flowSettings": {
+      "title": "Configuração do Fluxo",
+      "statusLabel": "Status da Configuração:",
+      "configured": "Configurado",
+      "pending": "Pendente",
+      "connectAccount": "Conecte uma conta",
+      "connectAccountCheck": "Conta conectada",
+      "save": "Salvar Configuração do Fluxo"
+    }
   }
 }
