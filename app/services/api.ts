@@ -20,30 +20,39 @@ api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
 
 api.interceptors.response.use(
     response => {
-        return response;
+        return response 
     },
     async (error: AxiosError) => {
-        const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
-        if (error.response?.status === 401 && !originalRequest._retry) {
+        const originalRequest = error.config as (InternalAxiosRequestConfig & { _retry?: boolean }) | undefined;
+
+        console.log('Interceptando erro:', error.response?.status, error.message);
+
+        if (error.response?.status === 401 && originalRequest && !originalRequest._retry) {
+            console.log("401 detectado, tentando refresh");
             originalRequest._retry = true;
+
             try {
-                const res = await api.post('/auth/refresh', {} , {
-                    withCredentials: true,
-                });
+                const res = await api.post('/auth/refresh', {}, { withCredentials: true });
+                console.log("Refresh ok, token novo recebido");
                 const newAccessToken = res.data.access_token;
+
                 store.dispatch(login({ token: newAccessToken, remember: true }));
+
                 if (originalRequest.headers) {
                     originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
                 }
+
                 return api(originalRequest);
-            }
-            catch (refreshError) {
+            } catch (refreshError) {
+                console.log("Refresh deu erro", refreshError);
                 store.dispatch(logout());
                 return Promise.reject(refreshError);
             }
         }
+
         return Promise.reject(error);
     }
 );
+
 
 export default api;
