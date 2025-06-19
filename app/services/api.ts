@@ -7,7 +7,7 @@ const api = axios.create({
     headers: {
         'Content-Type': 'application/json',
     },
-    withCredentials: true,//Para o cookie
+    withCredentials: true,
 });
 
 api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
@@ -27,7 +27,7 @@ api.interceptors.response.use(
         if (error.response?.status === 401 && !originalRequest._retry) {
             originalRequest._retry = true;
             try {
-                const res = await api.post('/auth/refresh', {
+                const res = await api.post('/auth/refresh', {} , {
                     withCredentials: true,
                 });
                 const newAccessToken = res.data.access_token;
