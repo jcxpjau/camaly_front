@@ -19,40 +19,44 @@ api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
 });
 
 api.interceptors.response.use(
-    response => {
-        return response 
-    },
-    async (error: AxiosError) => {
-        const originalRequest = error.config as (InternalAxiosRequestConfig & { _retry?: boolean }) | undefined;
+  response => response,
+  async (error: AxiosError) => {
+    const originalRequest = error.config as (InternalAxiosRequestConfig & { _retry?: boolean }) | undefined;
 
-        console.log('Interceptando erro:', error.response?.status, error.message);
+    console.log('Interceptando erro:', error.response?.status, error.message);
 
-        if (error.response?.status === 401 && originalRequest && !originalRequest._retry) {
-            console.log("401 detectado, tentando refresh");
-            originalRequest._retry = true;
+    if (
+      error.response?.status === 401 &&
+      originalRequest &&
+      !originalRequest._retry &&
+      !originalRequest.url?.includes('/auth/refresh')
+    ) {
+      console.log("401 detectado, tentando refresh");
+      originalRequest._retry = true;
 
-            try {
-                const res = await api.post('/auth/refresh', {}, { withCredentials: true });
-                console.log("Refresh ok, token novo recebido");
-                const newAccessToken = res.data.access_token;
+      try {
+        const res = await api.post('/auth/refresh', {}, { withCredentials: true });
+        console.log("Refresh ok, token novo recebido");
+        const newAccessToken = res.data.access_token;
 
-                store.dispatch(login({ token: newAccessToken, remember: true }));
+        store.dispatch(login({ token: newAccessToken, remember: true }));
 
-                if (originalRequest.headers) {
-                    originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
-                }
-
-                return api(originalRequest);
-            } catch (refreshError) {
-                console.log("Refresh deu erro", refreshError);
-                store.dispatch(logout());
-                return Promise.reject(refreshError);
-            }
+        if (originalRequest.headers) {
+          originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
         }
 
-        return Promise.reject(error);
+        return api(originalRequest);
+      } catch (refreshError) {
+        console.log("Refresh deu erro", refreshError);
+        store.dispatch(logout());
+        return Promise.reject(refreshError);
+      }
     }
+
+    return Promise.reject(error);
+  }
 );
+
 
 
 export default api;
