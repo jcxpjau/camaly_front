@@ -16,6 +16,7 @@ import Header from "./components/header";
 import Sidebar from "./components/sidebar";
 import { useTheme } from "./context/theme/theme.hooks";
 import { useAuth } from "./context/auth/auth.hooks";
+import api from "./services/api";
 
 
 export const links: Route.LinksFunction = () => [
@@ -57,21 +58,9 @@ function AppContent() {
     async function getUser()
     {
         try {
-            const res = await fetch(
-                import.meta.env.VITE_API_URL + "users/me",
-                {
-                    method: "GET",
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`,
-                    },
-                }
-            );
-            const json = await res.json();
-            if (!res.ok) {
-                console.error("Error getting user:", json );
-                return;
-            }
+
+            const res = await api.get( "users/me" );
+            const json = res.data;
             setUser( json );
         } catch( err : any ) {
             console.log( err );
