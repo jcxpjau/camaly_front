@@ -133,15 +133,16 @@ export default function Sidebar() {
                     </button>
                     <nav className="flex flex-col gap-3 mt-8 font-normal text-sm">
                        {purchases.map((purchase) => (
-                            <a
-                                key={purchase._id}
-                                href="#"
-                                className="flex items-center gap-2 hover:text-[var(--color-accent)] transition"
+                        <button
+                            className="flex items-center gap-2 hover:text-[var(--color-accent)] transition"
+                            onClick={(e) => {
+                            navigate(e, `/user/settingsagents/${purchase.productId}`);
+                            }}
                             >
                                 <Bot className="w-6 h-6" />
-                                <span>{purchase.name}</span>
-                            </a>
-                            ))}
+                                <span>{purchase.name}</span> 
+                        </button>
+                        ))}
                     </nav>
                 </section>
                 {isCollapsed && (
@@ -158,13 +159,14 @@ export default function Sidebar() {
                             <CirclePlus className="w-6 h-6" />
                         </a>
                         {purchases.map((purchase) => (
-                            <a
-                                key={purchase._id}
-                                href="#"
-                            className="flex items-center justify-center hover:text-[var(--color-accent)] hover:scale-110 transition-transform rounded-lg"
-                            >
-                                <Bot className="w-6 h-6" />
-                            </a>
+                            <button
+                                className="flex items-center gap-2 hover:text-[var(--color-accent)] transition"
+                                onClick={(e) => {
+                                navigate(e, `/user/settingsagents/${purchase.productId}`);
+                                }}
+                                >
+                                    <Bot className="w-6 h-6" />
+                            </button>
                             ))}
                     </nav>
                 )}

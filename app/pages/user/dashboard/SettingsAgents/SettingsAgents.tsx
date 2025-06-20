@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { Bot, CheckCircle, Circle, Settings, Trash2 } from 'lucide-react';
+import { Bot, CheckCircle, Circle, Settings } from 'lucide-react';
 import { Input } from '~/components/input/input';
 import api from '~/services/api';
-import { FcGoogle } from 'react-icons/fc'
-import { FaMicrosoft, FaGithub } from 'react-icons/fa'
+import { FcGoogle } from 'react-icons/fc';
+import { FaMicrosoft, FaGithub } from 'react-icons/fa';
+import { FaMeta } from 'react-icons/fa6';
 import { useAuth } from '~/context/auth/auth.hooks';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaMeta } from 'react-icons/fa6';
 import { useTranslation } from 'react-i18next';
+import { useLocation } from 'react-router';
 
 export type Flow = {
   _id: string;
@@ -16,18 +17,19 @@ export type Flow = {
   description: string;
   category: string;
   providerConnection: string;
-  inputsSchema: string[];
+  inputsSchema: Record<string, any>[]; // Corrigido para refletir o formato real
 };
 
 export type SelectedFlow = {
   flow: Flow;
-  data: Record<string, any>;//Valores que o usuário vai preencher
+  data: Record<string, any>; //Valores que o usuário vai preencher
   isConfigured: boolean;
 };
 
 type Props = {
   id?: string;
 };
+
 const providers = [
   { key: 'google', icon: <FcGoogle className="w-5 h-5" />, label: 'Google' },
   { key: 'meta', icon: <FaMeta className="w-5 h-5 text-[#1877F2]" />, label: 'Meta' },
@@ -37,28 +39,48 @@ const providers = [
 
 export function SettingsAgents({ id }: Props) {
   const { t } = useTranslation();
-  const [selectedFlow, setSelectedFlow] = useState<SelectedFlow | null>(null);
-  
-  const [isExpanded, setIsExpanded] = useState(true);
-
   const { user } = useAuth();
 
-  const [existsIntegration, setExistsIntegration] = useState(false)
-
+  const [selectedFlow, setSelectedFlow] = useState<SelectedFlow | null>(null);
+  const [existsIntegration, setExistsIntegration] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(true);
   const [loading, setLoading] = useState(true);
+
+  const [statusResPatchInfo, setStatusResPatchInfo] = useState('');
+  const [textResPatchInfo, setTextResPatchInfo] = useState('');
 
   //Função para atualizar o selectedFlow de acordo com o que o usuário digita
   function updateFlowData(data: Record<string, any>) {
     if (!selectedFlow) return;
 
     // Verifica se todos os campos esperados foram preenchidos
-    //Para cada chave do inputsSchema do selectedFlow verifico se sua correspondencia no data ta preenchido
-    const isConfigured = selectedFlow.flow.inputsSchema.every(
-      key => data[key] !== '' && data[key] !== undefined && data[key] !== null
+    const isConfigured = selectedFlow.flow.inputsSchema.every((inputObj) =>
+      Object.keys(inputObj).every(
+        (key) => data[key] !== '' && data[key] !== undefined && data[key] !== null
+      )
     );
+
     //Atualizo o selectedFlow com os dados preenchdios e isconfigured true
     setSelectedFlow({ ...selectedFlow, data, isConfigured });
   }
+
+  //UseEffect Para ler os parametros de login oAuth feito
+  useEffect(() => {
+  const params = new URLSearchParams(location.search);
+  const oauth = params.get('oauth');
+  const provider = params.get('provider');
+
+  if (oauth === 'success') {
+        setStatusResPatchInfo('success');
+        setTextResPatchInfo(
+          'Login OAuth concluído com sucesso'
+        );
+
+    // Limpar os parâmetros para não mostrar mensagem sempre
+    const cleanUrl = location.pathname;
+    window.history.replaceState({}, '', cleanUrl);
+  }
+}, [location.search, location.pathname]);
 
   //Pegando dados do flow
   useEffect(() => {
@@ -66,13 +88,13 @@ export function SettingsAgents({ id }: Props) {
     const loadFlow = async () => {
       try {
         const { data } = await api.get(`products/${id}`);
-        const selectedFlow: SelectedFlow = {
+        const flowData: SelectedFlow = {
           flow: data,
           data: {},
           isConfigured: false,
         };
-        setSelectedFlow(selectedFlow);
-        setLoading(false)
+        setSelectedFlow(flowData);
+        setLoading(false);
       } catch (error) {
         console.error('Erro ao carregar fluxo:', error);
       }
@@ -80,84 +102,106 @@ export function SettingsAgents({ id }: Props) {
     loadFlow();
   }, [id]);
 
+  //Busca integração e dados salvos do produto
   useEffect(() => {
-      if (!user || !selectedFlow) {
-            return;
-        }
-        const loadIntegrations = async () => {
-          try {
-            const data = await api.get(`user-integrations/${selectedFlow.flow.providerConnection}`)
-            if (data.status === 200) {
-                setExistsIntegration(true)
-            } 
-            else {
-              setExistsIntegration(false)
-            }
-          }
-          catch (error) {
-      } 
-        } 
-      loadIntegrations()
+    if (!user || !selectedFlow) return;
 
-  const loadSettingsProduct = async () => {
-    try {
-      const data = await api.get(`purchases/user/${user._id}/${selectedFlow.flow._id}`);
-      if (data.status === 200) {
-        const purchase = data.data.purchase;
+    const loadIntegrations = async () => {
+      try {
+        const res = await api.get(`user-integrations/${selectedFlow.flow.providerConnection}`);
+        setExistsIntegration(res.status === 200);
+      } catch (err) {
+        setExistsIntegration(false);
+      }
+    };
 
-        //Verifica se existe 'purchase' e se o 'inputsSchema' tem dados válidos
+    //Busca os dados salvos do produto (purchase.inputsSchema)
+    const loadSettingsProduct = async () => {
+      try {
+        const { data } = await api.get(
+          `purchases/user/${user._id}/product/${selectedFlow.flow._id}`
+        );
+        const purchase = data.purchase;
+
+        //Verifica se existe purchase e se inputsSchema tem dados válidos
         if (purchase && Array.isArray(purchase.inputsSchema) && purchase.inputsSchema.length > 0) {
-          //Pega o primeiro objeto do array inputsSchema, que contém os valores preenchidos pelo usuário
           const filledData = purchase.inputsSchema[0];
 
           //Atualiza o estado do formulário com os dados carregados do banco
-          //Uso a função que atualiza os dados
-          updateFlowData(filledData);
-        }
-      }
-    } catch (error) {
-      console.error('Erro ao carregar inputsSchema do produto:', error);
-    }
-  };
+          //mas só se o usuário ainda não tiver digitado nada
+          setSelectedFlow((prev) => {
+            if (!prev) return null;
 
-      loadSettingsProduct()
-  }, [selectedFlow, user])
+            const hasChanges = Object.keys(prev.data).some((key) => !!prev.data[key]);
+            if (hasChanges) return prev;
+
+            const isConfigured = prev.flow.inputsSchema.every((inputObj) =>
+              Object.keys(inputObj).every(
+                (key) =>
+                  filledData[key] !== undefined &&
+                  filledData[key] !== null &&
+                  filledData[key] !== ''
+              )
+            );
+
+            return {
+              ...prev,
+              data: filledData,
+              isConfigured,
+            };
+          });
+        }
+      } catch (error) {
+        console.error('Erro ao carregar inputsSchema do produto:', error);
+      }
+    };
+
+    loadIntegrations();
+    loadSettingsProduct();
+  }, [user, selectedFlow?.flow._id]);
 
   //Função para atualizar a purchase no banco com os dados que o usuário configurou
-async function UpdatePurchase(params: { productId: string; inputsSchemas: Record<string, any> }) {
-  try {
-    // transforma inputsSchemas (objeto) em array com 1 objeto
-    const inputsSchemasArray = [params.inputsSchemas];
+  async function UpdatePurchase(params: { productId: string; inputsSchemas: Record<string, any> }) {
+    try {
+      const inputsSchemasArray = [params.inputsSchemas];
 
-    const { data } = await api.put('/purchases/update', {
-      productId: params.productId,
-      inputsSchemas: inputsSchemasArray,
-    });
-    console.log(data)
-    return data;
-  } catch (error: any) {
-    console.error('Erro ao atualizar compra:', error.response?.data || error.message);
-    throw error;
+      const res = await api.put('/purchases/update', {
+        productId: params.productId,
+        inputsSchemas: inputsSchemasArray,
+      });
+
+      if (res.status === 200) {
+        setStatusResPatchInfo('success');
+        setTextResPatchInfo(
+          t('settings.personalSettings.sections.personalInformation.form.statusMessages.success')
+        );
+      } else {
+        setStatusResPatchInfo('error');
+        setTextResPatchInfo(
+          t('settings.personalSettings.sections.personalInformation.form.statusMessages.error')
+        );
+      }
+    } catch (error: any) {
+      console.error('Erro ao atualizar compra:', error.response?.data || error.message);
+      throw error;
+    }
   }
-}
 
-    async function LoginOauth(provider: string) {
+  async function LoginOauth(provider: string) {
     try {
       const stateObj = {
         provider,
         appUserId: user._id,
-        appProductId: id,//Id do fluxo que está sendo configurado
+        appProductId: id,
       };
 
       const encodedState = encodeURIComponent(JSON.stringify(stateObj));
-
       const res = await api.get(`/oauth/start?state=${encodedState}`);
-      window.location.href = res.data.url;//Redirecionando para o login oAuth
+      window.location.href = res.data.url;
     } catch (err) {
-      console.error("Error starting OAuth:", err);
+      console.error('Error starting OAuth:', err);
     }
   }
-
 
   //Utilitários visuais
   const capitalizeFirstLetter = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
@@ -171,12 +215,12 @@ async function UpdatePurchase(params: { productId: string; inputsSchemas: Record
   }
 
   //Verificando se o usuário preencheu tudo certo para mudar o visual
-  const isFormValid = selectedFlow?.flow.inputsSchema.every((inputObj) => {
-    return Object.keys(inputObj).every((key) => {
+  const isFormValid = selectedFlow?.flow.inputsSchema.every((inputObj) =>
+    Object.keys(inputObj).every((key) => {
       const value = selectedFlow.data[key];
       return value !== undefined && value !== null && value.toString().trim() !== '';
-    });
-  });
+    })
+  );
 
     if (loading || !user) {
         return (
@@ -253,6 +297,11 @@ async function UpdatePurchase(params: { productId: string; inputsSchemas: Record
                       exit={{ height: 0, opacity: 0 }}
                       transition={{ duration: 0.4 }}
                     >
+                                          {statusResPatchInfo && (
+                        <div className={`text-[var(--color-text-${statusResPatchInfo})] text-sm p-3 rounded text-center my-4`}>
+                            {textResPatchInfo}
+                        </div>
+                    )}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {
                           //Para cada objeto dentro do array inputsSchema do fluxo selecionado, vai passar item por item e criar inputs para cada chave dentro desses objetos.
