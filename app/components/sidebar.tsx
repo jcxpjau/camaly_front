@@ -165,7 +165,7 @@ export default function Sidebar() {
                                 navigate(e, `/user/settingsagents/${purchase.productId}`);
                                 }}
                                 >
-                                    <Bot className="w-6 h-6" />
+                                <Bot className="w-6 h-6" />
                             </button>
                             ))}
                     </nav>
