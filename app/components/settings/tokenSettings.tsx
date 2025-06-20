@@ -57,7 +57,7 @@ export function TokenSettings() {
         <div className="space-y-3 mb-6">
           {Object.keys(integrations).length === 0 ? (
             <p className="text-sm text-[var(--color-muted)] italic">
-              {t("settings.connectedAccounts.noIntegrations", "Nenhuma conta conectada no momento.")}
+              {t("settings.tokenSettings.noIntegrations")}
             </p>
           ) : (
             Object.entries(integrations).map(([provider, integration]) => (
@@ -75,7 +75,7 @@ export function TokenSettings() {
                       <CheckCircle className="w-4 h-4 text-green-400" />
                     </div>
                     <p className="text-slate-300 text-sm">
-                      {t("settingsAgents.flowSettings.connectAccountCheck", "Conta conectada com sucesso")}
+                      {t("settingsAgents.tokenSettings.connectAccountCheck")}
                     </p>
                   </div>
                 </div>
@@ -83,7 +83,7 @@ export function TokenSettings() {
                   <button
                     type="button"
                     className="rounded px-2 py-1 bg-transparent hover:bg-[var(--color-button-hover)] transition"
-                    aria-label={t("settings.connectedAccounts.deleteTokenAriaLabel", "Desconectar conta")}
+                    aria-label={t("settings.tokenSettings.deleteTokenAriaLabel")}
                     onClick={() => DeleteIntegration(provider)}
                   >
                     <Trash2 className="h-4 w-4 text-[var(--color-icon-error)]" />
