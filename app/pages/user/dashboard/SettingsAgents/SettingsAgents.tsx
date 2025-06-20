@@ -56,7 +56,7 @@ export function SettingsAgents({ id }: Props) {
     const isConfigured = selectedFlow.flow.inputsSchema.every(
       key => data[key] !== '' && data[key] !== undefined && data[key] !== null
     );
-    //Atualizo o selectedFlow com os dados preenchdios e isconfigured tru
+    //Atualizo o selectedFlow com os dados preenchdios e isconfigured true
     setSelectedFlow({ ...selectedFlow, data, isConfigured });
   }
 
@@ -98,6 +98,29 @@ export function SettingsAgents({ id }: Props) {
       } 
         } 
       loadIntegrations()
+
+  const loadSettingsProduct = async () => {
+    try {
+      const data = await api.get(`purchases/user/${user._id}/${selectedFlow.flow._id}`);
+      if (data.status === 200) {
+        const purchase = data.data.purchase;
+
+        //Verifica se existe 'purchase' e se o 'inputsSchema' tem dados válidos
+        if (purchase && Array.isArray(purchase.inputsSchema) && purchase.inputsSchema.length > 0) {
+          //Pega o primeiro objeto do array inputsSchema, que contém os valores preenchidos pelo usuário
+          const filledData = purchase.inputsSchema[0];
+
+          //Atualiza o estado do formulário com os dados carregados do banco
+          //Uso a função que atualiza os dados
+          updateFlowData(filledData);
+        }
+      }
+    } catch (error) {
+      console.error('Erro ao carregar inputsSchema do produto:', error);
+    }
+  };
+
+      loadSettingsProduct()
   }, [selectedFlow, user])
 
   //Função para atualizar a purchase no banco com os dados que o usuário configurou
@@ -123,6 +146,7 @@ async function UpdatePurchase(params: { productId: string; inputsSchemas: Record
       const stateObj = {
         provider,
         appUserId: user._id,
+        appProductId: id,//Id do fluxo que está sendo configurado
       };
 
       const encodedState = encodeURIComponent(JSON.stringify(stateObj));
