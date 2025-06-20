@@ -213,7 +213,11 @@
       },
       "token": {
         "createdOn": "Criado em"
-      }
+      },
+      "noIntegrations": "Não há tokens",
+      "connectAccountCheck": "Conta já conectada",
+      "sucessInfo": "Token deletado com sucesso",
+      "errorInfo": "Erro ao deletar token"
     },
     "environmentsSettings": {
       "title": "Ambientes",

@@ -24,21 +24,37 @@ export function TokenSettings() {
   const { t } = useTranslation();
   const [integrations, setIntegrations] = useState<UserIntegrations>({});
 
+  const [statusResPatchInfo, setStatusResPatchInfo] = useState('');
+  const [textResPatchInfo, setTextResPatchInfo] = useState('');
+
+  const loadIntegrations = async () => {
+    try {
+      const { data } = await api.get("user-integrations");
+      setIntegrations(data.data || {});
+    } catch (error) {
+      console.error("Erro ao carregar integrações:", error);
+    }
+  };
+
   useEffect(() => {
-    const loadIntegrations = async () => {
-      try {
-        const { data } = await api.get("user-integrations");
-        setIntegrations(data.data || {});
-      } catch (error) {
-        console.error("Erro ao carregar integrações:", error);
-      }
-    };
     loadIntegrations();
   }, []);
   async function DeleteIntegration(provider:string) {
     try {
-      const { data } = await api.delete(`user-integrations/${provider}`);
-    } catch (error) {
+      const res = await api.delete(`user-integrations/${provider}`);
+      if (res.status === 200) {
+        setStatusResPatchInfo('success');
+        setTextResPatchInfo(
+          t('settings.tokenSettings.sucessInfo')
+        );
+        await loadIntegrations(); 
+
+      } else {
+        setStatusResPatchInfo('error');
+        setTextResPatchInfo(
+          t('settings.tokenSettings.errorInfo')
+        );
+      }    } catch (error) {
       
     }
   }
@@ -55,6 +71,11 @@ export function TokenSettings() {
       </header>
       <div className="space-y-3">
         <div className="space-y-3 mb-6">
+          {statusResPatchInfo && (
+            <div className={`text-[var(--color-text-${statusResPatchInfo})] text-sm p-3 rounded text-center my-4`}>
+                {textResPatchInfo}
+            </div>
+          )}
           {Object.keys(integrations).length === 0 ? (
             <p className="text-sm text-[var(--color-muted)] italic">
               {t("settings.tokenSettings.noIntegrations")}
@@ -75,7 +96,7 @@ export function TokenSettings() {
                       <CheckCircle className="w-4 h-4 text-green-400" />
                     </div>
                     <p className="text-slate-300 text-sm">
-                      {t("settingsAgents.tokenSettings.connectAccountCheck")}
+                      {t("settings.tokenSettings.connectAccountCheck")}
                     </p>
                   </div>
                 </div>

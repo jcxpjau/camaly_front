@@ -213,7 +213,11 @@
             },
             "token": {
                 "createdOn": "Created on"
-            }
+            },
+            "noIntegrations": "There are no tokens",
+            "connectAccountCheck": "Account already connected",
+            "sucessInfo": "Token deleted successfully",
+            "errorInfo": "Error deleting token"
         },
         "environmentsSettings": {
             "title": "Environments",

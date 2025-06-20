@@ -297,7 +297,7 @@ export function SettingsAgents({ id }: Props) {
                       exit={{ height: 0, opacity: 0 }}
                       transition={{ duration: 0.4 }}
                     >
-                                          {statusResPatchInfo && (
+                    {statusResPatchInfo && (
                         <div className={`text-[var(--color-text-${statusResPatchInfo})] text-sm p-3 rounded text-center my-4`}>
                             {textResPatchInfo}
                         </div>
