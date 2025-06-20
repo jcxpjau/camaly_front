@@ -339,7 +339,8 @@
       "pending": "Pendente",
       "connectAccount": "Conecte uma conta",
       "connectAccountCheck": "Conta conectada",
-      "save": "Salvar Configuração do Fluxo"
+      "save": "Salvar Configuração do Fluxo",
+      "sucessInfoOAuth": "Login OAuth concluído com sucesso"
     }
   }
 }

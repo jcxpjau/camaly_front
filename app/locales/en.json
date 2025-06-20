@@ -339,7 +339,8 @@
     "pending": "Pending",
     "connectAccount": "Connect an account",
     "connectAccountCheck": "Account already connected",
-    "save": "Save Flow Configuration"
+    "save": "Save Flow Configuration",
+    "sucessInfoOAuth": "OAuth login completed successfully"
     }
   }
 }

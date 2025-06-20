@@ -73,7 +73,7 @@ export function SettingsAgents({ id }: Props) {
   if (oauth === 'success') {
         setStatusResPatchInfo('success');
         setTextResPatchInfo(
-          'Login OAuth concluído com sucesso'
+          t('settingsAgents.flowSettings.sucessInfoOAuth')
         );
 
     // Limpar os parâmetros para não mostrar mensagem sempre
