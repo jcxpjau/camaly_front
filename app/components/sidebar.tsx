@@ -10,7 +10,8 @@ import {
     ShoppingBag,
     CircleUserRound,
     PersonStandingIcon,
-    Settings
+    Settings,
+    Icon
 } from "lucide-react";
 import type { RootState } from "../store";
 import { useTheme } from "../context/theme/theme.hooks";
@@ -21,11 +22,13 @@ import { useTranslation } from "react-i18next";
 import { useCustomNavigate } from "~/hooks/useCustomNavigate";
 import { useAuth } from "~/context/auth/auth.hooks";
 import api from "~/services/api";
+import { ICONS } from "./filterBar/iconCategories";
 
 interface Purchase {
     _id: string;
     productId: string;
     name: string;
+    category: string;
 }
 
 export default function Sidebar() {
@@ -74,6 +77,7 @@ export default function Sidebar() {
                         _id: item._id,
                         productId: item.productId._id,
                         name: item.productId.name,
+                        category: item.productId.category || 'bot'
                     }));
 
                 setPurchases(mappedData);
@@ -132,17 +136,21 @@ export default function Sidebar() {
                         <CirclePlus className="w-5 h-5" />
                     </button>
                     <nav className="flex flex-col gap-3 mt-8 font-normal text-sm">
-                       {purchases.map((purchase) => (
-                        <button
-                            className="flex items-center gap-2 hover:text-[var(--color-accent)] transition"
-                            onClick={(e) => {
-                            navigate(e, `/user/settingsagents/${purchase.productId}`);
-                            }}
-                            >
-                                <Bot className="w-6 h-6" />
-                                <span>{purchase.name}</span> 
-                        </button>
-                        ))}
+                        {purchases.map((purchase) => {
+                            const Icon = ICONS[purchase.category?.toLowerCase()] || <Bot className="w-6 h-6" />;
+                            return (
+                                <button
+                                key={purchase._id}
+                                className="flex items-center gap-2 hover:text-[var(--color-accent)] transition"
+                                onClick={(e) => navigate(e, `/user/settingsagents/${purchase.productId}`)}
+                                >
+                                <span className="w-6 h-6 flex items-center justify-center">
+                                    {Icon}
+                                </span>                                
+                                <span>{purchase.name}</span>
+                                </button>
+                            );
+                        })}
                     </nav>
                 </section>
                 {isCollapsed && (
@@ -158,16 +166,22 @@ export default function Sidebar() {
                         >
                             <CirclePlus className="w-6 h-6" />
                         </a>
-                        {purchases.map((purchase) => (
+                        {purchases.map((purchase) => {
+                        const Icon = ICONS[purchase.category?.toLowerCase()] || <Bot className="w-6 h-6" />;
+                        return (
                             <button
-                                className="flex items-center gap-2 hover:text-[var(--color-accent)] transition"
-                                onClick={(e) => {
+                            key={purchase._id}
+                            className="flex items-center justify-center hover:text-[var(--color-accent)] hover:scale-110 transition"
+                            onClick={(e) => {
                                 navigate(e, `/user/settingsagents/${purchase.productId}`);
-                                }}
-                                >
-                                <Bot className="w-6 h-6" />
+                            }}
+                            >
+                            <span className="w-6 h-6 flex items-center justify-center">
+                                {Icon}
+                            </span>
                             </button>
-                            ))}
+                        );
+                        })}
                     </nav>
                 )}
             </div>

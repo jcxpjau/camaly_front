@@ -9,6 +9,7 @@ import { useAuth } from '~/context/auth/auth.hooks';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router';
+import { ICONS } from '~/components/filterBar/iconCategories';
 
 export type Flow = {
   _id: string;
@@ -222,6 +223,9 @@ export function SettingsAgents({ id }: Props) {
     })
   );
 
+  const category = selectedFlow?.flow?.category?.toLowerCase() || '';
+  const Icon = ICONS[category] || Bot;
+
     if (loading || !user) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-[var(--color-bg)] text-[var(--color-text)]">
@@ -247,8 +251,10 @@ export function SettingsAgents({ id }: Props) {
             >
             <div className="rounded-xl text-[var(--color-card-text)] backdrop-blur-sm p-6 mb-10">
               <div className="flex flex-col md:flex-row md:items-center md:gap-4 relative">
-                <div className="p-3 bg-[var(--color-accent)] rounded-xl flex items-center justify-center text-white w-fit mb-2 md:mb-0 md:mr-4">
-                  <Bot className="w-6 h-6" />
+                <div className="p-3 bg-[var(--color-accent)] rounded-xl flex items-center justify-center text-white w-fit mb-2 md:mb-0 md:mr-4">                  
+                  <span className="w-6 h-6 flex items-center justify-center">
+                      {Icon}
+                  </span>                
                 </div>
                 <div className="flex flex-col flex-1 min-w-0">
                   <div className="flex items-center gap-2">
@@ -258,8 +264,22 @@ export function SettingsAgents({ id }: Props) {
                     {selectedFlow.flow.description}
                   </p>
                 </div>
-                <span className="text-sm px-2 py-0.5 rounded-md bg-[var(--color-secondary)] text-[var(--color-secondary-text)] mt-4 md:mt-0 md:absolute md:right-0 md:top-0">
-                  {selectedFlow.flow.category}
+                <span
+                  className="
+                    inline-flex items-center
+                    rounded-full
+                    border border-transparent
+                    px-3 py-0.5
+                    text-xs font-semibold
+                    transition-colors
+                    focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2
+                    bg-[hsl(210,10%,18%)]
+                    text-[hsl(210,40%,98%)]
+                    hover:bg-[hsl(210,10%,23%)]
+                    mt-4 md:mt-0 md:absolute md:right-0 md:top-0
+                  "
+                >
+                  {selectedFlow.flow.category.toUpperCase()}
                 </span>
               </div>
             </div>
@@ -400,7 +420,7 @@ export function SettingsAgents({ id }: Props) {
                       inputsSchemas: selectedFlow.data,
                     })
                   }
-                  className={`mt-6 px-8 py-3 rounded-lg text-lg shadow transition
+                  className={`mt-6 px-7 py-2.5 rounded-lg text-lg shadow transition
                   ${
                     isFormValid
                       ? 'bg-[var(--color-accent)] text-white cursor-pointer'
