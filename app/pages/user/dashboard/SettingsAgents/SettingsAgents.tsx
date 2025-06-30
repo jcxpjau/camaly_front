@@ -1,15 +1,23 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Bot, CheckCircle, Circle, Settings } from 'lucide-react';
 import { Input } from '~/components/input/input';
 import api from '~/services/api';
 import { FcGoogle } from 'react-icons/fc';
-import { FaMicrosoft, FaGithub } from 'react-icons/fa';
-import { FaMeta } from 'react-icons/fa6';
+import { FaMicrosoft, FaGithub, FaInstagram } from 'react-icons/fa';
+import { FaFacebook, FaMeta } from 'react-icons/fa6';
 import { useAuth } from '~/context/auth/auth.hooks';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router';
 import { ICONS } from '~/components/filterBar/iconCategories';
+import { store } from '~/store';
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "~/components/ui/select";
 
 export type Flow = {
   _id: string;
@@ -49,6 +57,26 @@ export function SettingsAgents({ id }: Props) {
 
   const [statusResPatchInfo, setStatusResPatchInfo] = useState('');
   const [textResPatchInfo, setTextResPatchInfo] = useState('');
+
+  //Resposta do n8n, que irá vir com o nome da página do Facebook e do Insta
+  const [accountsFromApi, setAccountsFromApi] = useState<{ pageName?: string; instagramName?: string }>({});
+
+  //Plataformas para postar, por enquanto será insta e facebook
+  const platforms = [
+    { id: 'instagram', name: 'Instagram', icon: FaInstagram, color: 'from-pink-500 to-orange-500' },
+    { id: 'facebook', name: 'Facebook', icon: FaFacebook, color: 'from-blue-600 to-blue-700' }
+  ];
+
+  //Contas para postar que irá vir da API, implementar o followers futuramente
+  const accounts = {
+    instagram: accountsFromApi.instagramName
+      ? [{ id: 'instagramName', name: accountsFromApi.instagramName, followers: '-' }]
+      : [],
+    facebook: accountsFromApi.pageName
+      ? [{ id: 'pageName', name: accountsFromApi.pageName, followers: '-' }]
+      : [],
+  };
+
 
   //Função para atualizar o selectedFlow de acordo com o que o usuário digita
   function updateFlowData(data: Record<string, any>) {
@@ -225,17 +253,297 @@ export function SettingsAgents({ id }: Props) {
 
   const category = selectedFlow?.flow?.category?.toLowerCase() || '';
   const Icon = ICONS[category] || Bot;
+  const alreadyFetchedPages = useRef(false);
 
-    if (loading || !user) {
-        return (
-            <div className="min-h-screen flex items-center justify-center bg-[var(--color-bg)] text-[var(--color-text)]">
-                <div className="flex flex-col items-center gap-4">
-                    <div className="w-8 h-8 border-4 border-[var(--color-accent)] border-t-transparent rounded-full animate-spin" />
-                    <p className="text-sm text-[var(--color-muted)]">{t('loading')}</p>
-                </div>
-            </div>
-        );
+  //Pegando páginas do usuário
+  useEffect(() => {
+  const shouldFetch =
+    existsIntegration &&
+    selectedFlow?.flow.name === "Automated Posts" &&
+    !alreadyFetchedPages.current;
+
+  if (!shouldFetch) return;
+
+  const token = store.getState().auth.token;
+
+  async function getUserPages() {
+    try {
+      const response = await fetch("https://new.blumerland.com.br:55678/webhook/camaly/pagesuser", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token }),
+      });
+
+      if (!response.ok) throw new Error(`Request error: ${response.statusText}`);
+      const data = await response.json();
+      setAccountsFromApi(data);
+    } catch (error) {
+      console.error("Error fetching account data:", error);
+    } finally {
+      setLoading(false);
+      alreadyFetchedPages.current = true; // marca como já buscado
     }
+  }
+
+  getUserPages();
+}, [existsIntegration, selectedFlow?.flow.name]);
+
+  if (loading || !user) {
+    return (
+        <div className="min-h-screen flex items-center justify-center bg-[var(--color-bg)] text-[var(--color-text)]">
+            <div className="flex flex-col items-center gap-4">
+                <div className="w-8 h-8 border-4 border-[var(--color-accent)] border-t-transparent rounded-full animate-spin" />
+                <p className="text-sm text-[var(--color-muted)]">{t('loading')}</p>
+            </div>
+        </div>
+    );
+  }
+
+  if(selectedFlow?.flow.name === "Automated Posts"){
+    return(
+      <div className="min-h-screen bg-[var(--color-bg)] text-[var(--color-text)] px-6 py-10 mb-10">
+        <div className="max-w-7xl mx-auto">
+        <AnimatePresence>
+          {selectedFlow && (
+            <motion.div
+              key={selectedFlow.flow._id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+              transition={{ duration: 0.4 }}
+            >
+            <div className="rounded-xl text-[var(--color-card-text)] backdrop-blur-sm p-6 mb-10">
+              <div className="flex flex-col md:flex-row md:items-center md:gap-4 relative">
+                <div className="p-3 bg-[var(--color-accent)] rounded-xl flex items-center justify-center text-white w-fit mb-2 md:mb-0 md:mr-4">                  
+                  <span className="w-6 h-6 flex items-center justify-center">
+                      {Icon}
+                  </span>                
+                </div>
+                <div className="flex flex-col flex-1 min-w-0">
+                  <div className="flex items-center gap-2">
+                    <h2 className="text-2xl font-bold">{selectedFlow.flow.name}</h2>
+                  </div>
+                  <p className="text-[var(--color-card-subtext)] leading-relaxed break-words">
+                    {selectedFlow.flow.description}
+                  </p>
+                </div>
+                <span
+                  className="
+                    inline-flex items-center
+                    rounded-full
+                    border border-transparent
+                    px-3 py-0.5
+                    text-xs font-semibold
+                    transition-colors
+                    focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2
+                    bg-[hsl(210,10%,18%)]
+                    text-[hsl(210,40%,98%)]
+                    hover:bg-[hsl(210,10%,23%)]
+                    mt-4 md:mt-0 md:absolute md:right-0 md:top-0
+                  "
+                >
+                  {selectedFlow.flow.category.toUpperCase()}
+                </span>
+              </div>
+            </div>
+              <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-card-bg)] text-[var(--color-card-text)] backdrop-blur-sm p-6 space-y-6 shadow">
+                <header className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                  <div className="flex items-center gap-3">
+                    <div
+                      className={`p-2 rounded-lg ${
+                        isFormValid ? 'bg-[var(--color-success)]/20' : 'bg-[var(--color-warning)]/20'
+                      }`}
+                    >
+                      {isFormValid ? (
+                        <CheckCircle className="w-5 h-5 text-[var(--color-success)]" />
+                      ) : (
+                        <Circle className="w-5 h-5 text-[var(--color-warning)]" />
+                      )}
+                    </div>
+                    <h3 className="text-lg font-semibold">{t('settingsAgents.flowSettings.title')}</h3>
+                  </div>
+                  <button
+                    onClick={() => setIsExpanded(!isExpanded)}
+                    className="p-2 rounded hover:bg-[var(--color-button-hover)] transition-colors"
+                    aria-expanded={isExpanded}
+                  >
+                    <Settings className="w-5 h-5 text-[var(--color-muted)]" />
+                  </button>
+                </header>
+                <AnimatePresence initial={false}>
+                  {isExpanded && (
+                    <motion.form
+                      onSubmit={(e) => e.preventDefault()}
+                      className="space-y-6"
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: 'auto', opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.4 }}
+                    >
+                    {statusResPatchInfo && (
+                        <div className={`text-[var(--color-text-${statusResPatchInfo})] text-sm p-3 rounded text-center my-4`}>
+                            {textResPatchInfo}
+                        </div>
+                    )}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {selectedFlow.flow.inputsSchema.flatMap((inputObj) =>
+  Object.entries(inputObj).map(([key, _]) => {
+    const value = selectedFlow.data[key] ?? "";
+    const selectedPlatform = selectedFlow.data["socialMedia"] as "facebook" | "instagram" | undefined;
+
+    const renderInput = () => {
+      if (key === "socialMedia") {
+        return (
+          <Select value={value} onValueChange={(val) => handleChange(key, val)}>
+            <SelectTrigger>
+              <SelectValue placeholder="Selecione a plataforma" />
+            </SelectTrigger>
+            <SelectContent>
+              {platforms.map((platform) => (
+                <SelectItem key={platform.id} value={platform.id}>
+                  {platform.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        );
+      }
+
+      if (key === "account") {
+        const options = selectedPlatform ? accounts[selectedPlatform] || [] : [];
+        return (
+          <Select
+            value={value}
+            onValueChange={(val) => handleChange(key, val)}
+            disabled={!selectedPlatform}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Selecione a conta" />
+            </SelectTrigger>
+            <SelectContent>
+              {options.map((account) => (
+                <SelectItem key={account.id} value={account.name}>
+                  {account.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        );
+      }
+
+      return (
+        <Input.Content
+          placeholder={generatePlaceholder(key)}
+          type="text"
+          value={value}
+          onChange={(val) => handleChange(key, val)}
+        />
+      );
+    };
+
+    return (
+      <div key={key}>
+        <Input.Root label={key}>{renderInput()}</Input.Root>
+      </div>
+    );
+  })
+)}
+
+
+                      </div>
+                      <div className="p-4 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-input)]">
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm font-medium">{t('settingsAgents.flowSettings.statusLabel')}</span>
+                          <div
+                            className={`flex items-center gap-2 ${
+                              isFormValid ? 'text-[var(--color-success)]' : 'text-[var(--color-warning)]'
+                            }`}
+                          >
+                            {isFormValid ? <CheckCircle className="w-4 h-4" /> : <Circle className="w-4 h-4" />}
+                            <span className="text-sm">{isFormValid ? t('settingsAgents.flowSettings.configured') : t('settingsAgents.flowSettings.pending')}</span>
+                          </div>
+                        </div>
+                      </div>
+                        {existsIntegration ? (
+                          <div className="space-y-3 mb-6">
+                            {providers
+                              .filter((provider) => selectedFlow.flow.providerConnection.includes(provider.key))
+                              .map((provider) => (
+                                <div
+                                  key={provider.key}
+                                  className="flex items-center justify-between p-4 bg-green-500/10 border border-green-500/30 rounded-lg"
+                                >
+                                  <div className="flex items-center gap-3">
+                                    <div className="p-2 bg-green-500/20 rounded-lg">
+                                      {provider.icon}
+                                    </div>
+                                    <div>
+                                      <div className="flex items-center gap-2">
+                                        <span className="text-white font-medium">{provider.label}</span>
+                                        <CheckCircle className="w-4 h-4 text-green-400" />
+                                      </div>
+                                      <p className="text-slate-300 text-sm">{t('settingsAgents.flowSettings.connectAccountCheck')}</p>
+                                    </div>
+                                  </div>
+                                </div>
+                              ))}
+                          </div>
+                        ) : (
+                          <div>
+                            <h4 className="text-sm font-medium text-[var(--color-muted)] mb-3">{t('settingsAgents.flowSettings.connectAccount')}</h4>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                              {providers
+                                .filter((provider) => selectedFlow.flow.providerConnection.includes(provider.key))
+                                .map((provider, i) => (
+                                  <button
+                                    key={i}
+                                    type="button"
+                                    onClick={() => LoginOauth(provider.key)}
+                                    className="bg-[var(--color-button-bg)] border border-[var(--color-border)] text-[var(--color-text)] hover:bg-[var(--color-button-hover)] transition-colors flex items-center gap-2 p-3 rounded-md"
+                                  >
+                                    {provider.icon}
+                                    {provider.label}
+                                  </button>
+                                ))}
+                            </div>
+                          </div>
+                        )}
+                    </motion.form>
+                  )}
+                </AnimatePresence>
+              </div>
+              <div className="text-center">
+                <motion.button
+                  type="button"
+                  disabled={!isFormValid}
+                  onClick={() =>
+                    selectedFlow &&
+                    UpdatePurchase({
+                      productId: selectedFlow.flow._id,
+                      inputsSchemas: selectedFlow.data,
+                    })
+                  }
+                  className={`mt-6 px-7 py-2.5 rounded-lg text-lg shadow transition
+                  ${
+                    isFormValid
+                      ? 'bg-[var(--color-accent)] text-white cursor-pointer'
+                      : 'bg-[var(--color-accent)] text-[var(--color-card-subtext)] cursor-not-allowed brightness-75'
+                  }
+                `}
+                  whileHover={isFormValid ? { scale: 1.05, opacity: 0.9 } : {}}
+                  whileTap={isFormValid ? { scale: 0.95 } : {}}
+                  aria-disabled={!isFormValid}
+                >
+                  {t('settingsAgents.flowSettings.save')}
+                </motion.button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    </div>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-[var(--color-bg)] text-[var(--color-text)] px-6 py-10 mb-10">
