@@ -340,7 +340,10 @@
       "connectAccount": "Conecte uma conta",
       "connectAccountCheck": "Conta conectada",
       "save": "Salvar Configuração do Fluxo",
-      "sucessInfoOAuth": "Login OAuth concluído com sucesso"
+      "sucessInfoOAuth": "Login OAuth concluído com sucesso",
+      "placeholderInput": "Digite o(a)",
+      "placeholderSelectSocialMedia": "Selecione a SocialMedia",
+      "placeholderSelectAccount": "Selecione a Conta"
     }
   }
 }

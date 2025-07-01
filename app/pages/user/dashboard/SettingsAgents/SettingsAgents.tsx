@@ -18,6 +18,7 @@ import {
   SelectContent,
   SelectItem,
 } from "~/components/ui/select";
+import { DynamicInput } from '~/components/settingsAgents/dynamicInput';
 
 export type Flow = {
   _id: string;
@@ -26,7 +27,7 @@ export type Flow = {
   description: string;
   category: string;
   providerConnection: string;
-  inputsSchema: Record<string, any>[]; // Corrigido para refletir o formato real
+  inputsSchema: Record<string, any>[];
 };
 
 export type SelectedFlow = {
@@ -58,10 +59,22 @@ export function SettingsAgents({ id }: Props) {
   const [statusResPatchInfo, setStatusResPatchInfo] = useState('');
   const [textResPatchInfo, setTextResPatchInfo] = useState('');
 
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
+  const [toastVariant, setToastVariant] = useState<'success' | 'error'>('success');
+  
+  //Mensagem de sucesso ou erro quando for postar (provisória)
+  const showToastMessage = (message: string, variant: 'success' | 'error' = 'success') => {
+    setToastMessage(message);
+    setToastVariant(variant);
+    setShowToast(true);
+    setTimeout(() => setShowToast(false), 3000);
+  };
+
   //Resposta do n8n, que irá vir com o nome da página do Facebook e do Insta
   const [accountsFromApi, setAccountsFromApi] = useState<{ pageName?: string; instagramName?: string }>({});
 
-  //Plataformas para postar, por enquanto será insta e facebook
+  //Plataformas para postar
   const platforms = [
     { id: 'instagram', name: 'Instagram', icon: FaInstagram, color: 'from-pink-500 to-orange-500' },
     { id: 'facebook', name: 'Facebook', icon: FaFacebook, color: 'from-blue-600 to-blue-700' }
@@ -77,12 +90,14 @@ export function SettingsAgents({ id }: Props) {
       : [],
   };
 
-
   //Função para atualizar o selectedFlow de acordo com o que o usuário digita
   function updateFlowData(data: Record<string, any>) {
     if (!selectedFlow) return;
+    //selectedFlow.flow.inputsSchema -> Dados que o usuário precisa informar
+    //selectedFlow.data.inputsSchema -> Dados preenchido pelo usuário
 
-    // Verifica se todos os campos esperados foram preenchidos
+    //Verifica se todos os campos esperados foram preenchidos
+    //Compara a key do flow.inputsSchema com a key do data.inputsSchema e vê se o valor ta preenchido
     const isConfigured = selectedFlow.flow.inputsSchema.every((inputObj) =>
       Object.keys(inputObj).every(
         (key) => data[key] !== '' && data[key] !== undefined && data[key] !== null
@@ -92,12 +107,11 @@ export function SettingsAgents({ id }: Props) {
     //Atualizo o selectedFlow com os dados preenchdios e isconfigured true
     setSelectedFlow({ ...selectedFlow, data, isConfigured });
   }
-
+  
   //UseEffect Para ler os parametros de login oAuth feito
   useEffect(() => {
   const params = new URLSearchParams(location.search);
   const oauth = params.get('oauth');
-  const provider = params.get('provider');
 
   if (oauth === 'success') {
         setStatusResPatchInfo('success');
@@ -118,7 +132,7 @@ export function SettingsAgents({ id }: Props) {
       try {
         const { data } = await api.get(`products/${id}`);
         const flowData: SelectedFlow = {
-          flow: data,
+          flow: data,//coloco todos os dados aqui
           data: {},
           isConfigured: false,
         };
@@ -131,7 +145,7 @@ export function SettingsAgents({ id }: Props) {
     loadFlow();
   }, [id]);
 
-  //Busca integração e dados salvos do produto
+  //Busca integração
   useEffect(() => {
     if (!user || !selectedFlow) return;
 
@@ -152,51 +166,71 @@ export function SettingsAgents({ id }: Props) {
         );
         const purchase = data.purchase;
 
-        //Verifica se existe purchase e se inputsSchema tem dados válidos
-        if (purchase && Array.isArray(purchase.inputsSchema) && purchase.inputsSchema.length > 0) {
-          const filledData = purchase.inputsSchema[0];
+      // Verifica se existe uma purchase válida, se o campo inputsSchema é um array, e se tem ao menos um item
+      if (purchase && Array.isArray(purchase.inputsSchema) && purchase.inputsSchema.length > 0) {
 
-          //Atualiza o estado do formulário com os dados carregados do banco
-          //mas só se o usuário ainda não tiver digitado nada
-          setSelectedFlow((prev) => {
-            if (!prev) return null;
+        //Transformando um array de objetos com uma chave e valor cada em um único objeto combinando todas essas chaves e valores
+        //Facilitando manipulação
+        const filledData = purchase.inputsSchema.reduce(
+          (
+            acc: { [x: string]: any },
+            obj: { [x: string]: any }
+          ) => {
+            const key = Object.keys(obj)[0];
+            acc[key] = obj[key];
+            return acc;
+          },
+          {} as Record<string, any>
+        );
+        //Preenchendo os inputs com os dados do banco
+        setSelectedFlow((prev) => {
+          //Se não existir os dados antes da atualização faz nada
+          if (!prev) return null;
+          //Verifica se o usuário já digitou algum valor no formulário
+          const hasChanges = Object.keys(prev.data).some((key) => !!prev.data[key]);
+          if (hasChanges) return prev;
 
-            const hasChanges = Object.keys(prev.data).some((key) => !!prev.data[key]);
-            if (hasChanges) return prev;
+          //Compara a key do flow.inputsSchema com a key do data.inputsSchema (resposta API) e vê se o valor ta preenchido
+          const isConfigured = prev.flow.inputsSchema.every((inputObj) =>
+            Object.keys(inputObj).every(
+              (key) =>
+                filledData[key] !== undefined &&
+                filledData[key] !== null &&
+                filledData[key] !== ''
+            )
+          );
 
-            const isConfigured = prev.flow.inputsSchema.every((inputObj) =>
-              Object.keys(inputObj).every(
-                (key) =>
-                  filledData[key] !== undefined &&
-                  filledData[key] !== null &&
-                  filledData[key] !== ''
-              )
-            );
-
-            return {
-              ...prev,
-              data: filledData,
-              isConfigured,
-            };
-          });
+          // Atualiza o estado com os dados carregados do banco e a flag indicando se está configurado
+          return {
+            ...prev,
+            data: filledData,
+            isConfigured,
+          };
+        });
         }
       } catch (error) {
         console.error('Erro ao carregar inputsSchema do produto:', error);
       }
     };
-
     loadIntegrations();
     loadSettingsProduct();
   }, [user, selectedFlow?.flow._id]);
+  
+  //Convertendo os dados para o formato que o backend espera
+  function convertDataToInputsSchemasArray(data: Record<string, any>, inputsSchema: Record<string, any>[]): Record<string, any>[] {
+    return inputsSchema.map((inputObj) => {
+      const key = Object.keys(inputObj)[0];
+      return { [key]: data[key] ?? '' };
+    });
+  }
 
   //Função para atualizar a purchase no banco com os dados que o usuário configurou
   async function UpdatePurchase(params: { productId: string; inputsSchemas: Record<string, any> }) {
     try {
-      const inputsSchemasArray = [params.inputsSchemas];
-
       const res = await api.put('/purchases/update', {
         productId: params.productId,
-        inputsSchemas: inputsSchemasArray,
+        inputsSchemas: params.inputsSchemas,
+
       });
 
       if (res.status === 200) {
@@ -214,6 +248,35 @@ export function SettingsAgents({ id }: Props) {
       console.error('Erro ao atualizar compra:', error.response?.data || error.message);
       throw error;
     }
+
+    //Função para ativar o workflow de socialMedia (provisório aprovação meta)
+    if(selectedFlow?.flow.name === 'Automated Posts'){
+      try {
+      const response = await fetch("https://new.blumerland.com.br:55678/webhook/camaly/managepost", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      });
+
+      const data = await response.json();
+      if (data.status === "Post made successfully") {
+        const link = data.accountLink;
+        showToastMessage(
+          `Post made successfully. <a href="${link}" target="_blank" class="underline font-semibold ml-1">View Post</a>`,
+          "success"
+        );
+      } 
+      else {
+        showToastMessage("Erro inesperado ao publicar o post.", "error");
+      }
+
+    } catch (error) {
+      console.error("Error fetching account data:", error);
+    } finally {
+      setLoading(false);
+      alreadyFetchedPages.current = true; // marca como já buscado
+    
+  }
+    }
   }
 
   async function LoginOauth(provider: string) {
@@ -225,16 +288,12 @@ export function SettingsAgents({ id }: Props) {
       };
 
       const encodedState = encodeURIComponent(JSON.stringify(stateObj));
-      const res = await api.get(`/oauth/start?state=${encodedState}`);
+      const res = await api.get(`oauth/start?state=${encodedState}`);
       window.location.href = res.data.url;
     } catch (err) {
       console.error('Error starting OAuth:', err);
     }
   }
-
-  //Utilitários visuais
-  const capitalizeFirstLetter = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
-  const generatePlaceholder = (inputId: string) => `Digite sua(seu) ${capitalizeFirstLetter(inputId)}`;
 
   //Função para alterar o valor dos dados que o usuário esta digitando
   function handleChange(inputId: string, value: any) {
@@ -299,254 +358,18 @@ export function SettingsAgents({ id }: Props) {
     );
   }
 
-  if(selectedFlow?.flow.name === "Automated Posts"){
-    return(
-      <div className="min-h-screen bg-[var(--color-bg)] text-[var(--color-text)] px-6 py-10 mb-10">
-        <div className="max-w-7xl mx-auto">
-        <AnimatePresence>
-          {selectedFlow && (
-            <motion.div
-              key={selectedFlow.flow._id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 20 }}
-              transition={{ duration: 0.4 }}
-            >
-            <div className="rounded-xl text-[var(--color-card-text)] backdrop-blur-sm p-6 mb-10">
-              <div className="flex flex-col md:flex-row md:items-center md:gap-4 relative">
-                <div className="p-3 bg-[var(--color-accent)] rounded-xl flex items-center justify-center text-white w-fit mb-2 md:mb-0 md:mr-4">                  
-                  <span className="w-6 h-6 flex items-center justify-center">
-                      {Icon}
-                  </span>                
-                </div>
-                <div className="flex flex-col flex-1 min-w-0">
-                  <div className="flex items-center gap-2">
-                    <h2 className="text-2xl font-bold">{selectedFlow.flow.name}</h2>
-                  </div>
-                  <p className="text-[var(--color-card-subtext)] leading-relaxed break-words">
-                    {selectedFlow.flow.description}
-                  </p>
-                </div>
-                <span
-                  className="
-                    inline-flex items-center
-                    rounded-full
-                    border border-transparent
-                    px-3 py-0.5
-                    text-xs font-semibold
-                    transition-colors
-                    focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2
-                    bg-[hsl(210,10%,18%)]
-                    text-[hsl(210,40%,98%)]
-                    hover:bg-[hsl(210,10%,23%)]
-                    mt-4 md:mt-0 md:absolute md:right-0 md:top-0
-                  "
-                >
-                  {selectedFlow.flow.category.toUpperCase()}
-                </span>
-              </div>
-            </div>
-              <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-card-bg)] text-[var(--color-card-text)] backdrop-blur-sm p-6 space-y-6 shadow">
-                <header className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                  <div className="flex items-center gap-3">
-                    <div
-                      className={`p-2 rounded-lg ${
-                        isFormValid ? 'bg-[var(--color-success)]/20' : 'bg-[var(--color-warning)]/20'
-                      }`}
-                    >
-                      {isFormValid ? (
-                        <CheckCircle className="w-5 h-5 text-[var(--color-success)]" />
-                      ) : (
-                        <Circle className="w-5 h-5 text-[var(--color-warning)]" />
-                      )}
-                    </div>
-                    <h3 className="text-lg font-semibold">{t('settingsAgents.flowSettings.title')}</h3>
-                  </div>
-                  <button
-                    onClick={() => setIsExpanded(!isExpanded)}
-                    className="p-2 rounded hover:bg-[var(--color-button-hover)] transition-colors"
-                    aria-expanded={isExpanded}
-                  >
-                    <Settings className="w-5 h-5 text-[var(--color-muted)]" />
-                  </button>
-                </header>
-                <AnimatePresence initial={false}>
-                  {isExpanded && (
-                    <motion.form
-                      onSubmit={(e) => e.preventDefault()}
-                      className="space-y-6"
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: 'auto', opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.4 }}
-                    >
-                    {statusResPatchInfo && (
-                        <div className={`text-[var(--color-text-${statusResPatchInfo})] text-sm p-3 rounded text-center my-4`}>
-                            {textResPatchInfo}
-                        </div>
-                    )}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {selectedFlow.flow.inputsSchema.flatMap((inputObj) =>
-  Object.entries(inputObj).map(([key, _]) => {
-    const value = selectedFlow.data[key] ?? "";
-    const selectedPlatform = selectedFlow.data["socialMedia"] as "facebook" | "instagram" | undefined;
-
-    const renderInput = () => {
-      if (key === "socialMedia") {
-        return (
-          <Select value={value} onValueChange={(val) => handleChange(key, val)}>
-            <SelectTrigger>
-              <SelectValue placeholder="Selecione a plataforma" />
-            </SelectTrigger>
-            <SelectContent>
-              {platforms.map((platform) => (
-                <SelectItem key={platform.id} value={platform.id}>
-                  {platform.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        );
-      }
-
-      if (key === "account") {
-        const options = selectedPlatform ? accounts[selectedPlatform] || [] : [];
-        return (
-          <Select
-            value={value}
-            onValueChange={(val) => handleChange(key, val)}
-            disabled={!selectedPlatform}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Selecione a conta" />
-            </SelectTrigger>
-            <SelectContent>
-              {options.map((account) => (
-                <SelectItem key={account.id} value={account.name}>
-                  {account.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        );
-      }
-
-      return (
-        <Input.Content
-          placeholder={generatePlaceholder(key)}
-          type="text"
-          value={value}
-          onChange={(val) => handleChange(key, val)}
-        />
-      );
-    };
-
-    return (
-      <div key={key}>
-        <Input.Root label={key}>{renderInput()}</Input.Root>
-      </div>
-    );
-  })
-)}
-
-
-                      </div>
-                      <div className="p-4 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-input)]">
-                        <div className="flex items-center justify-between">
-                          <span className="text-sm font-medium">{t('settingsAgents.flowSettings.statusLabel')}</span>
-                          <div
-                            className={`flex items-center gap-2 ${
-                              isFormValid ? 'text-[var(--color-success)]' : 'text-[var(--color-warning)]'
-                            }`}
-                          >
-                            {isFormValid ? <CheckCircle className="w-4 h-4" /> : <Circle className="w-4 h-4" />}
-                            <span className="text-sm">{isFormValid ? t('settingsAgents.flowSettings.configured') : t('settingsAgents.flowSettings.pending')}</span>
-                          </div>
-                        </div>
-                      </div>
-                        {existsIntegration ? (
-                          <div className="space-y-3 mb-6">
-                            {providers
-                              .filter((provider) => selectedFlow.flow.providerConnection.includes(provider.key))
-                              .map((provider) => (
-                                <div
-                                  key={provider.key}
-                                  className="flex items-center justify-between p-4 bg-green-500/10 border border-green-500/30 rounded-lg"
-                                >
-                                  <div className="flex items-center gap-3">
-                                    <div className="p-2 bg-green-500/20 rounded-lg">
-                                      {provider.icon}
-                                    </div>
-                                    <div>
-                                      <div className="flex items-center gap-2">
-                                        <span className="text-white font-medium">{provider.label}</span>
-                                        <CheckCircle className="w-4 h-4 text-green-400" />
-                                      </div>
-                                      <p className="text-slate-300 text-sm">{t('settingsAgents.flowSettings.connectAccountCheck')}</p>
-                                    </div>
-                                  </div>
-                                </div>
-                              ))}
-                          </div>
-                        ) : (
-                          <div>
-                            <h4 className="text-sm font-medium text-[var(--color-muted)] mb-3">{t('settingsAgents.flowSettings.connectAccount')}</h4>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-                              {providers
-                                .filter((provider) => selectedFlow.flow.providerConnection.includes(provider.key))
-                                .map((provider, i) => (
-                                  <button
-                                    key={i}
-                                    type="button"
-                                    onClick={() => LoginOauth(provider.key)}
-                                    className="bg-[var(--color-button-bg)] border border-[var(--color-border)] text-[var(--color-text)] hover:bg-[var(--color-button-hover)] transition-colors flex items-center gap-2 p-3 rounded-md"
-                                  >
-                                    {provider.icon}
-                                    {provider.label}
-                                  </button>
-                                ))}
-                            </div>
-                          </div>
-                        )}
-                    </motion.form>
-                  )}
-                </AnimatePresence>
-              </div>
-              <div className="text-center">
-                <motion.button
-                  type="button"
-                  disabled={!isFormValid}
-                  onClick={() =>
-                    selectedFlow &&
-                    UpdatePurchase({
-                      productId: selectedFlow.flow._id,
-                      inputsSchemas: selectedFlow.data,
-                    })
-                  }
-                  className={`mt-6 px-7 py-2.5 rounded-lg text-lg shadow transition
-                  ${
-                    isFormValid
-                      ? 'bg-[var(--color-accent)] text-white cursor-pointer'
-                      : 'bg-[var(--color-accent)] text-[var(--color-card-subtext)] cursor-not-allowed brightness-75'
-                  }
-                `}
-                  whileHover={isFormValid ? { scale: 1.05, opacity: 0.9 } : {}}
-                  whileTap={isFormValid ? { scale: 0.95 } : {}}
-                  aria-disabled={!isFormValid}
-                >
-                  {t('settingsAgents.flowSettings.save')}
-                </motion.button>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-    </div>
-    )
-  }
 
   return (
     <div className="min-h-screen bg-[var(--color-bg)] text-[var(--color-text)] px-6 py-10 mb-10">
+            {showToast && (
+        <div className={`fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg ${
+          toastVariant === 'error'
+            ? 'bg-[var(--color-error)] text-white'
+            : 'bg-[var(--color-success)] text-black'
+        }`}>
+          <span dangerouslySetInnerHTML={{ __html: toastMessage }} />
+        </div>
+      )}
       <div className="max-w-7xl mx-auto">
         <AnimatePresence>
           {selectedFlow && (
@@ -562,7 +385,7 @@ export function SettingsAgents({ id }: Props) {
                 <div className="p-3 bg-[var(--color-accent)] rounded-xl flex items-center justify-center text-white w-fit mb-2 md:mb-0 md:mr-4">                  
                   <span className="w-6 h-6 flex items-center justify-center">
                       {Icon}
-                  </span>                
+                  </span>            
                 </div>
                 <div className="flex flex-col flex-1 min-w-0">
                   <div className="flex items-center gap-2">
@@ -630,31 +453,27 @@ export function SettingsAgents({ id }: Props) {
                             {textResPatchInfo}
                         </div>
                     )}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {
-                          //Para cada objeto dentro do array inputsSchema do fluxo selecionado, vai passar item por item e criar inputs para cada chave dentro desses objetos.
-                            selectedFlow.flow.inputsSchema.flatMap((inputObj, i) =>
-                            Object.keys(inputObj).map((key) => {//Pega todas as chaves (nomes dos inputs) do objeto inputObj
-                              //Pega o valor atual do input com a chave 'key' do estado data,
-                              //se não existir, usa string vazia para evitar undefined
-                              const value = selectedFlow.data[key] ?? '';
-                              //Retorna o JSX do input para essa chave
-                              return (
-                                //Usamos a chave 'key' como key do React para performance e controle
-                                <div key={key}>
-                                  <Input.Root label={key}>
-                                    <Input.Content
-                                      placeholder={generatePlaceholder(key)}
-                                      type="text"
-                                      value={value}
-                                      onChange={(value) => handleChange(key, value)}
-                                    />
-                                  </Input.Root>
-                                </div>
-                              );
-                            })
-                          )
-                        }
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {selectedFlow.flow.inputsSchema.flatMap((inputObj) =>
+                      Object.keys(inputObj).map((key) => {
+                        const value = selectedFlow.data[key] ?? '';//Pegando o valor ja salvo no banco caso o usuário tenha preenchido, se não tiver será vazio
+                        const selectedPlatform = selectedFlow.data["socialMedia"] || undefined;//Pegando a plataforma socialMedia selecionada
+                        return (
+                          <div key={key}>
+                            <Input.Root label={key}>
+                              <DynamicInput
+                                inputKey={key}
+                                value={value}
+                                onChange={(val) => handleChange(key, val)}
+                                platforms={platforms}
+                                accounts={accounts}
+                                selectedPlatform={selectedPlatform}
+                              />
+                            </Input.Root>
+                          </div>
+                        );
+                      })
+                    )}
                       </div>
                       <div className="p-4 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-input)]">
                         <div className="flex items-center justify-between">
@@ -725,7 +544,10 @@ export function SettingsAgents({ id }: Props) {
                     selectedFlow &&
                     UpdatePurchase({
                       productId: selectedFlow.flow._id,
-                      inputsSchemas: selectedFlow.data,
+                      inputsSchemas: convertDataToInputsSchemasArray(
+                        selectedFlow.data,
+                        selectedFlow.flow.inputsSchema
+                      ),
                     })
                   }
                   className={`mt-6 px-7 py-2.5 rounded-lg text-lg shadow transition
