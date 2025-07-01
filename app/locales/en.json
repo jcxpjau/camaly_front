@@ -340,7 +340,10 @@
     "connectAccount": "Connect an account",
     "connectAccountCheck": "Account already connected",
     "save": "Save Flow Configuration",
-    "sucessInfoOAuth": "OAuth login completed successfully"
+    "sucessInfoOAuth": "OAuth login completed successfully",
+    "placeholderInput": "Enter the",
+    "placeholderSelectSocialMedia": "Select the SocialMedia",
+    "placeholderSelectAccount": "Select the Account"
     }
   }
 }

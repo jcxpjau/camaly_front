@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Bot, User, Settings as SettingsIcon, Info, Brain, ClipboardCheck, ChevronLeft, ChevronRight } from "lucide-react";
-import { SettingsAgentsTokens } from "~/components/settingsAgents/settingsAgents";
-import { InstructionsAgents } from "~/components/settingsAgents/instructionsAgents";
-import { PersonalityAgents } from "~/components/settingsAgents/personalityAgents";
-import { FinallyAgents } from "~/components/settingsAgents/finallyAgents";
-import { ConductAgents } from "~/components/settingsAgents/conductAgents";
+import { SettingsAgentsTokens } from "~/components/agentBuilder/settingsAgents";
+import { InstructionsAgents } from "~/components/agentBuilder/instructionsAgents";
+import { PersonalityAgents } from "~/components/agentBuilder/personalityAgents";
+import { FinallyAgents } from "~/components/agentBuilder/finallyAgents";
+import { ConductAgents } from "~/components/agentBuilder/conductAgents";
 import { useLocation } from "react-router";
 
 interface AgentConfigHeaderProps {//Props que são necessárias para renderizar esse componente
