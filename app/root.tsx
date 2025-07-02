@@ -45,15 +45,41 @@ function ThemeWrapper({ children }: { children: React.ReactNode }) {
 function AppContent() {
     const location = useLocation();
     const navigate = useNavigate();
-    const { isAuthenticated, token, setUser } = useAuth();
+    const { isAuthenticated, token, setUser, isAdmin } = useAuth();
     const publicRoutes = ["/login", "/register"];
     const isPublicRoute = publicRoutes.includes(location.pathname);
+    const isAdminRoute = location.pathname.startsWith("/admin");
+    const isUserRoute = location.pathname.startsWith("/user");
 
     useEffect(() => {
-        if (!isAuthenticated && !isPublicRoute) {
-            navigate("/login");
+    if (!isAuthenticated && !isPublicRoute) {
+        navigate("/login", { replace: true });
+        return;
+    }
+    if (isAuthenticated && isAdminRoute && !isAdmin) {
+        navigate("/", { replace: true });
+        return;
+    }
+    if (isAuthenticated && isUserRoute && isAdmin) {
+        navigate("/admin/home", { replace: true });
+        return;
+    }
+    if (isAuthenticated) {
+        if (isAdmin && !isAdminRoute) {
+        navigate("/admin/home", { replace: true });
+        } else if (!isAdmin && !isUserRoute) {
+        navigate("/user/home", { replace: true });
         }
-    }, [isAuthenticated, isPublicRoute, navigate]);
+    }
+    }, [
+    isAuthenticated,
+    isPublicRoute,
+    isAdmin,
+    isAdminRoute,
+    isUserRoute,
+    navigate,
+    location.pathname,
+    ]);
 
     async function getUser()
     {
