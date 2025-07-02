@@ -84,18 +84,32 @@ export function TokenSettings() {
             Object.entries(integrations).map(([provider, integration]) => (
               <div
                 key={integration._id}
-                className="flex items-center justify-between p-4 bg-green-500/10 border border-green-500/30 rounded-lg"
+                className="flex items-center justify-between p-4 rounded-lg border"
+                style={{
+                  backgroundColor: "var(--color-success-bg)",
+                  borderColor: "var(--color-success-border)",
+                }}
               >
                 <div className="flex items-center gap-3">
-                  <div className="p-2 bg-green-500/20 rounded-lg">
-                    {providerIcons[provider] ?? <CheckCircle className="w-5 h-5 text-white" />}
+                  <div
+                    className="p-2 rounded-lg"
+                    style={{ backgroundColor: "var(--color-success-bg)" }}
+                  >
+                    {providerIcons[provider] ?? (
+                      <CheckCircle className="w-5 h-5 text-[var(--color-icon-success)]" />
+                    )}
                   </div>
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="text-white font-medium capitalize">{provider}</span>
-                      <CheckCircle className="w-4 h-4 text-green-400" />
+                      <span
+                        className="font-medium capitalize"
+                        style={{ color: "var(--color-card-text)" }}
+                      >
+                        {provider}
+                      </span>
+                      <CheckCircle className="w-4 h-4 text-[var(--color-icon-success)]" />
                     </div>
-                    <p className="text-slate-300 text-sm">
+                    <p className="text-sm" style={{ color: "var(--color-card-subtext)" }}>
                       {t("settings.tokenSettings.connectAccountCheck")}
                     </p>
                   </div>
