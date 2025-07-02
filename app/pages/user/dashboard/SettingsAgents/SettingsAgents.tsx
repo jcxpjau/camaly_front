@@ -495,18 +495,32 @@ export function SettingsAgents({ id }: Props) {
                               .map((provider) => (
                                 <div
                                   key={provider.key}
-                                  className="flex items-center justify-between p-4 bg-green-500/10 border border-green-500/30 rounded-lg"
+                                  className="flex items-center justify-between p-4 rounded-lg border"
+                                  style={{
+                                    backgroundColor: 'var(--color-success-bg)',
+                                    borderColor: 'var(--color-success-border)',
+                                  }}
                                 >
                                   <div className="flex items-center gap-3">
-                                    <div className="p-2 bg-green-500/20 rounded-lg">
+                                    <div
+                                      className="p-2 rounded-lg"
+                                      style={{ backgroundColor: 'var(--color-success-bg)' }}
+                                    >
                                       {provider.icon}
                                     </div>
                                     <div>
                                       <div className="flex items-center gap-2">
-                                        <span className="text-white font-medium">{provider.label}</span>
-                                        <CheckCircle className="w-4 h-4 text-green-400" />
+                                        <span
+                                          className="font-medium"
+                                          style={{ color: 'var(--color-card-text)' }}
+                                        >
+                                          {provider.label}
+                                        </span>
+                                        <CheckCircle className="w-4 h-4 text-[var(--color-icon-success)]" />
                                       </div>
-                                      <p className="text-slate-300 text-sm">{t('settingsAgents.flowSettings.connectAccountCheck')}</p>
+                                      <p className="text-sm" style={{ color: 'var(--color-card-subtext)' }}>
+                                        {t('settingsAgents.flowSettings.connectAccountCheck')}
+                                      </p>
                                     </div>
                                   </div>
                                 </div>
