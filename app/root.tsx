@@ -45,25 +45,24 @@ function ThemeWrapper({ children }: { children: React.ReactNode }) {
 function AppContent() {
     const location = useLocation();
     const navigate = useNavigate();
-    const { isAuthenticated, token, setUser, isAdmin } = useAuth();
+    const { isAuthenticated, token, setUser, isAdmin, user } = useAuth();
     const publicRoutes = ["/login", "/register"];
     const isPublicRoute = publicRoutes.includes(location.pathname);
     const isAdminRoute = location.pathname.startsWith("/admin");
     const isUserRoute = location.pathname.startsWith("/user");
 
+    //Replace -> para se o usuário clicar em voltar no nav ele volta em nada
     useEffect(() => {
     if (!isAuthenticated && !isPublicRoute) {
         navigate("/login", { replace: true });
         return;
     }
+
     if (isAuthenticated && isAdminRoute && !isAdmin) {
         navigate("/", { replace: true });
         return;
     }
-    if (isAuthenticated && isUserRoute && isAdmin) {
-        navigate("/admin/home", { replace: true });
-        return;
-    }
+
     if (isAuthenticated) {
         if (isAdmin && !isAdminRoute) {
         navigate("/admin/home", { replace: true });
@@ -79,6 +78,7 @@ function AppContent() {
     isUserRoute,
     navigate,
     location.pathname,
+    user
     ]);
 
     async function getUser()
