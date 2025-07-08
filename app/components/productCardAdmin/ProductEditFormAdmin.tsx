@@ -4,8 +4,8 @@ import {
   SelectTrigger,
   SelectValue,
   SelectContent,
-  SelectItem
-} from '~/components/ui/select';
+  SelectItem,
+} from "~/components/ui/select";
 import { Input } from "../input/input";
 
 interface EditProductFormProps {
@@ -21,171 +21,194 @@ export interface Product {
   category: string;
   price: number;
   active: boolean;
-  providerConnection: "google" | "meta" | "microsoft" | "other";
+  providerConnection: string;
+  imageUrl: string;
   inputsSchema?: Record<string, any>[];
 }
 
 export function EditProductForm({ initialProduct, onChange }: EditProductFormProps) {
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [category, setCategory] = useState("");
-  const [price, setPrice] = useState(0);
-  const [providerConnection, setProviderConnection] = useState<Product["providerConnection"]>("google");
-  const [active, setActive] = useState(true);
-  const [image, setImage] = useState("");
-  const [inputsData, setInputsData] = useState<Record<string, string>>({});
+  //Setando os valores do produto no formulário
+  const [formState, setFormState] = useState<Product>({
+    ...initialProduct,
+    inputsSchema: initialProduct.inputsSchema ?? [],//Se não existir inputsSchema irá usar um array vazio
+  });
 
-  const baseFieldStyle =
-    'px-4 w-full rounded-[var(--radius)] text-[var(--color-text-default)] border-transparent focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] transition';
+  //InputsSchema simplificado (um array de strings), facilita a manipulação/exibição no front
+  const [inputsData, setInputsData] = useState<string[]>([]);
 
+  //Carrega valores iniciais
   useEffect(() => {
-    if (initialProduct) {
-      setName(initialProduct.name);
-      setDescription(initialProduct.description);
-      setCategory(initialProduct.category);
-      setPrice(initialProduct.price);
-      setProviderConnection(initialProduct.providerConnection);
-      setActive(initialProduct.active);
+    setFormState({
+      ...initialProduct,
+      inputsSchema: initialProduct.inputsSchema ?? [],
+    });
+    const parsed: string[] =
+      initialProduct.inputsSchema?.map((obj) => {
+        const key = Object.keys(obj)[0];
+        return key;
+      }) ?? [];
 
-      const schemaData: Record<string, string> = {};
-      initialProduct.inputsSchema?.forEach((inputObj) => {
-        const key = Object.keys(inputObj)[0];
-        schemaData[key] = inputObj[key] ?? "";
-      });
-      setInputsData(schemaData);
-    }
+    setInputsData(parsed);
   }, [initialProduct]);
 
+  //Atualiza inputsSchema com base no inputsData
   useEffect(() => {
-    const inputsSchemaArray = Object.entries(inputsData).map(([key, value]) => ({ [key]: value }));
-    onChange({
-      ...initialProduct,
-      name,
-      description,
-      category,
-      price,
-      providerConnection,
-      active,
+    const inputsSchemaArray = inputsData.map((key) => ({
+      [key]: key,
+    }));
+
+    setFormState((prev) => ({
+      ...prev,
       inputsSchema: inputsSchemaArray,
-    });
-  }, [name, description, category, price, providerConnection, active, inputsData]);
+    }));
+  }, [inputsData]);
+
+  //Notifica o modal sempre que formState mudar
+  useEffect(() => {
+    onChange(formState);
+  }, [formState]);
 
   return (
     <div
       className="w-full max-w-2xl p-6 rounded-lg shadow-lg"
-      style={{ backgroundColor: 'var(--select-bg)', color: 'var(--color-card-text)' }}
+      style={{ backgroundColor: "var(--select-bg)", color: "var(--color-card-text)" }}
     >
       <h2 className="text-xl font-bold mb-4">Editar Produto</h2>
-
       <form className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="flex flex-col space-y-1">
-            <Input.Root label="Nome *">
-              <Input.Content
-                placeholder="Digite o nome do produto"
-                type="text"
-                value={name}
-                onChange={setName}
-              />
-            </Input.Root>
-          </div>
-
-          <div className="flex flex-col space-y-1">
-            <Input.Root label="Categoria *">
-              <Input.Content
-                placeholder="Digite a categoria do produto"
-                type="text"
-                value={category}
-                onChange={setCategory}
-              />
-            </Input.Root>
-          </div>
+          <Input.Root label="Nome *">
+            <Input.Content
+              placeholder="Digite o nome do produto"
+              type="text"
+              value={formState.name}
+              onChange={(v) =>
+                setFormState((prev) => ({ ...prev, name: v }))
+              }
+            />
+          </Input.Root>
+          <Input.Root label="Categoria *">
+            <Input.Content
+              placeholder="Digite a categoria do produto"
+              type="text"
+              value={formState.category}
+              onChange={(v) =>
+                setFormState((prev) => ({ ...prev, category: v }))
+              }
+            />
+          </Input.Root>
         </div>
-
         <div className="flex flex-col space-y-1">
-          <label htmlFor="description" style={{ color: 'var(--color-label-text)' }}>Descrição *</label>
+          <label htmlFor="description" style={{ color: "var(--color-label-text)" }}>
+            Descrição *
+          </label>
           <textarea
             id="description"
             placeholder="Descreva o que este workflow faz..."
             className="p-2 border rounded min-h-[100px] bg-[var(--color-bg-input)]"
-            style={{ borderColor: 'var(--color-border-input)' }}
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            style={{ borderColor: "var(--color-border-input)" }}
+            value={formState.description}
+            onChange={(e) =>
+              setFormState((prev) => ({ ...prev, description: e.target.value }))
+            }
           />
         </div>
-
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <Input.Root label="Preço (R$) *">
+            <Input.Content
+              placeholder="0.00"
+              type="number"
+              value={formState.price.toString()}
+              onChange={(v) =>
+                setFormState((prev) => ({
+                  ...prev,
+                  price: parseFloat(v) || 0,
+                }))
+              }
+            />
+          </Input.Root>
+          <Input.Root label="Provedor *">
+            <Input.Content
+              placeholder="Provedor"
+              type="text"
+              value={formState.providerConnection}
+              onChange={(v) =>
+                setFormState((prev) => ({ ...prev, providerConnection: v }))
+              }
+            />
+          </Input.Root>
           <div className="flex flex-col space-y-1">
-            <Input.Root label="Preço (R$) *">
-              <Input.Content
-                placeholder="0.00"
-                type="number"
-                value={price.toString()}
-                onChange={(v) => setPrice(parseFloat(v) || 0)}
-              />
-            </Input.Root>
-          </div>
-
-          <div className="flex flex-col space-y-1">
-            <label htmlFor="provider" style={{ color: 'var(--color-label-text)' }}>Provedor *</label>
-            <Select value={providerConnection} onValueChange={(v) => setProviderConnection(v as Product["providerConnection"])}>
-              <SelectTrigger className={baseFieldStyle}>
-                <SelectValue placeholder="Selecione um provedor" />
-              </SelectTrigger>
-              <SelectContent className="bg-[var(--select-bg)] text-[var(--color-card-text)] rounded-[var(--radius)] shadow-md border-transparent">
-                <SelectItem value="google">Google</SelectItem>
-                <SelectItem value="meta">Meta</SelectItem>
-                <SelectItem value="microsoft">Microsoft</SelectItem>
-                <SelectItem value="other">Outro</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="flex flex-col space-y-1">
-            <label htmlFor="status" style={{ color: 'var(--color-label-text)' }}>Status *</label>
-            <Select value={active ? "active" : "inactive"} onValueChange={(v) => setActive(v === "active")}>
-              <SelectTrigger className={baseFieldStyle}>
-                <SelectValue placeholder="Selecione o status" />
+            <label htmlFor="status" style={{ color: "var(--color-label-text)" }}>
+              Status *
+            </label>
+            <Select
+              value={formState.active ? "active" : "inactive"}
+              onValueChange={(v) =>
+                setFormState((prev) => ({
+                  ...prev,
+                  active: v === "active",
+                }))
+              }
+            >
+              <SelectTrigger className="px-4 w-full rounded-[var(--radius)] text-[var(--color-text-default)] border-transparent focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] transition">
+                <SelectValue />
               </SelectTrigger>
               <SelectContent className="bg-[var(--select-bg)] text-[var(--color-card-text)] rounded-[var(--radius)] shadow-md border-transparent">
                 <SelectItem value="active">Ativo</SelectItem>
-                <SelectItem value="pending">Pendente</SelectItem>
                 <SelectItem value="inactive">Inativo</SelectItem>
               </SelectContent>
             </Select>
           </div>
         </div>
-
         <div className="flex flex-col space-y-1">
-          <label htmlFor="image" style={{ color: 'var(--color-label-text)' }}>URL da Imagem *</label>
-          <input
-            id="image"
-            placeholder="https://exemplo.com/imagem.jpg"
-            className="p-2 border rounded bg-[var(--color-bg-input)]"
-            style={{ borderColor: 'var(--color-border-input)' }}
-            value={image}
-            onChange={(e) => setImage(e.target.value)}
-          />
+          <Input.Root label="Imagem *">
+            <Input.Content
+              placeholder="Url da Imagem"
+              type="text"
+              value={formState.imageUrl}
+              onChange={(v) =>
+                setFormState((prev) => ({ ...prev, imageUrl: v }))
+              }
+            />
+          </Input.Root>
         </div>
-
-        {Object.keys(inputsData).length > 0 && (
+        {inputsData.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {Object.entries(inputsData).map(([key, value]) => (
-              <div key={key} className="flex flex-col space-y-1">
-                <Input.Root label={key}>
-                  <Input.Content
-                    placeholder={`Digite o valor de ${key}`}
-                    type="text"
-                    value={value}
-                    onChange={(val) =>
-                      setInputsData((prev) => ({ ...prev, [key]: val }))
-                    }
-                  />
-                </Input.Root>
-              </div>
+            {inputsData.map((val, index) => (
+              <Input.Root key={index} label={`Campo ${index + 1}`}>
+                <Input.Content
+                  placeholder="Digite chave do input"
+                  type="text"
+                  value={val}
+                  onChange={(newVal) =>
+                    setInputsData((prev) =>
+                      prev.map((v, i) => (i === index ? newVal : v))
+                    )
+                  }
+                />
+              </Input.Root>
             ))}
           </div>
         )}
+        <div>
+          <button
+            type="button"
+            onClick={() => setInputsData((prev) => [...prev, ""])}
+            className="px-3 py-2 rounded text-sm font-medium transition-colors"
+            style={{
+              backgroundColor: "var(--color-button-bg)",
+              color: "var(--color-text)",
+              border: "1px solid var(--color-border)",
+            }}
+            onMouseOver={(e) => {
+              e.currentTarget.style.backgroundColor = "var(--color-button-hover)";
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.backgroundColor = "var(--color-button-bg)";
+            }}
+          >
+            + Adicionar novo campo
+          </button>
+        </div>
       </form>
     </div>
   );

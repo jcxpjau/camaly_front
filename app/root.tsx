@@ -103,7 +103,7 @@ function AppContent() {
         <>
             {isAuthenticated && <Header />}
             <div className="flex flex-1 overflow-hidden">
-                {isAuthenticated && <Sidebar />}
+                {isAuthenticated && !isAdmin && <Sidebar />}
                 <main className="flex-1 overflow-auto bg-[var(--color-bg)]">
                     <Outlet />
                 </main>

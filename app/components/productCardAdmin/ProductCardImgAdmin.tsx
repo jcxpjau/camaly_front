@@ -1,20 +1,17 @@
-// import libraries
 import type { JSX } from "react";
 
-// define props
 type ProductCardImageProps = {
-  provider: "google" | "meta" | "microsoft" | "other";
   active: boolean;
+  imageUrl?: string;
 };
 
-// component
-const ProductCardImage = ({ provider, active }: ProductCardImageProps): JSX.Element => {
-  const image = {
-    google: "https://images.unsplash.com/photo-1596526131083-e8c633c948d2?w=400&h=300&fit=crop",
-    meta: "https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=400&h=300&fit=crop",
-    microsoft: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=400&h=300&fit=crop",
-    other: "https://images.unsplash.com/photo-1509395176047-4a66953fd231?w=400&h=300&fit=crop",
-  }[provider];
+const DEFAULT_IMAGE = "https://avent7.com/images/logo.png";
+
+const ProductCardImage = ({
+  active,
+  imageUrl,
+}: ProductCardImageProps): JSX.Element => {
+  const image = imageUrl?.trim() ? imageUrl : DEFAULT_IMAGE;
 
   const statusStyle = active
     ? "bg-green-500/20 text-green-400 border-green-500/30"
@@ -24,7 +21,6 @@ const ProductCardImage = ({ provider, active }: ProductCardImageProps): JSX.Elem
     <div className="relative">
       <img
         src={image}
-        alt={provider}
         className="w-full h-48 object-cover transition-transform duration-200 group-hover:scale-105"
       />
       <div className="absolute top-3 right-3">
@@ -38,5 +34,4 @@ const ProductCardImage = ({ provider, active }: ProductCardImageProps): JSX.Elem
   );
 };
 
-// export
 export default ProductCardImage;

@@ -13,6 +13,9 @@ export default function HomeAdmin() {
   const [products, setProducts] = useState<Product[]>([]);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
 
+  const [statusResPatchInfo, setStatusResPatchInfo] = useState('');
+  const [textResPatchInfo, setTextResPatchInfo] = useState('');
+
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -31,17 +34,30 @@ export default function HomeAdmin() {
     fetchProducts();
   }, [user]);
 
-  async function UpdateProduct (updated: Product){
+  async function UpdateProduct(updated: Partial<Product> & { _id: string }) {
+    //Update é do tipo product, porém parcial que irá somente as infos alteradas
     try {
       const res = await api.put(`products/edit/${updated._id}/admin`, updated);
+      //Atualizando a lista para ver o produto já atualizado
       setProducts((prev) =>
         prev.map((p) => (p._id === updated._id ? res.data : p))
       );
+      if (res.status === 200) {
+        setStatusResPatchInfo('success');
+        setTextResPatchInfo(
+          t('settings.personalSettings.sections.personalInformation.form.statusMessages.success')
+        );
+      } else {
+        setStatusResPatchInfo('error');
+        setTextResPatchInfo(
+          t('settings.personalSettings.sections.personalInformation.form.statusMessages.error')
+        );
+      }
       setEditingProduct(null);
     } catch (err) {
       console.error("Erro ao atualizar produto:", err);
     }
-  };
+  }
 
   if (loading || !user) {
     return (
@@ -56,28 +72,12 @@ export default function HomeAdmin() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <div className="border-b border-border bg-card/50 backdrop-blur">
-        <div className="container mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                <Settings className="w-4 h-4 text-primary-foreground" />
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold">Workflow Admin</h1>
-                <p className="text-sm text-muted-foreground">
-                  Gerencie seus workflows automatizados
-                </p>
-              </div>
-            </div>
-            <button className="flex items-center bg-primary text-primary-foreground px-4 py-2 rounded-lg hover:bg-primary/90 transition">
-              <Plus className="w-4 h-4 mr-2" />
-              Novo Workflow
-            </button>
-          </div>
-        </div>
-      </div>
       <div className="container mx-auto px-6 py-6">
+        {statusResPatchInfo && (
+          <div className={`text-[var(--color-text-${statusResPatchInfo})] text-sm p-3 rounded text-center my-4`}>
+              {textResPatchInfo}
+          </div>
+        )}
         {products.length === 0 ? (
           <div className="text-center py-12">
             <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
@@ -95,7 +95,7 @@ export default function HomeAdmin() {
             {products.map((wf) => (
               <ProductCardAdmin.Root key={wf._id}>
                 <ProductCardAdmin.Image
-                  provider={wf.providerConnection}
+                  imageUrl={wf.imageUrl}
                   active={wf.active}
                 />
                 <div className="p-4 space-y-3">
@@ -108,7 +108,7 @@ export default function HomeAdmin() {
                     provider={wf.providerConnection}
                   />
                   <ProductCardAdmin.Footer price={wf.price}                     
-                  onEdit={() => setEditingProduct(wf)} 
+                    onEdit={() => setEditingProduct(wf)} 
                   />
                 </div>
               </ProductCardAdmin.Root>

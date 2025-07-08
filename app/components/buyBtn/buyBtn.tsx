@@ -4,7 +4,6 @@ import type { JSX } from "react";
 import { ShoppingCart } from "lucide-react";
 //others
 import api from "~/services/api";
-import { useAuth } from "~/context/auth/auth.hooks";
 
 type BuyBtnProps = {
   accentColor: string;
@@ -19,11 +18,9 @@ const BuyBtn = ({
   productId,
   onPurchaseSuccess,
 }: BuyBtnProps): JSX.Element => {
-  const { user, token } = useAuth();
   const handleClick = async () => {
     try {
-      await api.post(`purchases`, {
-        userId: user._id,
+      await api.post(`cart`, {
         productId: productId,
       });
       if (onPurchaseSuccess) {
