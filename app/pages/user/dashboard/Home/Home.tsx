@@ -11,7 +11,6 @@ import ProductPanel from "~/components/productPanel/ProductPanel";
 import { ICONS } from "~/components/filterBar/iconCategories";
 import { useAuth } from "~/context/auth/auth.hooks";
 import api from "~/services/api";
-import { PopUpSettings } from "~/components/settings/popUpSettings";
 import PopUpAction from "~/components/popUpAction/popUpAction";
 //import icons
 import { Settings, Trash } from "lucide-react";
@@ -138,12 +137,6 @@ const Home = (): JSX.Element => {
                                 </ProductCard.Footer>
                             </ProductCard.Root>
                         ))}
-                        {settingsOpen && selectedPurchase && (
-                        <PopUpSettings
-                            purchase={selectedPurchase}
-                            onClose={() => setSettingsOpen(false)}
-                        />
-                        )}
 
                     </ProductPanel>
                 ) : (

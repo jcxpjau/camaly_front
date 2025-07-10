@@ -77,11 +77,7 @@ const ProductOverview = ({
           {/* Description */}
           <div className="text-base text-[var(--color-text)]">
             <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur
-              vel sem nec sapien tincidunt varius. Quisque vel efficitur nisi.
-              Donec vehicula convallis elit, vel gravida orci bibendum vitae.
-              Pellentesque habitant morbi tristique senectus et netus et
-              malesuada fames ac turpis egestas.
+              {workflow.description}
             </p>
           </div>
 

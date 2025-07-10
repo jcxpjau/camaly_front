@@ -11,6 +11,9 @@ import ProductOverview from "~/components/productOverview/productOverview";
 import BuyBtn from "~/components/buyBtn/buyBtn";
 import api from "~/services/api";
 import { PopUpAction } from "~/components/popUpAction/";
+import PopUpCartItem from "~/components/cart/popUpCartItem";
+import { CartSidebar } from "~/components/cart/cartSideBar";
+
 
 interface IWorkflow {
   id: string;
@@ -23,6 +26,11 @@ interface IWorkflow {
 const Marketplace = (): JSX.Element => {
   const { t } = useTranslation();
   const [workflows, setWorkflows] = useState<IWorkflow[]>([]);
+  //PopUp Cart
+  const [lastAddedItem, setLastAddedItem] = useState<IWorkflow | null>(null);
+  const [showCartSidebar, setShowCartSidebar] = useState(false);
+
+  const [itemAlreadyInCart, setItemAlreadyInCart] = useState(false);
 
   //pagination for the panel
   const [loading, setLoading] = useState(true);
@@ -172,10 +180,14 @@ const Marketplace = (): JSX.Element => {
                   </ProductCard.Description>
                   <ProductCard.Footer>
                     <BuyBtn
+                      productId={workflow.id}
                       accentColor="#977efc"
                       hoverColor="#A4B7F4"
-                      productId={workflow.id}
-                      onPurchaseSuccess={()=>setPopUpOpen(true)}
+                      onPurchaseSuccess={(alreadyInCart) => {
+                        setLastAddedItem({ ...workflow });
+                        setItemAlreadyInCart(alreadyInCart);
+                        setPopUpOpen(true);
+                      }}
                     />
                     <ProductCard.MoreInfoButton
                       onClick={() => setSelectedProduct(workflow)}
@@ -211,15 +223,30 @@ const Marketplace = (): JSX.Element => {
           />
         )}
       </AnimatePresence>
-      {popUpOpen && (
-        <PopUpAction.Root onClose={()=>setPopUpOpen(false)}>
-          <PopUpAction.Title message={t("popUp.purchaseSuccesstitle")}/>
-          <PopUpAction.Description>
-           {t("popUp.purchaseDescription")}
-          </PopUpAction.Description>
-
-        </PopUpAction.Root>
+      {/*
+        popUpOpen && (
+          <PopUpAction.Root onClose={() => setPopUpOpen(false)}>
+            <PopUpAction.Title message={t("popUp.purchaseSuccesstitle")} />
+            <PopUpAction.Description>
+              {t("popUp.purchaseDescription")}
+            </PopUpAction.Description>
+          </PopUpAction.Root>
+        )
+      */}
+      {popUpOpen && lastAddedItem && (
+        <PopUpCartItem
+          open={popUpOpen}
+          onClose={() => setPopUpOpen(false)}
+          lastAddedItem={lastAddedItem}
+          onOpenCart={() => setShowCartSidebar(true)}
+          alreadyInCart={itemAlreadyInCart} // opcional, se quiser usar texto diferente
+        />
       )}
+      <AnimatePresence>
+  {showCartSidebar && (
+    <CartSidebar onClose={() => setShowCartSidebar(false)} />
+  )}
+</AnimatePresence>
     </div>
   );
 };

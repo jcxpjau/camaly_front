@@ -345,5 +345,51 @@
       "placeholderSelectSocialMedia": "Selecione a SocialMedia",
       "placeholderSelectAccount": "Selecione a Conta"
     }
-  }
+  },
+  "cartSideBar": {
+    "title": "Carrinho",
+    "cart": "Carrinho",
+    "history": "Histórico",
+    "selectAll": "Selecionar Todos",
+    "clearSelection": "Limpar Seleção",
+    "clearCart": "Limpar Carrinho",
+    "emptyCartTitle": "Carrinho vazio",
+    "emptyCartSubtitle": "Você ainda não adicionou nenhum produto.",
+    "total": "Total",
+    "checkout": "Finalizar Compra",
+    "emptyHistoryTitle": "Nenhuma compra encontrada",
+    "emptyHistorySubtitle": "Você ainda não realizou nenhuma compra."
+  },
+  "checkout": {
+    "title": "Checkout",
+    "personalData": "Dados Pessoais",
+    "firstName": "Nome *",
+    "firstNamePlaceholder": "Seu nome",
+    "lastName": "Sobrenome *",
+    "lastNamePlaceholder": "Seu sobrenome",
+    "email": "Email *",
+    "emailPlaceholder": "seu@email.com",
+    "phone": "Telefone *",
+    "phonePlaceholder": "(11) 99999-9999",
+    "cpf": "CPF *",
+    "cpfPlaceholder": "000.000.000-00",
+    "company": "Empresa (opcional)",
+    "companyPlaceholder": "Nome da empresa",
+    "finishPurchase": "Finalizar Compra",
+    "selectedItems": "Itens Selecionados",
+    "selectAll": "Selecionar Todos",
+    "clearSelection": "Limpar Seleção",
+    "clearCart": "Limpar Carrinho",
+    "orderSummary": "Resumo do Pedido",
+    "itemsSelected": "Itens selecionados",
+    "total": "Total"
+},
+"popupCartItem": {
+  "productAdded": "Produto adicionado ao seu carrinho",
+  "productAlreadyInCart": "Produto já está no seu carrinho!",
+  "itemAddedMessage": "Produto foi adicionado ao seu carrinho com sucesso",
+  "itemNotAddedMessage": "Produto não foi adicionado no seu carrinho!",
+  "continueShopping": "Continuar Comprando",
+  "viewCart": "Ver Carrinho"
+}
 }
