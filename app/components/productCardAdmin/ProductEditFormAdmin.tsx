@@ -7,6 +7,7 @@ import {
   SelectItem,
 } from "~/components/ui/select";
 import { Input } from "../input/input";
+import { Trash2 } from "lucide-react";
 
 interface EditProductFormProps {
   initialProduct: Product;
@@ -174,18 +175,32 @@ export function EditProductForm({ initialProduct, onChange }: EditProductFormPro
         {inputsData.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {inputsData.map((val, index) => (
-              <Input.Root key={index} label={`Campo ${index + 1}`}>
-                <Input.Content
-                  placeholder="Digite chave do input"
-                  type="text"
-                  value={val}
-                  onChange={(newVal) =>
-                    setInputsData((prev) =>
-                      prev.map((v, i) => (i === index ? newVal : v))
-                    )
+              <div key={index} className="flex items-end gap-2">
+                <div className="flex-1">
+                  <Input.Root label={`Campo ${index + 1}`}>
+                    <Input.Content
+                      placeholder="Digite chave do input"
+                      type="text"
+                      value={val}
+                      onChange={(newVal) =>
+                        setInputsData((prev) =>
+                          prev.map((v, i) => (i === index ? newVal : v))
+                        )
+                      }
+                    />
+                  </Input.Root>
+                </div>
+                <button
+                  type="button"
+                  onClick={() =>
+                    setInputsData((prev) => prev.filter((_, i) => i !== index))
                   }
-                />
-              </Input.Root>
+                  className="p-2 rounded-md hover:bg-red-100 transition"
+                  title="Remover campo"
+                >
+                  <Trash2 className="w-5 h-5 text-red-600" />
+                </button>
+              </div>
             ))}
           </div>
         )}

@@ -2,6 +2,7 @@ import React from "react";
 import { Bot, Check, CircleX, ShoppingCart, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ICONS } from "../filterBar/iconCategories";
+import { useTranslation } from "react-i18next";
 
 interface PopUpCartItemProps {
   open: boolean;
@@ -24,6 +25,7 @@ const PopUpCartItem: React.FC<PopUpCartItemProps> = ({
   onOpenCart
 }) => {
     if (!open || !lastAddedItem) return null;
+  const { t } = useTranslation();
 
     const Icon = ICONS[lastAddedItem.category?.toLowerCase()] || <Bot className="w-6 h-6" />;
 
@@ -68,8 +70,8 @@ const PopUpCartItem: React.FC<PopUpCartItemProps> = ({
                   className="rounded-full p-3"
                   style={{
                     background: alreadyInCart
-                      ? "linear-gradient(90deg, #22c55e, #16a34a)" // vermelho para já no carrinho
-                      : "linear-gradient(90deg, #dc2626, #b91c1c)", // verde para sucesso (novo item)
+                      ? "linear-gradient(90deg, #22c55e, #16a34a)"
+                      : "linear-gradient(90deg, #dc2626, #b91c1c)",
                   }}
                 >
                   {alreadyInCart ? (
@@ -80,7 +82,7 @@ const PopUpCartItem: React.FC<PopUpCartItemProps> = ({
                 </div>
               </div>
               <h3 className="text-xl font-semibold text-center mb-2">
-                {alreadyInCart ? "Produto Adicionado ao seu Carrinho" : "Produto já está no seu carrinho!"}
+                {alreadyInCart ? t("popupCartItem.productAdded") : t("popupCartItem.productAlreadyInCart")}
               </h3>
               <div
                 className="rounded-lg p-4 mb-4 border flex items-center space-x-3"
@@ -110,7 +112,7 @@ const PopUpCartItem: React.FC<PopUpCartItemProps> = ({
                 </div>
               </div>
               <p className="text-center mb-6" style={{ color: "var(--color-muted)" }}>
-                {alreadyInCart ? "Produto foi adicionado ao seu carrinho com sucesso" : "Produto não foi adicionado no seu carrinho!"}
+                {alreadyInCart ? t("popupCartItem.itemAddedMessage") : t("popupCartItem.itemNotAddedMessage")}
               </p>
               <div className="flex space-x-3">
                 <button
@@ -128,7 +130,7 @@ const PopUpCartItem: React.FC<PopUpCartItemProps> = ({
                   }
                   type="button"
                 >
-                  Continuar Comprando
+                  {t("popupCartItem.continueShopping")}
                 </button>
                 <button
                   onClick={() => {
@@ -143,7 +145,7 @@ const PopUpCartItem: React.FC<PopUpCartItemProps> = ({
                   }}
                   type="button"
                 >
-                  Ver Carrinho
+                  {t("popupCartItem.viewCart")}
                 </button>
               </div>
             </div>

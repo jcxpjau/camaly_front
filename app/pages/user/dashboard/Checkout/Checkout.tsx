@@ -171,15 +171,7 @@ export default function Checkout() {
           transition={{ duration: 0.6 }}
           className="mb-10"
         >
-          <button
-            onClick={() => navigate(-1)}
-            className="flex items-center text-[var(--color-muted)] hover:text-[var(--color-text)] text-sm mb-2"
-            type="button"
-          >
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Voltar
-          </button>
-          <h1 className="text-3xl font-semibold">Checkout</h1>
+          <h1 className="text-3xl font-semibold">{t("checkout.title")}</h1>
         </motion.div>
                 {statusResPatchInfo && (
           <div className={`text-[var(--color-text-${statusResPatchInfo})] text-sm p-3 rounded text-center my-4`}>
@@ -187,59 +179,58 @@ export default function Checkout() {
           </div>
         )}
         <div className="grid grid-cols-1 lg:grid-cols-[3fr_2fr] gap-5">
-        {/*PAYMENT*/}
           <div className="space-y-6">
             <div className="bg-[var(--color-card-bg)] border border-[var(--color-border)] rounded-lg p-6">
-              <h3 className="text-lg font-semibold mb-4">Dados Pessoais</h3>
+              <h3 className="text-lg font-semibold mb-4">{t("checkout.personalData")}</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <Input.Root label="Nome *">
+                    <Input.Root label={t("checkout.firstName")}>
                     <Input.Content
-                        placeholder="Seu nome"
+                        placeholder={t("checkout.firstNamePlaceholder")}
                         type="text"
                         value={formData.firstName}
                         onChange={(v) => handleInputChange("firstName", v)}
                     />
                     </Input.Root>
 
-                    <Input.Root label="Sobrenome *">
+                    <Input.Root label={t("checkout.lastName")}>
                     <Input.Content
-                        placeholder="Seu sobrenome"
+                        placeholder={t("checkout.lastNamePlaceholder")}
                         type="text"
                         value={formData.lastName}
                         onChange={(v) => handleInputChange("lastName", v)}
                     />
                     </Input.Root>
 
-                    <Input.Root label="Email *">
+                    <Input.Root label={t("checkout.email")}>
                     <Input.Content
-                        placeholder="seu@email.com"
+                        placeholder={t("checkout.emailPlaceholder")}
                         type="email"
                         value={formData.email}
                         onChange={(v) => handleInputChange("email", v)}
                     />
                     </Input.Root>
 
-                    <Input.Root label="Telefone *">
+                    <Input.Root label={t("checkout.phone")}>
                     <Input.Content
-                        placeholder="(11) 99999-9999"
+                        placeholder={t("checkout.phonePlaceholder")}
                         type="text"
                         value={formData.phone}
                         onChange={(v) => handleInputChange("phone", v)}
                     />
                     </Input.Root>
 
-                    <Input.Root label="CPF *">
+                    <Input.Root label={t("checkout.cpf")}>
                     <Input.Content
-                        placeholder="000.000.000-00"
+                        placeholder={t("checkout.cpfPlaceholder")}
                         type="text"
                         value={formData.cpf}
                         onChange={(v) => handleInputChange("cpf", v)}
                     />
                     </Input.Root>
 
-                    <Input.Root label="Empresa (opcional)">
+                    <Input.Root label={t("checkout.company")}>
                     <Input.Content
-                        placeholder="Nome da empresa"
+                        placeholder={t("checkout.companyPlaceholder")}
                         type="text"
                         value={formData.company}
                         onChange={(v) => handleInputChange("company", v)}
@@ -250,18 +241,17 @@ export default function Checkout() {
             <PaymentTabs selectedMethod={paymentMethod} onChange={setPaymentMethod} />
             <button
               onClick={Checkout}
-              //disabled={selectedItems.length === 0 || !formData.firstName || !formData.email}
               className="w-full bg-[var(--color-accent)] hover:bg-[var(--color-special-purple)] text-white font-semibold py-3 text-lg rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
               type="button"
             >
-              Finalizar Compra - R$ {totalAmount.toFixed(2)}
+              {t("checkout.finishPurchase")} - $ {totalAmount.toFixed(2)}
             </button>
           </div>
           {/*CARRINHO*/}
           <div className="space-y-6">
             <div>
               <div className="flex justify-between items-center mb-4">
-                <h2 className="text-xl font-semibold">Itens Selecionados</h2>
+                <h2 className="text-xl font-semibold">{t("checkout.selectedItems")}</h2>
                 <div className="flex gap-2">
                   <button
                     onClick={selectAllItems}
@@ -270,14 +260,14 @@ export default function Checkout() {
                     type="button"
                   >
                     <Check className="w-4 h-4 inline-block mr-1" />
-                    Selecionar Todos
+                    {t("checkout.selectAll")}
                   </button>
                   <button
                     onClick={clearSelection}
                     className="text-sm px-3 py-1 border rounded-md border-[var(--color-border)]"
                     type="button"
                   >
-                    Limpar Seleção
+                    {t("checkout.clearSelection")}
                   </button>
                   <button
                     onClick={removeAllItems}
@@ -285,7 +275,7 @@ export default function Checkout() {
                     type="button"
                   >
                     <Trash2 className="w-4 h-4 inline-block mr-1" />
-                    Limpar Carrinho
+                    {t("checkout.clearCart")}
                   </button>
                 </div>
               </div>
@@ -311,19 +301,19 @@ export default function Checkout() {
               </div>
             </div>
             <div className="bg-[var(--color-progress-bg)] border border-[var(--color-border)] rounded-lg p-6">
-              <h3 className="text-lg font-semibold mb-4">Resumo do Pedido</h3>
+              <h3 className="text-lg font-semibold mb-4">{t("checkout.orderSummary")}</h3>
               <div className="space-y-2">
                 <div className="flex justify-between text-sm">
                   <span className="text-[var(--color-muted)]">
-                    Itens selecionados ({selectedItems.length})
+                    {t("checkout.itemsSelected")} ({selectedItems.length})
                   </span>
-                  <span>R$ {totalAmount.toFixed(2)}</span>
+                  <span>$ {totalAmount.toFixed(2)}</span>
                 </div>
                 <hr className="border-[var(--color-divider)] my-3" />
                 <div className="flex justify-between text-lg font-semibold">
-                  <span>Total</span>
+                  <span>{t("checkout.total")} </span>
                   <span className="text-[var(--color-accent)]">
-                    R$ {totalAmount.toFixed(2)}
+                    $ {totalAmount.toFixed(2)}
                   </span>
                 </div>
               </div>
