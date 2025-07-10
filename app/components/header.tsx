@@ -114,7 +114,7 @@ export default function Header() {
                 className="rounded-full p-2 hover:bg-[var(--color-bg-alt)] hidden sm:block"
                 onClick={() => setShowCartSidebar(true)}
                 >
-                <ShoppingCart className="w-6 h-6 text-[var(--color-muted)]" />
+                    <ShoppingCart className="w-6 h-6 text-[var(--color-muted)]" />
                 </button>
                 <div className="relative hidden sm:block" ref={profileRef}>
                     <button

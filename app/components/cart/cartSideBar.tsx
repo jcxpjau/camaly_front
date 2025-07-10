@@ -1,4 +1,3 @@
-// imports
 import {
   X,
   ShoppingCart,
@@ -12,32 +11,54 @@ import { CartItem } from "./cartItem";
 import { motion } from "framer-motion";
 import { useAuth } from "~/context/auth/auth.hooks";
 import api from "~/services/api";
+import { useTranslation } from "react-i18next";
+import { useCustomNavigate } from "~/hooks/useCustomNavigate";
 
 interface CartSidebarProps {
   onClose: () => void;
 }
 
-interface Product {
+export interface Product {
   id: string;
   name: string;
   price: number;
   category: string;
 }
 
-interface ItemCartFromAPI {
-  id: string;
+//Resposta API para itens do carrinho
+export interface ItemCartFromAPI {
+  id: string;//Id do carrinho
   addedAt: string;
   product: Product;
 }
 
+interface PurchaseItemFromAPI {
+  id: string;
+  productId: Product;
+  createdAt: string;
+}
+
+
+export interface SelectedItem {
+  cartId: string;
+  productId: string;
+  name: string;
+  price: number;
+}
+
 export const CartSidebar = ({ onClose }: CartSidebarProps) => {
   const { user } = useAuth();
+  const { t } = useTranslation();
+  const navigate = useCustomNavigate();
+
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<"cart" | "history">("cart");
-  const [selectedItems, setSelectedItems] = useState<string[]>([]);
+
+  const [selectedItems, setSelectedItems] = useState<SelectedItem[]>([]);
 
   const [cartItems, setCartItems] = useState<ItemCartFromAPI[]>([]);
-  const [purchasesItems, setPurchasesItems] = useState<ItemCartFromAPI[]>([]);
+
+  const [purchasesItems, setPurchasesItems] = useState<PurchaseItemFromAPI[]>([]);
 
   useEffect(() => {
     if (!user) return;
@@ -52,57 +73,107 @@ export const CartSidebar = ({ onClose }: CartSidebarProps) => {
         setLoading(false);
       }
     };
-    const fetchPurchases = async () => {
-      try {
-        setLoading(true);
-        const res = await api.get(`purchases/user/${user._id}`);
-        // setPurchasesItems(res.data.itemsCart);
-      } catch (err) {
-        console.error("Erro ao buscar histórico:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
+const fetchPurchases = async () => {
+  try {
+    setLoading(true);
+    const res = await api.get(`purchases/user/${user._id}`);
+    setPurchasesItems(res.data); // aqui o res.data já é o array correto
+  } catch (err) {
+    console.error("Erro ao buscar histórico:", err);
+  } finally {
+    setLoading(false);
+  }
+};
     fetchItemsCart();
     fetchPurchases();
   }, [user]);
 
-  const toggleItemSelection = (itemId: string) => {
-    setSelectedItems((prev) =>
-      prev.includes(itemId) ? prev.filter((id) => id !== itemId) : [...prev, itemId]
-    );
-  };
+  function selectItem(cartId: string) {
+    setSelectedItems(function(prev) {//Primeiro pega o estado anterior (antes do click para selecionar)
+      //Verifica se o item clicado já estava selecionado
+      const exists = prev.find(function(item) {
+        return item.cartId === cartId;
+      });
+      
+      if (exists) {
+        //Se já está selecionado, remove ele da lista
+        return prev.filter(function(item) {
+          return item.cartId !== cartId;
+        });
+      } 
+      else {
+        //Se não está selecionado, busca o item completo no carrinho
+        const itemToAdd = cartItems.find(function(item) {
+          return item.id === cartId;
+        });
 
-  const selectAllItems = () => {
-    setSelectedItems(cartItems.map((item) => item.id));
-  };
+        if (!itemToAdd) {
+          // Se não encontrar o item, retorna o estado anterior (sem mudanças)
+          return prev;
+        }
 
-  const clearSelection = () => {
+        //Adiciona o item na seleção, com os campos relevantes (id, nome, preço)
+        return prev.concat({
+          cartId: itemToAdd.id,
+          productId: itemToAdd.product.id,
+          name: itemToAdd.product.name,
+          price: itemToAdd.product.price,
+        });
+      }
+    });
+}
+
+  function selectAllItems() {
+    //Mapeia todos os itens do carrinho
+    const allSelected = cartItems.map(function(item) {
+      return {
+        cartId: item.id,
+        productId: item.product.id,
+        name: item.product.name,
+        price: item.product.price
+      };
+    });
+
+    //Atualiza o estado com todos os itens mapeados, selecionou todos
+    setSelectedItems(allSelected);
+  }
+
+  function clearSelection(){
     setSelectedItems([]);
   };
+
   async function removeAllItems() {
     try {
-      const res = await api.delete(`cart/user/${user._id}`);
-
+      await api.delete(`cart/user/${user._id}`);
+      setCartItems([]);
+      setSelectedItems([]);
     } catch (error) {
       console.error("Erro ao remover itens:", error);
     }
   }
 
-  // Para remover um item individual (passado ao CartItem)
-  async function removeSingleItem(itemId: string) {
+  async function removeSingleItem(productId: string) {
     try {
-      const res = await api.delete(`cart/user/${user._id}/product/${itemId}`);
-      setCartItems((prev) => prev.filter((item) => item.id !== itemId));
-      setSelectedItems((prev) => prev.filter((id) => id !== itemId));
+      await api.delete(`cart/user/${user._id}/product/${productId}`);
+      setCartItems((prev) => prev.filter((item) => item.product.id !== productId));
+      setSelectedItems((prev) => prev.filter((item) => item.productId !== productId));
     } catch (error) {
       console.error("Erro ao remover item:", error);
     }
   }
 
-  const totalPrice = cartItems.reduce((acc, item) =>
-    selectedItems.includes(item.id) ? acc + item.product.price : acc, 0
-  );
+  const totalPrice = selectedItems.reduce((acc, item) => acc + item.price, 0);
+
+  if (loading || !user) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[var(--color-bg)] text-[var(--color-text)]">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-8 h-8 border-4 border-[var(--color-accent)] border-t-transparent rounded-full animate-spin" />
+          <p className="text-sm text-[var(--color-muted)]">{t("loading")}</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -128,7 +199,6 @@ export const CartSidebar = ({ onClose }: CartSidebarProps) => {
         exit={{ x: "100%" }}
         transition={{ type: "spring", stiffness: 300, damping: 30 }}
       >
-        {/* Header */}
         <div className="p-4 border-b" style={{ borderColor: "var(--color-border)" }}>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -140,8 +210,6 @@ export const CartSidebar = ({ onClose }: CartSidebarProps) => {
             </button>
           </div>
         </div>
-
-        {/* Tabs */}
         <div className="flex items-center border-b" style={{ borderColor: "var(--color-border)" }}>
           <button
             onClick={() => setActiveTab("cart")}
@@ -166,8 +234,6 @@ export const CartSidebar = ({ onClose }: CartSidebarProps) => {
             Histórico
           </button>
         </div>
-
-        {/* Conteúdo */}
         {activeTab === "cart" ? (
           <div className="flex-1 flex flex-col">
             {/* Ações */}
@@ -196,34 +262,38 @@ export const CartSidebar = ({ onClose }: CartSidebarProps) => {
                   className="min-w-[130px] max-w-[170px] h-9 px-3 text-xs rounded-md border border-red-400 text-red-600 hover:bg-red-100/50 transition flex items-center justify-center break-words"
                 >
                   <Trash2 className="w-4 h-4 mr-1 shrink-0" />
-                    Limpar Carrinho
+                  Limpar Carrinho
                 </button>
               )}
             </div>
-
-            {/* Lista de Itens */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-3">
-              {cartItems.map((cartItem) => (
-                <CartItem
-                  key={cartItem.id}
-                  item={{
-                    id: cartItem.id,
-                    name: cartItem.product.name,
-                    price: cartItem.product.price,
-                    category: cartItem.product.category,
-                    quantity: 1,
-                    addedAt: new Date(cartItem.addedAt),
-                  }}
-                  isSelected={selectedItems.includes(cartItem.id)}
-                  onToggleSelection={toggleItemSelection}
-                  onRemove={() => removeSingleItem(cartItem.product.id)}
-                  showSelection
-                  showRemoveButton
-                />
-              ))}
-            </div>
-
-            {/* Total */}
+              <div className="flex-1 overflow-y-auto p-4 space-y-3">
+                {cartItems.length > 0 ? (
+                  cartItems.map((cartItem) => (
+                    <CartItem
+                      key={cartItem.id}
+                      item={{
+                        id: cartItem.id,
+                        name: cartItem.product.name,
+                        price: cartItem.product.price,
+                        category: cartItem.product.category,
+                        quantity: 1,
+                        addedAt: new Date(cartItem.addedAt),
+                      }}
+                      isSelected={selectedItems.some(item => item.cartId === cartItem.id)}
+                      onToggleSelection={selectItem}
+                      onRemove={() => removeSingleItem(cartItem.product.id)}
+                      showSelection
+                      showRemoveButton
+                    />
+                  ))
+                ) : (
+                  <div className="flex flex-col items-center justify-center h-full text-center p-6 text-[var(--color-muted)]">
+                    <ShoppingCart className="w-12 h-12 mb-3" />
+                    <p className="text-base font-medium">Carrinho vazio</p>
+                    <p className="text-sm mt-1">Você ainda não adicionou nenhum produto.</p>
+                  </div>
+                )}
+              </div>
             {selectedItems.length > 0 && (
               <div className="p-4 border-t" style={{ borderColor: "var(--color-border)" }}>
                 <div className="flex justify-between font-medium text-base">
@@ -231,28 +301,48 @@ export const CartSidebar = ({ onClose }: CartSidebarProps) => {
                   <span>R$ {totalPrice.toFixed(2)}</span>
                 </div>
                 <button
-                  disabled
-                  className="mt-4 w-full px-4 py-2 rounded-md flex items-center justify-center gap-2 opacity-50 cursor-not-allowed"
+                  className="mt-4 w-full px-4 py-2 rounded-md flex items-center justify-center gap-2"
                   style={{
                     backgroundColor: "var(--color-accent)",
                     color: "var(--color-bg)",
                   }}
+                  onClick={(e) => {
+                  navigate(e, `/user/checkout`);
+                  }}
                 >
                   <ShoppingBag className="w-4 h-4" />
-                  Finalizar Compra (em breve)
+                  Finalizar Compra
                 </button>
               </div>
             )}
           </div>
         ) : (
           <div className="flex-1 overflow-y-auto p-4 space-y-3">
-            {/* Conteúdo histórico */}
-            <div className="flex items-center justify-center p-8 w-full">
-              <div className="text-center">
-                <History className="w-12 h-12 mx-auto mb-3 text-[var(--color-muted)]" />
-                <p className="text-[var(--color-muted)]">Nenhuma compra realizada</p>
+            {purchasesItems.length > 0 ? (
+              <div className="flex flex-col gap-3">
+                {purchasesItems.map((purchaseItem) => (
+                  <CartItem
+                    key={purchaseItem.id}
+                    item={{
+                      id: purchaseItem.id,
+                      name: purchaseItem.productId.name,
+                      price: purchaseItem.productId.price,
+                      category: purchaseItem.productId.category,
+                      quantity: 1,
+                      addedAt: new Date(purchaseItem.createdAt),
+                    }}
+                    showSelection={false}
+                    showRemoveButton={false}
+                  />
+                ))}
               </div>
-            </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center h-full text-center p-6 text-[var(--color-muted)]">
+                <History className="w-12 h-12 mb-3" />
+                <p className="text-base font-medium">Nenhuma compra encontrada</p>
+                <p className="text-sm mt-1">Você ainda não realizou nenhuma compra.</p>
+              </div>
+            )}
           </div>
         )}
       </motion.div>

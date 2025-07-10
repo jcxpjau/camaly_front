@@ -1,22 +1,27 @@
 import React from "react";
-import { Bot, Check, ShoppingCart, X } from "lucide-react";
+import { Bot, Check, CircleX, ShoppingCart, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ICONS } from "../filterBar/iconCategories";
 
 interface PopUpCartItemProps {
   open: boolean;
   onClose: () => void;
+  onOpenCart: () => void;
   lastAddedItem: {
     name: string;
     price: string;
-    category: string
+    category: string;
   } | null;
+  alreadyInCart: boolean;
 }
+
 
 const PopUpCartItem: React.FC<PopUpCartItemProps> = ({
   open,
   onClose,
   lastAddedItem,
+  alreadyInCart,
+  onOpenCart
 }) => {
     if (!open || !lastAddedItem) return null;
 
@@ -62,14 +67,20 @@ const PopUpCartItem: React.FC<PopUpCartItemProps> = ({
                 <div
                   className="rounded-full p-3"
                   style={{
-                    background: "linear-gradient(90deg, #22c55e, #16a34a)",
+                    background: alreadyInCart
+                      ? "linear-gradient(90deg, #22c55e, #16a34a)" // vermelho para já no carrinho
+                      : "linear-gradient(90deg, #dc2626, #b91c1c)", // verde para sucesso (novo item)
                   }}
                 >
-                  <Check className="h-8 w-8 text-white" />
+                  {alreadyInCart ? (
+                    <Check className="h-8 w-8 text-white" />
+                  ) : (
+                    <CircleX className="h-8 w-8 text-white" />
+                  )}
                 </div>
               </div>
               <h3 className="text-xl font-semibold text-center mb-2">
-                Produto Adicionado!
+                {alreadyInCart ? "Produto Adicionado ao seu Carrinho" : "Produto já está no seu carrinho!"}
               </h3>
               <div
                 className="rounded-lg p-4 mb-4 border flex items-center space-x-3"
@@ -99,7 +110,7 @@ const PopUpCartItem: React.FC<PopUpCartItemProps> = ({
                 </div>
               </div>
               <p className="text-center mb-6" style={{ color: "var(--color-muted)" }}>
-                O produto foi adicionado ao seu carrinho com sucesso!
+                {alreadyInCart ? "Produto foi adicionado ao seu carrinho com sucesso" : "Produto não foi adicionado no seu carrinho!"}
               </p>
               <div className="flex space-x-3">
                 <button
@@ -121,8 +132,8 @@ const PopUpCartItem: React.FC<PopUpCartItemProps> = ({
                 </button>
                 <button
                   onClick={() => {
+                    onOpenCart();
                     onClose();
-                    //console.log("Navegar para carrinho");
                   }}
                   className="flex-1 py-3 px-4 rounded-lg font-medium transition-transform hover:scale-105"
                   style={{

@@ -12,6 +12,7 @@ import BuyBtn from "~/components/buyBtn/buyBtn";
 import api from "~/services/api";
 import { PopUpAction } from "~/components/popUpAction/";
 import PopUpCartItem from "~/components/cart/popUpCartItem";
+import { CartSidebar } from "~/components/cart/cartSideBar";
 
 
 interface IWorkflow {
@@ -27,7 +28,9 @@ const Marketplace = (): JSX.Element => {
   const [workflows, setWorkflows] = useState<IWorkflow[]>([]);
   //PopUp Cart
   const [lastAddedItem, setLastAddedItem] = useState<IWorkflow | null>(null);
+  const [showCartSidebar, setShowCartSidebar] = useState(false);
 
+  const [itemAlreadyInCart, setItemAlreadyInCart] = useState(false);
 
   //pagination for the panel
   const [loading, setLoading] = useState(true);
@@ -177,13 +180,12 @@ const Marketplace = (): JSX.Element => {
                   </ProductCard.Description>
                   <ProductCard.Footer>
                     <BuyBtn
+                      productId={workflow.id}
                       accentColor="#977efc"
                       hoverColor="#A4B7F4"
-                      productId={workflow.id}
-                      onPurchaseSuccess={() => {
-                        setLastAddedItem({
-                          ...workflow,
-                        });
+                      onPurchaseSuccess={(alreadyInCart) => {
+                        setLastAddedItem({ ...workflow });
+                        setItemAlreadyInCart(alreadyInCart);
                         setPopUpOpen(true);
                       }}
                     />
@@ -236,8 +238,15 @@ const Marketplace = (): JSX.Element => {
           open={popUpOpen}
           onClose={() => setPopUpOpen(false)}
           lastAddedItem={lastAddedItem}
+          onOpenCart={() => setShowCartSidebar(true)}
+          alreadyInCart={itemAlreadyInCart} // opcional, se quiser usar texto diferente
         />
       )}
+      <AnimatePresence>
+  {showCartSidebar && (
+    <CartSidebar onClose={() => setShowCartSidebar(false)} />
+  )}
+</AnimatePresence>
     </div>
   );
 };
