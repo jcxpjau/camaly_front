@@ -213,7 +213,11 @@
             },
             "token": {
                 "createdOn": "Created on"
-            }
+            },
+            "noIntegrations": "There are no tokens",
+            "connectAccountCheck": "Account already connected",
+            "sucessInfo": "Token deleted successfully",
+            "errorInfo": "Error deleting token"
         },
         "environmentsSettings": {
             "title": "Environments",
@@ -326,6 +330,67 @@
         "purchaseDeleteDescription": "You'll no longer have access to this workflow",
         "purchaseDeleteConfirmation": "Confirm",
         "purchaseSuccesstitle": "Purchase was successfull",
-        "purchaseDescription": "You've bought {{name}}. Now add your configurations and start automating!"
+        "purchaseDescription": "Now add your configurations and start automating!"
+    },
+    "settingsAgents": {
+    "flowSettings": {
+    "title": "Flow Configuration",
+    "statusLabel": "Configuration Status:",
+    "configured": "Configured",
+    "pending": "Pending",
+    "connectAccount": "Connect an account",
+    "connectAccountCheck": "Account already connected",
+    "save": "Save Flow Configuration",
+    "sucessInfoOAuth": "OAuth login completed successfully",
+    "placeholderInput": "Enter the",
+    "placeholderSelectSocialMedia": "Select the SocialMedia",
+    "placeholderSelectAccount": "Select the Account"
+    }
+  },
+  "cartSideBar": {
+    "title": "Cart",
+    "cart": "Cart",
+    "history": "History",
+    "selectAll": "Select All",
+    "clearSelection": "Clear Selection",
+    "clearCart": "Clear Cart",
+    "emptyCartTitle": "Cart is empty",
+    "emptyCartSubtitle": "You haven't added any products yet.",
+    "total": "Total",
+    "checkout": "Checkout",
+    "emptyHistoryTitle": "No purchases found",
+    "emptyHistorySubtitle": "You haven't made any purchases yet."
+  },
+  "checkout": {
+    "title": "Checkout",
+    "personalData": "Personal Data",
+    "firstName": "First Name *",
+    "firstNamePlaceholder": "Your first name",
+    "lastName": "Last Name *",
+    "lastNamePlaceholder": "Your last name",
+    "email": "Email *",
+    "emailPlaceholder": "your@email.com",
+    "phone": "Phone *",
+    "phonePlaceholder": "(11) 99999-9999",
+    "cpf": "CPF *",
+    "cpfPlaceholder": "000.000.000-00",
+    "company": "Company (optional)",
+    "companyPlaceholder": "Company name",
+    "finishPurchase": "Finish Purchase",
+    "selectedItems": "Selected Items",
+    "selectAll": "Select All",
+    "clearSelection": "Clear Selection",
+    "clearCart": "Clear Cart",
+    "orderSummary": "Order Summary",
+    "itemsSelected": "Items selected",
+    "total": "Total"
+    },
+    "popupCartItem": {
+    "productAdded": "Product added to your cart",
+    "productAlreadyInCart": "Product is already in your cart!",
+    "itemAddedMessage": "Product was successfully added to your cart",
+    "itemNotAddedMessage": "Product was not added to your cart!",
+    "continueShopping": "Continue Shopping",
+    "viewCart": "View Cart"
     }
 }

@@ -1,28 +1,65 @@
-import React from "react";
-import { Key, Plus, Copy, Trash2 } from "lucide-react";
-import ButtonSettings from "./buttonSettings";
+import React, { useEffect, useState, type JSX } from "react";
+import { Key, Copy, Trash2, CheckCircle } from "lucide-react";
+import { FcGoogle } from "react-icons/fc";
+import { FaMeta } from "react-icons/fa6";
 import { useTranslation } from "react-i18next";
+import api from "~/services/api";
 
-const tokens = [
-  {
-    id: "1",
-    name: "Main Token",
-    value: "abcd-1234-efgh-5678",
-    created: "2024-01-01",
-  },
-  {
-    id: "2",
-    name: "Backup Token",
-    value: "ijkl-9012-mnop-3456",
-    created: "2024-02-10",
-  },
-];
+const providerIcons: Record<string, JSX.Element> = {
+  google: <FcGoogle className="w-5 h-5" />,
+  meta: <FaMeta className="w-5 h-5 text-[#1877F2]" />,
+};
+
+type Integration = {
+  accessToken: string;
+  refreshToken?: string;
+  scopes: string[];
+  status: string;
+  _id: string;
+};
+
+type UserIntegrations = Record<string, Integration>;
 
 export function TokenSettings() {
   const { t } = useTranslation();
+  const [integrations, setIntegrations] = useState<UserIntegrations>({});
 
+  const [statusResPatchInfo, setStatusResPatchInfo] = useState('');
+  const [textResPatchInfo, setTextResPatchInfo] = useState('');
+
+  const loadIntegrations = async () => {
+    try {
+      const { data } = await api.get("user-integrations");
+      setIntegrations(data.data || {});
+    } catch (error) {
+      console.error("Erro ao carregar integrações:", error);
+    }
+  };
+
+  useEffect(() => {
+    loadIntegrations();
+  }, []);
+  async function DeleteIntegration(provider:string) {
+    try {
+      const res = await api.delete(`user-integrations/${provider}`);
+      if (res.status === 200) {
+        setStatusResPatchInfo('success');
+        setTextResPatchInfo(
+          t('settings.tokenSettings.sucessInfo')
+        );
+        await loadIntegrations(); 
+
+      } else {
+        setStatusResPatchInfo('error');
+        setTextResPatchInfo(
+          t('settings.tokenSettings.errorInfo')
+        );
+      }    } catch (error) {
+      
+    }
+  }
   return (
-    <section  className="space-y-6 rounded-lg" style={{ color: "var(--color-card-text)" }}>
+    <section className="space-y-6 rounded-lg" style={{ color: "var(--color-card-text)" }}>
       <header>
         <h2 className="flex items-center gap-2 text-xl font-semibold">
           <Key className="h-5 w-5 text-[var(--color-icon-default)]" />
@@ -32,43 +69,64 @@ export function TokenSettings() {
           {t("settings.tokenSettings.description")}
         </p>
       </header>
-
-      <div>
-        <div className="flex justify-between items-center mb-4">
-          <h3 className="text-lg font-medium">{t("settings.tokenSettings.activeTokensTitle")}</h3>
-          <ButtonSettings text={t("settings.tokenSettings.buttons.newToken")} icon={Plus} />
-        </div>
-        <div className="space-y-3">
-          {tokens.map((token) => (
-            <div
-              key={token.id}
-              className="flex items-center justify-between p-4 rounded-lg bg-[var(--color-bg-alt)] border border-[var(--color-border)]"
-            >
-              <div>
-                <div className="font-medium">{token.name}</div>
-                <div className="text-sm text-[var(--color-muted)]">
-                  {token.value} • {t("settings.tokenSettings.token.createdOn")} {token.created}
+      <div className="space-y-3">
+        <div className="space-y-3 mb-6">
+          {statusResPatchInfo && (
+            <div className={`text-[var(--color-text-${statusResPatchInfo})] text-sm p-3 rounded text-center my-4`}>
+                {textResPatchInfo}
+            </div>
+          )}
+          {Object.keys(integrations).length === 0 ? (
+            <p className="text-sm text-[var(--color-muted)] italic">
+              {t("settings.tokenSettings.noIntegrations")}
+            </p>
+          ) : (
+            Object.entries(integrations).map(([provider, integration]) => (
+              <div
+                key={integration._id}
+                className="flex items-center justify-between p-4 rounded-lg border"
+                style={{
+                  backgroundColor: "var(--color-success-bg)",
+                  borderColor: "var(--color-success-border)",
+                }}
+              >
+                <div className="flex items-center gap-3">
+                  <div
+                    className="p-2 rounded-lg"
+                    style={{ backgroundColor: "var(--color-success-bg)" }}
+                  >
+                    {providerIcons[provider] ?? (
+                      <CheckCircle className="w-5 h-5 text-[var(--color-icon-success)]" />
+                    )}
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span
+                        className="font-medium capitalize"
+                        style={{ color: "var(--color-card-text)" }}
+                      >
+                        {provider}
+                      </span>
+                      <CheckCircle className="w-4 h-4 text-[var(--color-icon-success)]" />
+                    </div>
+                    <p className="text-sm" style={{ color: "var(--color-card-subtext)" }}>
+                      {t("settings.tokenSettings.connectAccountCheck")}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex gap-2">
+                  <button
+                    type="button"
+                    className="rounded px-2 py-1 bg-transparent hover:bg-[var(--color-button-hover)] transition"
+                    aria-label={t("settings.tokenSettings.deleteTokenAriaLabel")}
+                    onClick={() => DeleteIntegration(provider)}
+                  >
+                    <Trash2 className="h-4 w-4 text-[var(--color-icon-error)]" />
+                  </button>
                 </div>
               </div>
-              <div className="flex gap-2">
-                <button
-                  type="button"
-                  className="rounded px-2 py-1 border border-[var(--color-border)] bg-[var(--color-button-bg)] hover:bg-[var(--color-button-hover)] transition"
-                  aria-label={t("settings.tokenSettings.buttons.copyTokenAriaLabel")}
-                  onClick={() => navigator.clipboard.writeText(token.value)}
-                >
-                  <Copy className="h-4 w-4 text-[var(--color-icon-default)]" />
-                </button>
-                <button
-                  type="button"
-                  className="rounded px-2 py-1 border border-[var(--color-border)] bg-[var(--color-button-bg)] hover:bg-[var(--color-button-hover)] transition"
-                  aria-label={t("settings.tokenSettings.buttons.deleteTokenAriaLabel")}
-                >
-                  <Trash2 className="h-4 w-4 text-[var(--color-icon-error)]" />
-                </button>
-              </div>
-            </div>
-          ))}
+            ))
+          )}
         </div>
       </div>
     </section>

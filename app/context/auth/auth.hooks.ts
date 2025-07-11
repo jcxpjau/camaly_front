@@ -7,11 +7,13 @@ export const useAuth = () => {
 
   const dispatch = useDispatch<AppDispatch>()
   const auth : any  = useSelector((state: RootState) => state.auth)
+  const isAdmin = auth.user?.type === 'admin';
 
   return {
     ...auth,
-    login: (token: string, remember: boolean ) => dispatch(login( { token, remember } )),
+    isAdmin,
+    login: (token: string, remember: boolean) => dispatch(login({ token, remember })),
     logout: () => dispatch(logout()),
-    setUser: ( user: any ) => dispatch( setUser( user ) )
-  }
+    setUser: (user: any) => dispatch(setUser(user)),
+  };
 }

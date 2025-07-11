@@ -16,6 +16,7 @@ import Header from "./components/header";
 import Sidebar from "./components/sidebar";
 import { useTheme } from "./context/theme/theme.hooks";
 import { useAuth } from "./context/auth/auth.hooks";
+import api from "./services/api";
 
 
 export const links: Route.LinksFunction = () => [
@@ -44,34 +45,48 @@ function ThemeWrapper({ children }: { children: React.ReactNode }) {
 function AppContent() {
     const location = useLocation();
     const navigate = useNavigate();
-    const { isAuthenticated, token, setUser } = useAuth();
+    const { isAuthenticated, token, setUser, isAdmin, user } = useAuth();
     const publicRoutes = ["/login", "/register"];
     const isPublicRoute = publicRoutes.includes(location.pathname);
+    const isAdminRoute = location.pathname.startsWith("/admin");
+    const isUserRoute = location.pathname.startsWith("/user");
 
+    //Replace -> para se o usuário clicar em voltar no nav ele volta em nada
     useEffect(() => {
-        if (!isAuthenticated && !isPublicRoute) {
-            navigate("/login");
+    if (!isAuthenticated && !isPublicRoute) {
+        navigate("/login", { replace: true });
+        return;
+    }
+
+    if (isAuthenticated && isAdminRoute && !isAdmin) {
+        navigate("/", { replace: true });
+        return;
+    }
+
+    if (isAuthenticated) {
+        if (isAdmin && !isAdminRoute) {
+        navigate("/admin/home", { replace: true });
+        } else if (!isAdmin && !isUserRoute) {
+        navigate("/user/home", { replace: true });
         }
-    }, [isAuthenticated, isPublicRoute, navigate]);
+    }
+    }, [
+    isAuthenticated,
+    isPublicRoute,
+    isAdmin,
+    isAdminRoute,
+    isUserRoute,
+    navigate,
+    location.pathname,
+    user
+    ]);
 
     async function getUser()
     {
         try {
-            const res = await fetch(
-                import.meta.env.VITE_API_URL + "users/me",
-                {
-                    method: "GET",
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`,
-                    },
-                }
-            );
-            const json = await res.json();
-            if (!res.ok) {
-                console.error("Error getting user:", json );
-                return;
-            }
+
+            const res = await api.get( "users/me" );
+            const json = res.data;
             setUser( json );
         } catch( err : any ) {
             console.log( err );
@@ -88,7 +103,7 @@ function AppContent() {
         <>
             {isAuthenticated && <Header />}
             <div className="flex flex-1 overflow-hidden">
-                {isAuthenticated && <Sidebar />}
+                {isAuthenticated && !isAdmin && <Sidebar />}
                 <main className="flex-1 overflow-auto bg-[var(--color-bg)]">
                     <Outlet />
                 </main>

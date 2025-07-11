@@ -4,13 +4,12 @@ import type { JSX } from "react";
 import { ShoppingCart } from "lucide-react";
 //others
 import api from "~/services/api";
-import { useAuth } from "~/context/auth/auth.hooks";
 
 type BuyBtnProps = {
   accentColor: string;
   hoverColor: string;
   productId: string;
-  onPurchaseSuccess?: () => void;
+  onPurchaseSuccess?: (alreadyInCart: boolean) => void;
 };
 
 const BuyBtn = ({
@@ -19,20 +18,25 @@ const BuyBtn = ({
   productId,
   onPurchaseSuccess,
 }: BuyBtnProps): JSX.Element => {
-  const { user, token } = useAuth();
+
   const handleClick = async () => {
     try {
-      await api.post(`purchases`, {
-        userId: user._id,
-        productId: productId,
-      });
-      if (onPurchaseSuccess) {
-        onPurchaseSuccess();
+      await api.post("cart", { productId });
+      onPurchaseSuccess?.(true);
+    } catch (error: any) {
+      if (error.response) {
+        const { status, data } = error.response;
+        if (status === 400 && data?.message === "Produto já está no carrinho.") {
+          onPurchaseSuccess?.(false);
+        } else {
+          console.error("Erro API:", status, data?.message);
+        }
+      } else {
+        console.error("Erro inesperado:", error);
       }
-    } catch (error) {
-      console.error("Erro ao fazer a compra:", error);
     }
   };
+
 
   return (
     <button

@@ -8,6 +8,7 @@ import {
     LogOut,
     Settings,
     User,
+    ShoppingCart,
 } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -18,12 +19,14 @@ import { useSideBar } from "~/context/theme/sidebar.hooks";
 import { useNavigate } from "react-router";
 import { useCustomNavigate } from "~/hooks/useCustomNavigate";
 import { useAuth } from "~/context/auth/auth.hooks";
+import {CartSidebar} from "./cart/cartSideBar";
 
 export default function Header() {
     const {user, logout } = useAuth();
     const { isOpen, toggleSidebar } = useSideBar();
     const [showSearchMobile, setShowSearchMobile] = useState(false);
     const [showProfileMenu, setShowProfileMenu] = useState(false);
+    const [showCartSidebar, setShowCartSidebar] = useState(false);
 
     const searchRef = useRef<HTMLDivElement>(null);
     const profileRef = useRef<HTMLDivElement>(null);
@@ -107,8 +110,11 @@ export default function Header() {
                         style={{ zIndex: 5 }}
                     />
                 </div>
-                <button className="rounded-full p-2 hover:bg-[var(--color-bg-alt)] hidden sm:block">
-                    <CircleHelp className="w-6 h-6 text-[var(--color-muted)]" />
+                <button
+                className="rounded-full p-2 hover:bg-[var(--color-bg-alt)] hidden sm:block"
+                onClick={() => setShowCartSidebar(true)}
+                >
+                    <ShoppingCart className="w-6 h-6 text-[var(--color-muted)]" />
                 </button>
                 <div className="relative hidden sm:block" ref={profileRef}>
                     <button
@@ -157,6 +163,11 @@ export default function Header() {
                     </AnimatePresence>
                 </div>
             </div>
+            <AnimatePresence>
+                {showCartSidebar && (
+                    <CartSidebar onClose={() => setShowCartSidebar(false)} />
+                )}
+            </AnimatePresence>
         </header>
     );
 }
