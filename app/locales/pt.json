@@ -264,15 +264,36 @@
       "description": "Revise as atividades recentes da conta.",
       "levels": {
         "info": "INFORMAÇÃO",
+        "success": "SUCCESSO",
         "error": "ERRO",
-        "warn": "AVISO"
+        "warning": "AVISO"
+      },
+      "logHeader": {
+        "datetime": "Data",
+        "level": "Nível",
+        "msg": "Mensagem",
+        "area": "Área"
       },
       "messages": {
-        "userLoggedIn": "Usuário logado com sucesso",
-        "apiAuthFailed": "Falha na autenticação da API",
-        "tokenRefreshed": "Token de acesso renovado",
-        "rateLimitNear": "Limite de requisições próximo",
-        "backupCompleted": "Backup automático concluído"
+        "tokenUpdated": "Access token alterado",
+        "purchaseSuccessfull": "Compra do fluxo 'Gmail Extractor' efetuada com sucesso",
+        "apiFail": "Autenticação da API falhou",
+        "paymentWarning": "Período de teste gratuito do fluxo 'Gmail Extractor' acaba em 3 dias",
+        "loginSuccessfull": "Usuário fez login com sucesso"
+      },
+      "areas": {
+        "login": "Login do Usuário",
+        "purchase": "Compras",
+        "tokens": "Tokens de Acesso",
+        "api": "API",
+        "plans": "Planos e Cobrança"
+      },
+      "filters": {
+        "allAreas": "Todas as Áreas",
+        "allLevels": "Todos os Níveis",
+        "areaLabel": "Filtrar por Área",
+        "levelLabel": "Filtrar por Nível",
+        "dateLabel": "Filtrar por Data"
       }
     }
   },
@@ -328,7 +349,7 @@
   "popUp": {
     "purchaseDeleteTitle": "Você tem certeza que quer remover {{name}}? ",
     "purchaseDeleteDescription": "Você deixará de ter acesso a este fluxo",
-     "purchaseDeleteConfirmation": "Confirmar",
+    "purchaseDeleteConfirmation": "Confirmar",
     "purchaseSuccesstitle": "Compra bem sucedida",
     "purchaseDescription": "Agora adicione suas configurações e comece a automatizar!"
   },
@@ -384,13 +405,13 @@
     "orderSummary": "Resumo do Pedido",
     "itemsSelected": "Itens selecionados",
     "total": "Total"
-},
-"popupCartItem": {
-  "productAdded": "Produto adicionado ao seu carrinho",
-  "productAlreadyInCart": "Produto já está no seu carrinho!",
-  "itemAddedMessage": "Produto foi adicionado ao seu carrinho com sucesso",
-  "itemNotAddedMessage": "Produto não foi adicionado no seu carrinho!",
-  "continueShopping": "Continuar Comprando",
-  "viewCart": "Ver Carrinho"
-}
+  },
+  "popupCartItem": {
+    "productAdded": "Produto adicionado ao seu carrinho",
+    "productAlreadyInCart": "Produto já está no seu carrinho!",
+    "itemAddedMessage": "Produto foi adicionado ao seu carrinho com sucesso",
+    "itemNotAddedMessage": "Produto não foi adicionado no seu carrinho!",
+    "continueShopping": "Continuar Comprando",
+    "viewCart": "Ver Carrinho"
+  }
 }

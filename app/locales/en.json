@@ -1,350 +1,371 @@
 {
+  "greeting": "Welcome back, {{name}}!",
+  "description": "Explore what’s new!",
+  "creator": "Ads Creator",
+  "your-stats": "Your Stats",
+  "agent": "New Agents",
+  "Reports": "Reports",
+  "concierge": "Creator",
+  "credits": "credits",
+  "your-agents": "Your Agents",
+  "language": {
+    "en": "English",
+    "pt": "Portuguese"
+  },
+  "loading": "Loading...",
+  "newagents": {
+    "customer-support-title": "Customer Support",
+    "customer-support-description": "Customize the agent to meet all your customers' needs.",
+    "automated-posts-title": "Automated Posts",
+    "automated-posts-description": "Schedule posts and generate captions using our specialized agent.",
+    "reminders-title": "Reminders",
+    "reminders-description": "Avoid no-shows with this reminder and confirmation email automator."
+  },
+  "marketplace": {
+    "title": "Workflow Marketplace",
+    "description": "Boost your productivity by adding automations to your business.",
+    "search-placeholder": "Search workflows...",
+    "prices": "Price",
+    "categoryChoice": "Select category",
+    "author": "Author",
+    "noProducts": "There are no workflows matching your filter(s)"
+  },
+  "reports": {
+    "title": "Reports",
+    "description": "Insights and metrics from support sessions and usage data.",
+    "stats": {
+      "sessions": {
+        "title": "1,024 support sessions",
+        "description": "just this month with Concierge"
+      },
+      "questions": {
+        "title": ">3,000 questions answered",
+        "description": "from customers"
+      },
+      "credits": {
+        "title": "5,000 credits",
+        "description": "Average monthly usage"
+      }
+    },
+    "usage": {
+      "title": "Usage by Day of the Week"
+    },
+    "agents": {
+      "title": "Agents",
+      "mostUsed": "Most Used"
+    }
+  },
+  "conciergeStats": {
+    "title": "Concierge",
+    "description": "Insights and metrics from support sessions and usage data.",
+    "stats": {
+      "sessions": {
+        "title": "1,024 support sessions",
+        "description": "just this month with Concierge"
+      },
+      "questions": {
+        "title": ">3,000 questions answered",
+        "description": "from customers"
+      },
+      "credits": {
+        "title": "5,000 credits",
+        "description": "Average monthly usage"
+      }
+    },
+    "usage": {
+      "title": "Usage by Day of the Week"
+    },
+    "channels": {
+      "title": "Support Channels",
+      "mostUsed": "Most Used"
+    }
+  },
+  "home": {
     "greeting": "Welcome back, {{name}}!",
-    "description": "Explore what’s new!",
-    "creator": "Ads Creator",
-    "your-stats": "Your Stats",
-    "agent": "New Agents",
-    "Reports": "Reports",
-    "concierge": "Creator",
-    "credits": "credits",
-    "your-agents": "Your Agents",
-    "language": {
-        "en": "English",
-        "pt": "Portuguese"
+    "subtitle": "Check out your purchased workflows",
+    "noProducts": "You don't have any active workflows"
+  },
+  "category": {
+    "posts": "Social media",
+    "insight": "Insights",
+    "schedule": "Scheduling",
+    "bot": "Chatbot",
+    "personalization": "Client experience",
+    "user": "User management",
+    "settings": "Settings",
+    "notifications": "Notifications",
+    "messages": "Messages",
+    "files": "Files",
+    "documents": "Documents",
+    "analytics": "Analytics",
+    "global": "Global presence",
+    "favorites": "Favorites",
+    "likes": "Engagement",
+    "security": "Security",
+    "privacy": "Privacy",
+    "access": "Access control",
+    "ai": "AI features",
+    "success": "Success tracking"
+  },
+  "settings": {
+    "title": "Settings",
+    "description": "Manage your account preferences and settings",
+    "tabs": {
+      "personal": "Personal",
+      "api": "API",
+      "tokens": "Tokens",
+      "environments": "Environments",
+      "plans": "Plans",
+      "logs": "Logs"
     },
-    "loading": "Loading...",
-    "newagents": {
-        "customer-support-title": "Customer Support",
-        "customer-support-description": "Customize the agent to meet all your customers' needs.",
-        "automated-posts-title": "Automated Posts",
-        "automated-posts-description": "Schedule posts and generate captions using our specialized agent.",
-        "reminders-title": "Reminders",
-        "reminders-description": "Avoid no-shows with this reminder and confirmation email automator."
-    },
-    "marketplace": {
-        "title": "Workflow Marketplace",
-        "description": "Boost your productivity by adding automations to your business.",
-        "search-placeholder": "Search workflows...",
-        "prices": "Price",
-        "categoryChoice": "Select category",
-        "author": "Author",
-        "noProducts": "There are no workflows matching your filter(s)"
-    },
-    "reports": {
-        "title": "Reports",
-        "description": "Insights and metrics from support sessions and usage data.",
-        "stats": {
-            "sessions": {
-                "title": "1,024 support sessions",
-                "description": "just this month with Concierge"
+    "personalSettings": {
+      "sections": {
+        "personalInformation": {
+          "title": "Personal Information",
+          "description": "Update your personal information and account preferences.",
+          "form": {
+            "fields": {
+              "firstName": {
+                "label": "First Name",
+                "placeholder": "First Name..."
+              },
+              "lastName": {
+                "label": "Last Name",
+                "placeholder": "Last Name..."
+              },
+              "email": {
+                "label": "Email",
+                "placeholder": "Email..."
+              },
+              "notificationsToggle": {
+                "label": "Receive email notifications"
+              }
             },
-            "questions": {
-                "title": ">3,000 questions answered",
-                "description": "from customers"
+            "errors": {
+              "emailRequired": "Email is required.",
+              "nameRequired": "Name is required."
             },
-            "credits": {
-                "title": "5,000 credits",
-                "description": "Average monthly usage"
-            }
-        },
-        "usage": {
-            "title": "Usage by Day of the Week"
-        },
-        "agents": {
-            "title": "Agents",
-            "mostUsed": "Most Used"
-        }
-    },
-    "conciergeStats": {
-        "title": "Concierge",
-        "description": "Insights and metrics from support sessions and usage data.",
-        "stats": {
-            "sessions": {
-                "title": "1,024 support sessions",
-                "description": "just this month with Concierge"
-            },
-            "questions": {
-                "title": ">3,000 questions answered",
-                "description": "from customers"
-            },
-            "credits": {
-                "title": "5,000 credits",
-                "description": "Average monthly usage"
-            }
-        },
-        "usage": {
-            "title": "Usage by Day of the Week"
-        },
-        "channels": {
-            "title": "Support Channels",
-            "mostUsed": "Most Used"
-        }
-    },
-    "home": {
-        "greeting": "Welcome back, {{name}}!",
-        "subtitle": "Check out your purchased workflows",
-        "noProducts": "You don't have any active workflows"
-    },
-    "category": {
-        "posts": "Social media",
-        "insight": "Insights",
-        "schedule": "Scheduling",
-        "bot": "Chatbot",
-        "personalization": "Client experience",
-        "user": "User management",
-        "settings": "Settings",
-        "notifications": "Notifications",
-        "messages": "Messages",
-        "files": "Files",
-        "documents": "Documents",
-        "analytics": "Analytics",
-        "global": "Global presence",
-        "favorites": "Favorites",
-        "likes": "Engagement",
-        "security": "Security",
-        "privacy": "Privacy",
-        "access": "Access control",
-        "ai": "AI features",
-        "success": "Success tracking"
-    },
-    "settings": {
-        "title": "Settings",
-        "description": "Manage your account preferences and settings",
-        "tabs": {
-            "personal": "Personal",
-            "api": "API",
-            "tokens": "Tokens",
-            "environments": "Environments",
-            "plans": "Plans",
-            "logs": "Logs"
-        },
-        "personalSettings": {
-            "sections": {
-                "personalInformation": {
-                    "title": "Personal Information",
-                    "description": "Update your personal information and account preferences.",
-                    "form": {
-                        "fields": {
-                            "firstName": {
-                                "label": "First Name",
-                                "placeholder": "First Name..."
-                            },
-                            "lastName": {
-                                "label": "Last Name",
-                                "placeholder": "Last Name..."
-                            },
-                            "email": {
-                                "label": "Email",
-                                "placeholder": "Email..."
-                            },
-                            "notificationsToggle": {
-                                "label": "Receive email notifications"
-                            }
-                        },
-                        "errors": {
-                            "emailRequired": "Email is required.",
-                            "nameRequired": "Name is required."
-                        },
-                        "statusMessages": {
-                            "success": "Information updated successfully.",
-                            "error": "An error has occurred, please try again!"
-                        },
-                        "buttons": {
-                            "saveChanges": "Save Changes"
-                        }
-                    }
-                },
-                "personalSecurity": {
-                    "title": "Personal Security",
-                    "description": "Update your personal security information and account preferences.",
-                    "form": {
-                        "fields": {
-                            "oldPassword": {
-                                "label": "Old Password",
-                                "placeholder": "Old Password..."
-                            },
-                            "newPassword": {
-                                "label": "New Password",
-                                "placeholder": "New Password..."
-                            },
-                            "confirmNewPassword": {
-                                "label": "Confirm your new password",
-                                "placeholder": "Confirm your new password"
-                            },
-                            "twoFactorAuthentication": {
-                                "title": "Two-factor authentication (2FA)",
-                                "description": "Two-factor authentication is currently disabled.",
-                                "learnMore": "Learn more",
-                                "enableButton": "Enable 2FA"
-                            }
-                        },
-                        "errors": {
-                            "oldPasswordRequired": "Old password is required.",
-                            "oldPasswordIncorrect": "Old password is incorrect.",
-                            "newPasswordRequired": "New password is required.",
-                            "newPasswordSameAsOld": "New password cannot be the same as the old one.",
-                            "confirmNewPasswordRequired": "Confirmation of new password is required.",
-                            "passwordsDoNotMatch": "Passwords do not match."
-                        },
-                        "buttons": {
-                            "saveChanges": "Save Changes"
-                        }
-                    }
-                }
-            }
-        },
-        "apiSettings": {
-            "title": "API Settings",
-            "description": "Configure your API keys and endpoints.",
-            "apiEndpoint": "API Endpoint",
-            "apiKey": "API Key",
-            "copyApiKey": "Copy API key",
-            "enabledLogs": "Enabled Logs",
-            "saveChanges": "Save Changes"
-        },
-        "tokenSettings": {
-            "title": "Tokens and Secrets",
-            "description": "Manage your access tokens and secret keys.",
-            "activeTokensTitle": "Active Tokens",
-            "buttons": {
-                "newToken": "New Token",
-                "copyTokenAriaLabel": "Copy token",
-                "deleteTokenAriaLabel": "Delete token"
-            },
-            "token": {
-                "createdOn": "Created on"
-            },
-            "noIntegrations": "There are no tokens",
-            "connectAccountCheck": "Account already connected",
-            "sucessInfo": "Token deleted successfully",
-            "errorInfo": "Error deleting token"
-        },
-        "environmentsSettings": {
-            "title": "Environments",
-            "description": "Manage your deployment environments.",
-            "configured": "Configured Environments",
-            "add": "Add Environment",
-            "status": {
-                "active": "Active",
-                "inactive": "Inactive",
-                "configuring": "Configuring"
-            },
-            "name": {
-                "production": "Production",
-                "staging": "Staging",
-                "buy": "Buy"
-            }
-        },
-        "plansSettings": {
-            "title": "Subscription Plans",
-            "description": "Choose the plan that fits your needs.",
-            "currentPlan": {
-                "label": "Current Plan: Pro",
-                "status": "Active",
-                "priceAndBilling": "$99.90/month • Next billing: 02/15/2024"
-            },
-            "metrics": {
-                "requests": {
-                    "label": "Requests"
-                },
-                "storage": {
-                    "label": "Storage"
-                },
-                "users": {
-                    "label": "Users"
-                }
+            "statusMessages": {
+              "success": "Information updated successfully.",
+              "error": "An error has occurred, please try again!"
             },
             "buttons": {
-                "upgradePlan": "Upgrade Plan",
-                "billingHistory": "Billing History"
+              "saveChanges": "Save Changes"
             }
+          }
         },
-        "logsSettings": {
-            "title": "Activity Logs",
-            "description": "Review recent account activity.",
-            "levels": {
-                "info": "INFO",
-                "error": "ERROR",
-                "warn": "WARN"
+        "personalSecurity": {
+          "title": "Personal Security",
+          "description": "Update your personal security information and account preferences.",
+          "form": {
+            "fields": {
+              "oldPassword": {
+                "label": "Old Password",
+                "placeholder": "Old Password..."
+              },
+              "newPassword": {
+                "label": "New Password",
+                "placeholder": "New Password..."
+              },
+              "confirmNewPassword": {
+                "label": "Confirm your new password",
+                "placeholder": "Confirm your new password"
+              },
+              "twoFactorAuthentication": {
+                "title": "Two-factor authentication (2FA)",
+                "description": "Two-factor authentication is currently disabled.",
+                "learnMore": "Learn more",
+                "enableButton": "Enable 2FA"
+              }
             },
-            "messages": {
-                "userLoggedIn": "User logged in successfully",
-                "apiAuthFailed": "API authentication failed",
-                "tokenRefreshed": "Access token refreshed",
-                "rateLimitNear": "Request limit approaching",
-                "backupCompleted": "Automatic backup completed"
+            "errors": {
+              "oldPasswordRequired": "Old password is required.",
+              "oldPasswordIncorrect": "Old password is incorrect.",
+              "newPasswordRequired": "New password is required.",
+              "newPasswordSameAsOld": "New password cannot be the same as the old one.",
+              "confirmNewPasswordRequired": "Confirmation of new password is required.",
+              "passwordsDoNotMatch": "Passwords do not match."
+            },
+            "buttons": {
+              "saveChanges": "Save Changes"
             }
+          }
         }
+      }
     },
-    "login": {
-        "title": "Welcome back",
-        "subtitle": "Login to continue using Camaly",
-        "form": {
-            "emailPlaceholder": "Email...",
-            "passwordPlaceholder": "Password...",
-            "rememberMe": "Stay signed in",
-            "forgotPassword": "Forgot password?",
-            "submit": "Sign In",
-            "divider": "OR",
-            "google": "Sign in with Google",
-            "apple": "Sign in with Apple",
-            "firstTime": "First time at Camaly?",
-            "createAccount": "Create an account"
+    "apiSettings": {
+      "title": "API Settings",
+      "description": "Configure your API keys and endpoints.",
+      "apiEndpoint": "API Endpoint",
+      "apiKey": "API Key",
+      "copyApiKey": "Copy API key",
+      "enabledLogs": "Enabled Logs",
+      "saveChanges": "Save Changes"
+    },
+    "tokenSettings": {
+      "title": "Tokens and Secrets",
+      "description": "Manage your access tokens and secret keys.",
+      "activeTokensTitle": "Active Tokens",
+      "buttons": {
+        "newToken": "New Token",
+        "copyTokenAriaLabel": "Copy token",
+        "deleteTokenAriaLabel": "Delete token"
+      },
+      "token": {
+        "createdOn": "Created on"
+      },
+      "noIntegrations": "There are no tokens",
+      "connectAccountCheck": "Account already connected",
+      "sucessInfo": "Token deleted successfully",
+      "errorInfo": "Error deleting token"
+    },
+    "environmentsSettings": {
+      "title": "Environments",
+      "description": "Manage your deployment environments.",
+      "configured": "Configured Environments",
+      "add": "Add Environment",
+      "status": {
+        "active": "Active",
+        "inactive": "Inactive",
+        "configuring": "Configuring"
+      },
+      "name": {
+        "production": "Production",
+        "staging": "Staging",
+        "buy": "Buy"
+      }
+    },
+    "plansSettings": {
+      "title": "Subscription Plans",
+      "description": "Choose the plan that fits your needs.",
+      "currentPlan": {
+        "label": "Current Plan: Pro",
+        "status": "Active",
+        "priceAndBilling": "$99.90/month • Next billing: 02/15/2024"
+      },
+      "metrics": {
+        "requests": {
+          "label": "Requests"
         },
-        "errors": {
-            "emailRequired": "Email is required.",
-            "passwordRequired": "Password is required.",
-            "invalidCredentials": "Incorrect username or password. Please check your credentials and try again."
+        "storage": {
+          "label": "Storage"
+        },
+        "users": {
+          "label": "Users"
         }
+      },
+      "buttons": {
+        "upgradePlan": "Upgrade Plan",
+        "billingHistory": "Billing History"
+      }
     },
-    "register": {
-        "title": "Welcome back",
-        "subtitle": "Login to continue using Camaly",
-        "form": {
-            "namePlaceholder": "Name...",
-            "emailPlaceholder": "Email...",
-            "passwordPlaceholder": "Password...",
-            "confirmPasswordPlaceholder": "Confirm Password...",
-            "submit": "Create Account"
-        },
-        "errors": {
-            "nameRequired": "Name is required.",
-            "emailRequired": "Email is required.",
-            "passwordRequired": "Password is required.",
-            "confirmRequired": "Confirmation is required.",
-            "passwordMismatch": "Passwords do not match.",
-            "emailInUse": "The email address you entered is already linked to an account. Please use a different email address or log in with your credentials."
-        },
-        "or": "OR",
-        "socialLogin": {
-            "google": "Sign up with Google",
-            "apple": "Sign up with Apple"
-        },
-        "footer": {
-            "question": "Already have an account?",
-            "action": "Sign In"
-        }
+    "logsSettings": {
+      "title": "Activity Logs",
+      "description": "Review recent account activity.",
+      "levels": {
+        "info": "INFO",
+        "success": "SUCCESS",
+        "error": "ERROR",
+        "warning": "WARN"
+      },
+      "logHeader": {
+        "datetime": "Date",
+        "level": "Level",
+        "msg": "Message",
+        "area": "Area"
+      },
+      "messages": {
+        "tokenUpdated": "Access token refreshed",
+        "purchaseSuccessfull": "Sucessfully purchased workflow 'Gmail Extractor'",
+        "apiFail": "API authentication failed",
+        "paymentWarning": "Free trial of workflow 'Gmail Extractor' ends in 3 days",
+        "loginSuccessfull": "User logged in successfully"
+      },
+      "areas": {
+        "login": "User Login",
+        "purchase": "Purchases",
+        "tokens": "Access Tokens",
+        "api": "API",
+        "plans": "Plans & Billing"
+      },
+      "filters": {
+        "allAreas": "All Areas",
+        "allLevels": "All Levels",
+        "areaLabel": "Filter by Area",
+        "levelLabel": "Filter by Level",
+        "dateLabel": "Filter by Date"
+      }
+    }
+  },
+  "login": {
+    "title": "Welcome back",
+    "subtitle": "Login to continue using Camaly",
+    "form": {
+      "emailPlaceholder": "Email...",
+      "passwordPlaceholder": "Password...",
+      "rememberMe": "Stay signed in",
+      "forgotPassword": "Forgot password?",
+      "submit": "Sign In",
+      "divider": "OR",
+      "google": "Sign in with Google",
+      "apple": "Sign in with Apple",
+      "firstTime": "First time at Camaly?",
+      "createAccount": "Create an account"
     },
-    "popUp": {
-        "purchaseDeleteTitle": "Are you sure you want to unsubscribe from {{name}}? ",
-        "purchaseDeleteDescription": "You'll no longer have access to this workflow",
-        "purchaseDeleteConfirmation": "Confirm",
-        "purchaseSuccesstitle": "Purchase was successfull",
-        "purchaseDescription": "Now add your configurations and start automating!"
+    "errors": {
+      "emailRequired": "Email is required.",
+      "passwordRequired": "Password is required.",
+      "invalidCredentials": "Incorrect username or password. Please check your credentials and try again."
+    }
+  },
+  "register": {
+    "title": "Welcome back",
+    "subtitle": "Login to continue using Camaly",
+    "form": {
+      "namePlaceholder": "Name...",
+      "emailPlaceholder": "Email...",
+      "passwordPlaceholder": "Password...",
+      "confirmPasswordPlaceholder": "Confirm Password...",
+      "submit": "Create Account"
     },
-    "settingsAgents": {
+    "errors": {
+      "nameRequired": "Name is required.",
+      "emailRequired": "Email is required.",
+      "passwordRequired": "Password is required.",
+      "confirmRequired": "Confirmation is required.",
+      "passwordMismatch": "Passwords do not match.",
+      "emailInUse": "The email address you entered is already linked to an account. Please use a different email address or log in with your credentials."
+    },
+    "or": "OR",
+    "socialLogin": {
+      "google": "Sign up with Google",
+      "apple": "Sign up with Apple"
+    },
+    "footer": {
+      "question": "Already have an account?",
+      "action": "Sign In"
+    }
+  },
+  "popUp": {
+    "purchaseDeleteTitle": "Are you sure you want to unsubscribe from {{name}}? ",
+    "purchaseDeleteDescription": "You'll no longer have access to this workflow",
+    "purchaseDeleteConfirmation": "Confirm",
+    "purchaseSuccesstitle": "Purchase was successfull",
+    "purchaseDescription": "Now add your configurations and start automating!"
+  },
+  "settingsAgents": {
     "flowSettings": {
-    "title": "Flow Configuration",
-    "statusLabel": "Configuration Status:",
-    "configured": "Configured",
-    "pending": "Pending",
-    "connectAccount": "Connect an account",
-    "connectAccountCheck": "Account already connected",
-    "save": "Save Flow Configuration",
-    "sucessInfoOAuth": "OAuth login completed successfully",
-    "placeholderInput": "Enter the",
-    "placeholderSelectSocialMedia": "Select the SocialMedia",
-    "placeholderSelectAccount": "Select the Account"
+      "title": "Flow Configuration",
+      "statusLabel": "Configuration Status:",
+      "configured": "Configured",
+      "pending": "Pending",
+      "connectAccount": "Connect an account",
+      "connectAccountCheck": "Account already connected",
+      "save": "Save Flow Configuration",
+      "sucessInfoOAuth": "OAuth login completed successfully",
+      "placeholderInput": "Enter the",
+      "placeholderSelectSocialMedia": "Select the SocialMedia",
+      "placeholderSelectAccount": "Select the Account"
     }
   },
   "cartSideBar": {
@@ -384,13 +405,13 @@
     "orderSummary": "Order Summary",
     "itemsSelected": "Items selected",
     "total": "Total"
-    },
-    "popupCartItem": {
+  },
+  "popupCartItem": {
     "productAdded": "Product added to your cart",
     "productAlreadyInCart": "Product is already in your cart!",
     "itemAddedMessage": "Product was successfully added to your cart",
     "itemNotAddedMessage": "Product was not added to your cart!",
     "continueShopping": "Continue Shopping",
     "viewCart": "View Cart"
-    }
+  }
 }

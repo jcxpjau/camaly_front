@@ -1,19 +1,79 @@
-import React from "react";
-import { ListChecks } from "lucide-react";
+import { ChevronLeft, ChevronRight, ListChecks } from "lucide-react";
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import LogsFilters from "./logsFilters";
+
+const levelColors = {
+  info: "#3498db", // azul
+  success: "#2ecc71", // verde
+  warn: "#f1c40f", // amarelo
+  error: "#e74c3c", // vermelho
+};
 
 export function LogsSettings() {
   const { t } = useTranslation();
   const logs = [
-    { id: "1", time: "14:32:15", level: t("settings.logsSettings.levels.info"), message: t("settings.logsSettings.messages.userLoggedIn"), ip: "192.168.1.100" },
-    { id: "2", time: "14:30:22", level: t("settings.logsSettings.levels.error"), message: t("settings.logsSettings.messages.apiAuthFailed"), ip: "192.168.1.100" },
-    { id: "3", time: "14:28:45", level: t("settings.logsSettings.levels.info"), message: t("settings.logsSettings.messages.tokenRefreshed"), ip: "192.168.1.100" },
-    { id: "4", time: "14:25:12", level: t("settings.logsSettings.levels.warn"), message: t("settings.logsSettings.messages.rateLimitNear"), ip: "192.168.1.100" },
-    { id: "5", time: "14:22:33", level: t("settings.logsSettings.levels.info"), message: t("settings.logsSettings.messages.backupCompleted"), ip: "Sistema" },
+    {
+      id: "1",
+      datetime: "2025-06-14 12:28:04",
+      level: "info",
+      area: "tokens",
+      msg: "tokenUpdated",
+    },
+    {
+      id: "2",
+      datetime: "2025-06-24 03:15:17",
+      level: "success",
+      area: "purchase",
+      msg: "purchaseSuccessfull",
+    },
+    {
+      id: "3",
+      datetime: "2025-06-26 16:27:47",
+      level: "error",
+      area: "api",
+      msg: "apiFail",
+    },
+    {
+      id: "4",
+      datetime: "2025-06-28 21:59:01",
+      level: "warning",
+      area: "plans",
+      msg: "paymentWarning",
+    },
+    {
+      id: "5",
+      datetime: "2025-06-20 11:30:52",
+      level: "success",
+      area: "login",
+      msg: "loginSuccessfull",
+    },
   ];
+  const [selectedArea, setSelectedArea] = useState("");
+  const [selectedLevel, setSelectedLevel] = useState("");
+  const [selectedDate, setSelectedDate] = useState("");
+
+  const [filteredLogs, setFilteredLogs] = useState(logs);
+
+  useEffect(() => {
+    const result = logs.filter((log) => {
+      const matchesArea = selectedArea ? log.area === selectedArea : true;
+      const matchesLevel = selectedLevel ? log.level === selectedLevel : true;
+      const matchesDate = selectedDate
+        ? log.datetime.startsWith(selectedDate)
+        : true;
+
+      return matchesArea && matchesLevel && matchesDate;
+    });
+
+    setFilteredLogs(result);
+  }, [logs, selectedArea, selectedLevel, selectedDate]);
 
   return (
-    <section className="space-y-6 rounded-lg" style={{ color: "var(--color-card-text)" }}>
+    <section
+      className="space-y-6 rounded-lg"
+      style={{ color: "var(--color-card-text)" }}
+    >
       <header>
         <h2 className="flex items-center gap-2 text-xl font-semibold">
           <ListChecks className="h-5 w-5 text-[var(--color-icon-default)]" />
@@ -23,39 +83,91 @@ export function LogsSettings() {
           {t("settings.logsSettings.description")}
         </p>
       </header>
-
+      <div className="flex flex-col md:flex-row md:items-center gap-4">
+        <LogsFilters
+          selectedArea={selectedArea}
+          setSelectedArea={setSelectedArea}
+          selectedLevel={selectedLevel}
+          setSelectedLevel={setSelectedLevel}
+          selectedDate={selectedDate}
+          setSelectedDate={setSelectedDate}
+          t={t}
+        />
+      </div>
       <div
-        className="max-h-96 overflow-y-auto border rounded-md p-4 space-y-2"
+        className="border rounded-md p-4 space-y-2"
         style={{
           borderColor: "var(--color-border)",
           backgroundColor: "var(--color-bg-alt)",
         }}
       >
-        {logs.map((log) => (
-          <div
-            key={log.id}
-            className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4 p-3 border rounded-lg font-mono text-sm break-words"
-            style={{ borderColor: "var(--color-border)" }}
-          >
-            <span className="text-slate-500 w-full md:w-auto">{log.time}</span>
+        <div
+          className="hidden md:flex items-center gap-4 px-3 pb-2 border-b text-xs font-semibold text-slate-500 uppercase"
+          style={{ borderColor: "var(--color-border)" }}
+        >
+          <span className="w-40">
+            {t(`settings.logsSettings.logHeader.datetime`)}
+          </span>
+          <span className="w-24">
+            {t(`settings.logsSettings.logHeader.level`)}
+          </span>
+          <span className="flex-1">
+            {t(`settings.logsSettings.logHeader.msg`)}
+          </span>
+          <span className="w-24">
+            {t(`settings.logsSettings.logHeader.area`)}
+          </span>
+        </div>
 
-            <span
-              className={`px-2 py-0.5 rounded border w-fit text-center text-xs md:text-sm ${
-                log.level === "INFO" || log.level === "INFORMAÇÃO"
-                  ? "border-[var(--color-info)] text-[var(--color-text-info)]"
-                  : log.level === "ERROR" || log.level === "ERRO"
-                  ? "border-[var(--color-error)] text-[var(--color-text-error)]"
-                  : "border-[var(--color-warning)] text-[var(--color-text-warning)]"
-              }`}
+        <div className="max-h-96 overflow-y-auto space-y-2">
+          {filteredLogs.map((log) => (
+            <div
+              key={log.id}
+              className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4 p-3 border rounded-lg font-mono text-sm break-words"
+              style={{ borderColor: "var(--color-border)" }}
             >
-              {log.level}
-            </span>
+              <span className="text-slate-500 w-full md:w-40">
+                {log.datetime}
+              </span>
 
-            <span className="flex-1 break-words">{log.message}</span>
+              <span
+                className="px-2 py-0.5 rounded border w-fit text-center text-xs md:text-sm"
+                style={{
+                  borderColor: `var(--color-${log.level.toLowerCase()})`,
+                  color: `var(--color-text-${log.level.toLowerCase()})`,
+                }}
+              >
+                {t(`settings.logsSettings.levels.${log.level}`)}
+              </span>
 
-            <span className="text-slate-500 w-full md:w-auto">{log.ip}</span>
-          </div>
-        ))}
+              <span className="flex-1 break-words">
+                {t(`settings.logsSettings.messages.${log.msg}`)}
+              </span>
+
+              <span className="px-2 py-0.5 rounded border w-fit text-center text-xs md:text-sm">
+                {t(`settings.logsSettings.areas.${log.area}`)}
+              </span>
+            </div>
+          ))}
+        </div>
+
+        <div className="flex justify-center items-center gap-2 mt-4">
+          <button className="px-3 py-1 rounded border text-xs md:text-sm hover:bg-slate-100 dark:hover:bg-slate-700">
+            <ChevronLeft />
+          </button>
+          <button className="px-3 py-1 rounded border text-xs md:text-sm bg-slate-200 dark:bg-slate-700">
+            1
+          </button>
+          <button className="px-3 py-1 rounded border text-xs md:text-sm hover:bg-slate-100 dark:hover:bg-slate-700">
+            2
+          </button>
+          <button className="px-3 py-1 rounded border text-xs md:text-sm hover:bg-slate-100 dark:hover:bg-slate-700">
+            3
+          </button>
+          <button className="px-3 py-1 rounded border text-xs md:text-sm hover:bg-slate-100 dark:hover:bg-slate-700">
+            <ChevronRight />
+          </button>
+        </div>
       </div>
     </section>
   );
